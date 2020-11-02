@@ -6,9 +6,15 @@ JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     ui(new Ui::JoinLobbyDialog)
 {
     ui->setupUi(this);
+    connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 }
 
 JoinLobbyDialog::~JoinLobbyDialog()
 {
     delete ui;
+}
+
+void JoinLobbyDialog::cancel()
+{
+    this->close();
 }

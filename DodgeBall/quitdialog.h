@@ -20,6 +20,10 @@ private:
 
 signals:
     void quit();
+
+private slots:
+    void yes();
+    void no();
 };
 
 #endif // QUITDIALOG_H

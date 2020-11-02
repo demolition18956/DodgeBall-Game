@@ -6,9 +6,15 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     ui(new Ui::HostLobbyDialog)
 {
     ui->setupUi(this);
+    connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 }
 
 HostLobbyDialog::~HostLobbyDialog()
 {
     delete ui;
+}
+
+void HostLobbyDialog::cancel()
+{
+    this->close();
 }

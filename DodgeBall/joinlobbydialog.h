@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::JoinLobbyDialog *ui;
+
+private slots:
+    void cancel();
 };
 
 #endif // JOINLOBBYDIALOG_H

@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QDebug>
 #include <QPushButton>
+#include <quitdialog.h>
+#include <hostlobbydialog.h>
+#include <joinlobbydialog.h>
 
 namespace Ui {
 class MainWindow;
@@ -22,11 +25,14 @@ public slots:
     void joinFunc();
     void exitFunc();
 
+private slots:
+    void exit();
+
 private:
     Ui::MainWindow *ui;
-    QPushButton *mainhostbutton;
-    QPushButton *mainjoinbutton;
-    QPushButton *mainexitbutton;
+    QuitDialog *quitDialog;
+    HostLobbyDialog *hostDialog;
+    JoinLobbyDialog *joinDialog;
 };
 
 #endif // MAINWINDOW_H

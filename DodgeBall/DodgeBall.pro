@@ -25,14 +25,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        hostlobbydialog.cpp \
+        joinlobbydialog.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        quitdialog.cpp
 
 HEADERS += \
-        mainwindow.h
+        hostlobbydialog.h \
+        joinlobbydialog.h \
+        mainwindow.h \
+        quitdialog.h \
 
 FORMS += \
-        mainwindow.ui
+        hostlobbydialog.ui \
+        joinlobbydialog.ui \
+        mainwindow.ui \
+        quitdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

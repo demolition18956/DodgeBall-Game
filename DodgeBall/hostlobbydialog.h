@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::HostLobbyDialog *ui;
+
+private slots:
+    void cancel();
 };
 
 #endif // HOSTLOBBYDIALOG_H
