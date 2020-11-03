@@ -6,6 +6,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     ui(new Ui::HostLobbyDialog)
 {
     ui->setupUi(this);
+    back = false;
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 }
 
@@ -17,4 +18,13 @@ HostLobbyDialog::~HostLobbyDialog()
 void HostLobbyDialog::cancel()
 {
     this->close();
+    setBool(true);
+}
+
+bool HostLobbyDialog::getBool(){
+    return back;
+}
+
+void HostLobbyDialog::setBool(bool value){
+    back = value;
 }

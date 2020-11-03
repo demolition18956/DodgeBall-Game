@@ -25,7 +25,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::hostFunc(){
     qDebug("Host");
+    this->hide();
     hostDialog->exec();
+
+    if(hostDialog->getBool()){
+        this->show();
+    }
 }
 
 void MainWindow::joinFunc(){
