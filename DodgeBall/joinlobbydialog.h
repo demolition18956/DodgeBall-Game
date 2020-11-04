@@ -13,11 +13,14 @@ class JoinLobbyDialog : public QDialog
 
 public:
     explicit JoinLobbyDialog(QWidget *parent = nullptr);
+    //set bool fuuncitons
+    bool getBool();
+    void setBool(bool value);
     ~JoinLobbyDialog();
 
 private:
     Ui::JoinLobbyDialog *ui;
-
+    bool back;
 private slots:
     void cancel();
 };

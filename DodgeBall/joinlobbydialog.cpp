@@ -17,4 +17,13 @@ JoinLobbyDialog::~JoinLobbyDialog()
 void JoinLobbyDialog::cancel()
 {
     this->close();
+    setBool(true);
+}
+
+bool JoinLobbyDialog::getBool(){
+    return back;
+}
+
+void JoinLobbyDialog::setBool(bool value){
+    back = value;
 }

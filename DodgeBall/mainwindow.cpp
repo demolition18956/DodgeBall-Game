@@ -35,7 +35,13 @@ void MainWindow::hostFunc(){
 
 void MainWindow::joinFunc(){
     qDebug("Join");
+    this->hide();
     joinDialog->exec();
+
+    if(joinDialog->getBool()){
+        this->show();
+    }
+
 }
 
 void MainWindow::exitFunc(){
