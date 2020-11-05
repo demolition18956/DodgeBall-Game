@@ -49,4 +49,6 @@ void JoinLobbyDialog::join()
     portNumber = ui->portEdit->text();
 
     socket = new QUdpSocket;
+
+
 }
