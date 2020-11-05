@@ -77,60 +77,24 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="palette">
-      <palette>
-       <active>
-        <colorrole role="WindowText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>238</red>
-           <green>238</green>
-           <blue>236</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </active>
-       <inactive>
-        <colorrole role="WindowText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>238</red>
-           <green>238</green>
-           <blue>236</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </inactive>
-       <disabled>
-        <colorrole role="WindowText">
-         <brush brushstyle="SolidPattern">
-          <color alpha="255">
-           <red>190</red>
-           <green>190</green>
-           <blue>190</blue>
-          </color>
-         </brush>
-        </colorrole>
-       </disabled>
-      </palette>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>20</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Host A Lobby</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_2">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>68</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
        <property name="palette">
         <palette>
          <active>
@@ -170,68 +134,26 @@
        </property>
        <property name="font">
         <font>
-         <pointsize>15</pointsize>
+         <pointsize>20</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>IP Address</string>
+        <string>Host a new Lobby?</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="ipEdit"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_3">
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>238</red>
-             <green>238</green>
-             <blue>236</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>238</red>
-             <green>238</green>
-             <blue>236</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>190</red>
-             <green>190</green>
-             <blue>190</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
+      <spacer name="horizontalSpacer_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="font">
-        <font>
-         <pointsize>15</pointsize>
-        </font>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>68</width>
+         <height>20</height>
+        </size>
        </property>
-       <property name="text">
-        <string>Port</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="portEdit"/>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -253,7 +175,7 @@
      <item>
       <widget class="QPushButton" name="joinButton">
        <property name="text">
-        <string>Join</string>
+        <string>Host</string>
        </property>
       </widget>
      </item>

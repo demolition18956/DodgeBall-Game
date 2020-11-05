@@ -10,13 +10,6 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     back = false;
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
-    QRegularExpression ipInput ("[0-9]{1,3}[.]{1}[0-9]{1,3}[.]{1}[0-9]{1,3}[.]{1}[0-9]{1,3}");
-    QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(ipInput, ui->ipEdit);
-    ui->ipEdit->setValidator(ipValidator);
-
-    QRegularExpression portInput ("[0-9]{1,5}");
-    QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
-    ui->portEdit->setValidator(portValidator);
 }
 
 HostLobbyDialog::~HostLobbyDialog()
