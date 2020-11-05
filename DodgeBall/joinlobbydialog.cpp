@@ -47,8 +47,10 @@ void JoinLobbyDialog::join()
 
     ipAdress = ui->ipEdit->text();
     portNumber = ui->portEdit->text();
+    int portNumber_int = portNumber.toInt();
 
     socket = new QUdpSocket;
-
+    socket->bind(QHostAddress::AnyIPv4, portNumber_int, QUdpSocket::ShareAddress);
+    socket->joinMulticastGroup(QHostAddress(ipAdress));
 
 }

@@ -1,5 +1,6 @@
 #include "hostlobbydialog.h"
 #include "ui_hostlobbydialog.h"
+#include "lobby.h"
 #include <QRegularExpressionValidator>
 #include <QHostAddress>
 #include <QNetworkInterface>
@@ -12,6 +13,8 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     ui->setupUi(this);
     back = false;
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    connect(ui->joinButton, SIGNAL(clicked()), this, SLOT(createLobby()));
+/*
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
     qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
     for (const QHostAddress &address: QNetworkInterface::allAddresses()) {
@@ -22,7 +25,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     hostUDP->bind(5678);
     hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p2"));
 
-    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage()));
+    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage())); */
 }
 
 HostLobbyDialog::~HostLobbyDialog()
@@ -44,7 +47,13 @@ void HostLobbyDialog::setBool(bool value){
     back = value;
 }
 
-void HostLobbyDialog::processMessage(){
+void HostLobbyDialog::createLobby(){
+    lobby *gameLobby = new lobby;
+    this->hide();
+    gameLobby->show();
+}
+
+/*void HostLobbyDialog::processMessage(){
     QByteArray datagram;
 
         while (hostUDP->hasPendingDatagrams())
@@ -58,4 +67,4 @@ void HostLobbyDialog::processMessage(){
 
         msg = in.readLine();
         qDebug() << msg;
-}
+}*/

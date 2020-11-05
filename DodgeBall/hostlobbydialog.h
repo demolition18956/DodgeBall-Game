@@ -27,7 +27,8 @@ private:
 
 private slots:
     void cancel();
-    void processMessage();
+    //void processMessage();
+    void createLobby();
 
 };
 

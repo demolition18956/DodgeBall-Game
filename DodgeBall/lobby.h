@@ -2,6 +2,10 @@
 #define LOBBY_H
 
 #include <QMainWindow>
+#include <QHostAddress>
+#include <QNetworkInterface>
+#include <QtDebug>
+#include <QUdpSocket>
 
 namespace Ui {
 class lobby;
@@ -17,6 +21,10 @@ public:
 
 private:
     Ui::lobby *ui;
+    QUdpSocket* hostUDP;
+
+private slots:
+    void processMessage();
 };
 
 #endif // LOBBY_H
