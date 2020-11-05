@@ -1,6 +1,9 @@
 #include "hostlobbydialog.h"
 #include "ui_hostlobbydialog.h"
 #include <QRegularExpressionValidator>
+#include <QHostAddress>
+#include <QNetworkInterface>
+#include <QtDebug>
 
 HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     QDialog(parent),
@@ -9,7 +12,17 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     ui->setupUi(this);
     back = false;
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
+    qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
+    for (const QHostAddress &address: QNetworkInterface::allAddresses()) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
+             qDebug() << address.toString();
+    }
+    hostUDP = new QUdpSocket(this);
+    hostUDP->bind(5678);
+    hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p2"));
 
+    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage()));
 }
 
 HostLobbyDialog::~HostLobbyDialog()
@@ -29,4 +42,20 @@ bool HostLobbyDialog::getBool(){
 
 void HostLobbyDialog::setBool(bool value){
     back = value;
+}
+
+void HostLobbyDialog::processMessage(){
+    QByteArray datagram;
+
+        while (hostUDP->hasPendingDatagrams())
+        {
+            datagram.resize(hostUDP->pendingDatagramSize());
+            hostUDP->readDatagram(datagram.data(), datagram.size());
+        }
+
+        QString msg;
+        QTextStream in(&datagram, QIODevice::ReadOnly);
+
+        msg = in.readLine();
+        qDebug() << msg;
 }

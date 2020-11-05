@@ -2,6 +2,7 @@
 #define HOSTLOBBYDIALOG_H
 
 #include <QDialog>
+#include <QUdpSocket>
 
 namespace Ui {
 class HostLobbyDialog;
@@ -21,10 +22,12 @@ public:
 private:
     Ui::HostLobbyDialog *ui;
     bool back; //variable to show the main window again if hosting is cancelled
+    QUdpSocket* hostUDP;
 
 
 private slots:
     void cancel();
+    void processMessage();
 
 };
 
