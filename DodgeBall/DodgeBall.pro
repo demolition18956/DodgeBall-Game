@@ -27,14 +27,18 @@ CONFIG += c++11
 SOURCES += \
         hostlobbydialog.cpp \
         joinlobbydialog.cpp \
+        lobby.cpp \
         main.cpp \
         mainwindow.cpp \
+        player.cpp \
         quitdialog.cpp
 
 HEADERS += \
         hostlobbydialog.h \
         joinlobbydialog.h \
+    lobby.h \
         mainwindow.h \
+    player.h \
         quitdialog.h \
 
 FORMS += \
