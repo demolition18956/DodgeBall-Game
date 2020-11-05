@@ -2,6 +2,7 @@
 #define JOINLOBBYDIALOG_H
 
 #include <QDialog>
+#include <QUdpSocket>
 
 namespace Ui {
 class JoinLobbyDialog;
@@ -21,8 +22,11 @@ public:
 private:
     Ui::JoinLobbyDialog *ui;
     bool back;
+    QUdpSocket* socket;
+
 private slots:
     void cancel();
+    void join();
 };
 
 #endif // JOINLOBBYDIALOG_H

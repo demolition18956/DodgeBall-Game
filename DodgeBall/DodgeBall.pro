@@ -44,6 +44,7 @@ HEADERS += \
 FORMS += \
         hostlobbydialog.ui \
         joinlobbydialog.ui \
+        lobby.ui \
         mainwindow.ui \
         quitdialog.ui
 

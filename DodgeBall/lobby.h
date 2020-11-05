@@ -3,15 +3,20 @@
 
 #include <QMainWindow>
 
+namespace Ui {
+class lobby;
+}
+
 class lobby : public QMainWindow
 {
     Q_OBJECT
+
 public:
     explicit lobby(QWidget *parent = nullptr);
+    ~lobby();
 
-signals:
-
-public slots:
+private:
+    Ui::lobby *ui;
 };
 
 #endif // LOBBY_H

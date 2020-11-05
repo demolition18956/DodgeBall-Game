@@ -1,6 +1,7 @@
 #include "joinlobbydialog.h"
 #include "ui_joinlobbydialog.h"
 #include <QRegularExpressionValidator>
+#include <QUdpSocket>
 
 JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     QDialog(parent),
@@ -16,6 +17,8 @@ JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);
+
+    connect(ui->joinButton, SIGNAL(clicked()), this, SLOT(join()));
 }
 
 JoinLobbyDialog::~JoinLobbyDialog()
@@ -35,4 +38,15 @@ bool JoinLobbyDialog::getBool(){
 
 void JoinLobbyDialog::setBool(bool value){
     back = value;
+}
+
+void JoinLobbyDialog::join()
+{
+    QString ipAdress;
+    QString portNumber;
+
+    ipAdress = ui->ipEdit->text();
+    portNumber = ui->portEdit->text();
+
+    socket = new QUdpSocket;
 }

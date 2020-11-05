@@ -22,6 +22,7 @@ private:
     Ui::HostLobbyDialog *ui;
     bool back; //variable to show the main window again if hosting is cancelled
 
+
 private slots:
     void cancel();
 
