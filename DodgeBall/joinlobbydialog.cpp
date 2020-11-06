@@ -42,15 +42,15 @@ void JoinLobbyDialog::setBool(bool value){
 
 void JoinLobbyDialog::join()
 {
-    QString ipAdress;
+    QString ipAddress;
     QString portNumber;
 
-    ipAdress = ui->ipEdit->text();
+    ipAddress = ui->ipEdit->text();
     portNumber = ui->portEdit->text();
     int portNumber_int = portNumber.toInt();
 
     socket = new QUdpSocket;
-    socket->bind(QHostAddress::AnyIPv4, portNumber_int, QUdpSocket::ShareAddress);
-    socket->joinMulticastGroup(QHostAddress(ipAdress));
+    socket->bind(QHostAddress::AnyIPv4, portNumber_int,QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress);
+    socket->joinMulticastGroup(QHostAddress(ipAddress));
 
 }

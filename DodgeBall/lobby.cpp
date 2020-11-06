@@ -16,9 +16,10 @@ lobby::lobby(QWidget *parent) :
     }
     hostUDP = new QUdpSocket(this);
     hostUDP->bind(5678);
-    hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p2"));
+    hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p1"));
 
     connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage()));
+
 }
 
 lobby::~lobby()
