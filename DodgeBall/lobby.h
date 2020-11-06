@@ -24,7 +24,6 @@ private:
     QUdpSocket* hostUDP;
 
 private slots:
-    void processMessage();
 };
 
 #endif // LOBBY_H
