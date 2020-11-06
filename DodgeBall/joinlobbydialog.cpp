@@ -54,3 +54,17 @@ void JoinLobbyDialog::join()
     socket->joinMulticastGroup(QHostAddress(ipAddress));
 
 }
+
+void JoinLobbyDialog::sendMessage(){
+    QByteArray datagram;
+
+        QTextStream out(&datagram, QIODevice::WriteOnly);
+
+
+        QString msg = ui->testEdit->text();
+        ui->testEdit->setText("");
+
+        qDebug() << msg;
+
+       socket->writeDatagram(datagram, QHostAddress::LocalHost, 5678);
+}

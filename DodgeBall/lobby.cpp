@@ -40,5 +40,6 @@ void lobby::processMessage(){
         QTextStream in(&datagram, QIODevice::ReadOnly);
 
         msg = in.readLine();*/
-        qDebug() << "A payer has joined";
+        qDebug() << "A player has joined";
 }
+

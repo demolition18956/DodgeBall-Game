@@ -24,9 +24,11 @@ private:
     bool back;
     QUdpSocket* socket;
 
+
 private slots:
     void cancel();
     void join();
+    void sendMessage();
 };
 
 #endif // JOINLOBBYDIALOG_H
