@@ -14,7 +14,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     back = false;
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
     connect(ui->joinButton, SIGNAL(clicked()), this, SLOT(createLobby()));
-/*
+
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
     qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
     for (const QHostAddress &address: QNetworkInterface::allAddresses()) {
@@ -25,7 +25,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     hostUDP->bind(5678);
     hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p2"));
 
-    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage())); */
+    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage()));
 }
 
 HostLobbyDialog::~HostLobbyDialog()
@@ -53,7 +53,7 @@ void HostLobbyDialog::createLobby(){
     gameLobby->show();
 }
 
-/*void HostLobbyDialog::processMessage(){
+void HostLobbyDialog::processMessage(){
     QByteArray datagram;
 
         while (hostUDP->hasPendingDatagrams())
@@ -67,4 +67,4 @@ void HostLobbyDialog::createLobby(){
 
         msg = in.readLine();
         qDebug() << msg;
-}*/
+}
