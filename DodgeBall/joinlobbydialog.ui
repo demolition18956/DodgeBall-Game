@@ -79,9 +79,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QLineEdit" name="testEdit"/>
-   </item>
-   <item>
     <widget class="QLabel" name="label_3">
      <property name="palette">
       <palette>

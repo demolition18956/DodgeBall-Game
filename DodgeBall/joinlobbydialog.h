@@ -28,7 +28,7 @@ private:
 private slots:
     void cancel();
     void join();
-    void sendMessage();
+
 };
 
 #endif // JOINLOBBYDIALOG_H
