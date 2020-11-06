@@ -52,6 +52,11 @@ void JoinLobbyDialog::join()
     socket = new QUdpSocket;
     socket->bind(QHostAddress::AnyIPv4, portNumber_int, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress);
     socket->joinMulticastGroup(QHostAddress(ipAddress));
+    QString msg = "Hello";
+    QByteArray datagram;
+    QTextStream out(&datagram, QIODevice::WriteOnly);
+    out << msg << endl;
+    socket->writeDatagram(datagram, QHostAddress(ipAddress),portNumber_int);
 
 }
 
