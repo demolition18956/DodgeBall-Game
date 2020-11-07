@@ -44,7 +44,7 @@ void HostLobbyDialog::setBool(bool value){
 }
 
 void HostLobbyDialog::createLobby(){
-    lobby *gameLobby = new lobby;
+    lobby *gameLobby = new lobby(true);
     GameServer *server = new GameServer;
     this->hide();
     gameLobby->show();

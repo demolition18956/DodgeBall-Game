@@ -34,8 +34,20 @@ void GameServer::ProcessNewConnections()
                 QTcpSocket* sock = nextPendingConnection();
                 players[i] = new Player();
                 players[i]->setSocket(sock);
+                playerCount++;
+                QByteArray ba;
+                ba.setNum(1);   // 1 for Accepted
+                players[i]->getSocket()->write(ba);
                 break;
             }
         }
+    }
+}
+
+GameServer::~GameServer()
+{
+    for(int i=0;i<6;i++)
+    {
+        delete players[i];
     }
 }

@@ -39,3 +39,13 @@ void Player::setSocket(QTcpSocket *sock)
 {
     socket = sock;
 }
+
+bool Player::isHost()
+{
+    return host;
+}
+
+Player::~Player()
+{
+    delete socket;
+}

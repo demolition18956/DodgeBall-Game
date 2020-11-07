@@ -21,6 +21,7 @@ public:
     GameServer();
     int GetPlayerCount();
     bool isInLobby();
+    ~GameServer();
 
 signals:
     void AllReady();   // emitted when all players are ready

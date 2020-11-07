@@ -5,7 +5,7 @@
 #include <QHostAddress>
 #include <QNetworkInterface>
 #include <QtDebug>
-#include <QUdpSocket>
+#include <QTcpSocket>
 
 namespace Ui {
 class lobby;
@@ -16,13 +16,15 @@ class lobby : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit lobby(QWidget *parent = nullptr);
+    explicit lobby(bool host_,QWidget *parent = nullptr);
     ~lobby();
+    QTcpSocket socket;
+    bool isHost();
 
 private:
     Ui::lobby *ui;
-    QUdpSocket* hostUDP;
     QString playerName;
+    bool host;
 
 private slots:
     void processMessage();

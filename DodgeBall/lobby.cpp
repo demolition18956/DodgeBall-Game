@@ -3,7 +3,7 @@
 
 
 
-lobby::lobby(QWidget *parent) :
+lobby::lobby(bool host_,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::lobby)
 {
@@ -14,7 +14,7 @@ lobby::lobby(QWidget *parent) :
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
              qDebug() << address.toString();
     }
-
+    host = host_;
 }
 
 lobby::~lobby()
@@ -25,16 +25,15 @@ lobby::~lobby()
 void lobby::processMessage(){
     QByteArray datagram;
 
-        while (hostUDP->hasPendingDatagrams())
-        {
-            datagram.resize(hostUDP->pendingDatagramSize());
-            hostUDP->readDatagram(datagram.data(), datagram.size());
-        }
+    QString msg;
+    QTextStream in(&datagram, QIODevice::ReadOnly);
 
-        QString msg;
-        QTextStream in(&datagram, QIODevice::ReadOnly);
+    msg = in.readAll();
+    qDebug() << msg << "A player has joined";
+}
 
-        msg = in.readAll();
-        qDebug() << msg << "A player has joined";
+bool lobby::isHost()
+{
+    return host;
 }
 
