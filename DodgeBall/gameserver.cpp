@@ -1,5 +1,6 @@
 #include "gameserver.h"
 #include <QTcpSocket>
+#include <QByteArray>
 
 GameServer::GameServer()
 {
@@ -14,7 +15,12 @@ void GameServer::ProcessNewConnections()
     {
         if(playerCount >= 6)
         {
-            // reject connection code here
+            QTcpSocket* sock = nextPendingConnection();
+            QByteArray ba;
+            ba.setNum(0);   // 0 for Rejected
+            sock->write(ba);
+            sock->abort();
+            delete sock;
             return;
         }
         for(int i=0;i<6;i++)
@@ -25,8 +31,10 @@ void GameServer::ProcessNewConnections()
             }
             else
             {
-                //QTcpSocket* sock = nextPendingConnection();
-               // players[i] = new Player();
+                QTcpSocket* sock = nextPendingConnection();
+                players[i] = new Player();
+                players[i]->setSocket(sock);
+                break;
             }
         }
     }

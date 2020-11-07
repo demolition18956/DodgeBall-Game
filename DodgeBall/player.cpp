@@ -34,3 +34,8 @@ QTcpSocket* Player::getSocket()
 {
     return socket;
 }
+
+void Player::setSocket(QTcpSocket *sock)
+{
+    socket = sock;
+}

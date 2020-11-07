@@ -21,6 +21,7 @@ public:
     bool isReady();
     bool isHoldingBall();
     QTcpSocket* getSocket();
+    void setSocket(QTcpSocket* sock);
 };
 
 #endif // PLAYER_H
