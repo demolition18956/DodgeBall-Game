@@ -14,11 +14,6 @@ lobby::lobby(QWidget *parent) :
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
              qDebug() << address.toString();
     }
-    hostUDP = new QUdpSocket(this);
-    hostUDP->bind(QHostAddress(QHostAddress::AnyIPv4),5678);
-    hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p1"));
-
-    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage()));
 
 }
 

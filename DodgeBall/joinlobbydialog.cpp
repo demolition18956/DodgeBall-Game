@@ -1,7 +1,6 @@
 #include "joinlobbydialog.h"
 #include "ui_joinlobbydialog.h"
 #include <QRegularExpressionValidator>
-#include <QUdpSocket>
 
 JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     QDialog(parent),
@@ -10,10 +9,12 @@ JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
+    ui->ipEdit->setText("146.229.162.184");
     QRegularExpression ipInput ("[0-9]{1,3}[.]{1}[0-9]{1,3}[.]{1}[0-9]{1,3}[.]{1}[0-9]{1,3}");
     QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(ipInput, ui->ipEdit);
     ui->ipEdit->setValidator(ipValidator);
 
+    ui->portEdit->setText("5678");
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);
@@ -48,15 +49,6 @@ void JoinLobbyDialog::join()
     ipAddress = ui->ipEdit->text();
     portNumber = ui->portEdit->text();
     int portNumber_int = portNumber.toInt();
-
-    socket = new QUdpSocket;
-    socket->bind(QHostAddress::AnyIPv4, portNumber_int, QUdpSocket::ReuseAddressHint|QUdpSocket::ShareAddress);
-    socket->joinMulticastGroup(QHostAddress(ipAddress));
-    QString msg = "Hello";
-    QByteArray datagram;
-    QTextStream out(&datagram, QIODevice::WriteOnly);
-    out << msg << endl;
-    socket->writeDatagram(datagram, QHostAddress(ipAddress),portNumber_int);
 
 }
 

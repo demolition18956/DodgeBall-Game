@@ -2,6 +2,7 @@
 #define HOSTLOBBYDIALOG_H
 
 #include <QDialog>
+#include "gameserver.h"
 #include <QUdpSocket>
 
 namespace Ui {

@@ -22,6 +22,7 @@ public:
 private:
     Ui::lobby *ui;
     QUdpSocket* hostUDP;
+    QString playerName;
 
 private slots:
     void processMessage();

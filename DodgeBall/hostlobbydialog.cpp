@@ -21,11 +21,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
              qDebug() << address.toString();
     }
-    hostUDP = new QUdpSocket(this);
-    hostUDP->bind(5678);
-    hostUDP->setMulticastInterface(QNetworkInterface::interfaceFromName("p6p2"));
 
-    connect(hostUDP, SIGNAL(readyRead()), this, SLOT(processMessage()));
 }
 
 HostLobbyDialog::~HostLobbyDialog()
@@ -49,6 +45,7 @@ void HostLobbyDialog::setBool(bool value){
 
 void HostLobbyDialog::createLobby(){
     lobby *gameLobby = new lobby;
+    GameServer *server = new GameServer;
     this->hide();
     gameLobby->show();
 }
