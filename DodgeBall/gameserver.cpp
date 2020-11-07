@@ -25,7 +25,8 @@ void GameServer::ProcessNewConnections()
             }
             else
             {
-                players[i] = new Player();
+                //QTcpSocket* sock = nextPendingConnection();
+               // players[i] = new Player();
             }
         }
     }

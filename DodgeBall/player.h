@@ -1,17 +1,24 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QMainWindow>
-#include <QUdpSocket>
-class player : public QMainWindow
+#include <QTcpSocket>
+
+class Player : public QTcpSocket
 {
-    Q_OBJECT
+
+private:
+    int x;   // the player's position
+    int y;
+    bool ready;   // is the player ready?
+    bool hasBall;   // is the player holding a ball?
+    void setReady(bool flag);
+
 public:
-    explicit player(QWidget *parent = nullptr);
-
-signals:
-
-public slots:
+    Player();
+    int GetX();
+    int GetY();
+    bool isReady();
+    bool isHoldingBall();
 };
 
 #endif // PLAYER_H
