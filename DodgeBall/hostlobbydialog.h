@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "gameserver.h"
-#include <QUdpSocket>
+#include <QTcpSocket>
 
 namespace Ui {
 class HostLobbyDialog;
@@ -23,13 +23,16 @@ public:
 private:
     Ui::HostLobbyDialog *ui;
     bool back; //variable to show the main window again if hosting is cancelled
-    QUdpSocket* hostUDP;
+    QTcpSocket* socket;
 
 
 private slots:
     void cancel();
     void processMessage();
     void createLobby();
+
+signals:
+    void hostNew();
 
 };
 

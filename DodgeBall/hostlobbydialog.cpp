@@ -44,24 +44,18 @@ void HostLobbyDialog::setBool(bool value){
 }
 
 void HostLobbyDialog::createLobby(){
-    lobby *gameLobby = new lobby(true);
-    GameServer *server = new GameServer;
+//    lobby *gameLobby = new lobby(true);
+//    GameServer *server = new GameServer;
+    emit hostNew();
     this->hide();
-    gameLobby->show();
 }
 
 void HostLobbyDialog::processMessage(){
     QByteArray datagram;
 
-        while (hostUDP->hasPendingDatagrams())
-        {
-            datagram.resize(hostUDP->pendingDatagramSize());
-            hostUDP->readDatagram(datagram.data(), datagram.size());
-        }
+    QString msg;
+    QTextStream in(&datagram, QIODevice::ReadOnly);
 
-        QString msg;
-        QTextStream in(&datagram, QIODevice::ReadOnly);
-
-        msg = in.readLine();
-        qDebug() << msg;
+    msg = in.readLine();
+    qDebug() << msg;
 }

@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->mainjoinbutton, SIGNAL(pressed()), this, SLOT(joinFunc()));
     connect(ui->mainexitbutton, SIGNAL(pressed()), this, SLOT(exitFunc()));
     connect(quitDialog, SIGNAL(quit()), this, SLOT(exit()));
+    connect(hostDialog, SIGNAL(hostNew()), this, SLOT(hostNew()));
 }
 
 MainWindow::~MainWindow()
@@ -21,6 +22,8 @@ MainWindow::~MainWindow()
     delete quitDialog;
     delete hostDialog;
     delete joinDialog;
+    delete gameLobby;
+    delete server;
 }
 
 void MainWindow::hostFunc(){
@@ -53,4 +56,11 @@ void MainWindow::exit()
 {
     quitDialog->close();
     this->close();
+}
+
+void MainWindow::hostNew()
+{
+    gameLobby = new lobby(true);
+    server = new GameServer();
+    gameLobby->show();
 }

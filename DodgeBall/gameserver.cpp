@@ -5,7 +5,7 @@
 GameServer::GameServer()
 {
     setMaxPendingConnections(6);
-    connect(this, SIGNAL(newConnection()),this, SLOT(ProcessNewConnections()));
+    connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
     listen(QHostAddress::Any,5678);
 }
 

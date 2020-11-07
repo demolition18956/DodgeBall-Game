@@ -7,6 +7,8 @@
 #include <quitdialog.h>
 #include <hostlobbydialog.h>
 #include <joinlobbydialog.h>
+#include <lobby.h>
+#include <gameserver.h>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +23,7 @@ public:
     ~MainWindow();
 
 public slots:
+    void hostNew();
     void hostFunc();
     void joinFunc();
     void exitFunc();
@@ -33,6 +36,8 @@ private:
     QuitDialog *quitDialog;
     HostLobbyDialog *hostDialog;
     JoinLobbyDialog *joinDialog;
+    GameServer* server;
+    lobby* gameLobby;
 };
 
 #endif // MAINWINDOW_H
