@@ -29,3 +29,8 @@ void Player::setReady(bool flag)
 {
     ready = flag;
 }
+
+QTcpSocket* Player::getSocket()
+{
+    return socket;
+}

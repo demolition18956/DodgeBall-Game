@@ -19,7 +19,7 @@ void GameServer::ProcessNewConnections()
         }
         for(int i=0;i<6;i++)
         {
-            if(players[i])
+            if(players[i]->getSocket())
             {
                 continue;   // this player slot is already taken
             }

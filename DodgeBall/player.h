@@ -3,10 +3,11 @@
 
 #include <QTcpSocket>
 
-class Player : public QTcpSocket
+class Player
 {
 
 private:
+    QTcpSocket* socket;
     int x;   // the player's position
     int y;
     bool ready;   // is the player ready?
@@ -19,6 +20,7 @@ public:
     int GetY();
     bool isReady();
     bool isHoldingBall();
+    QTcpSocket* getSocket();
 };
 
 #endif // PLAYER_H
