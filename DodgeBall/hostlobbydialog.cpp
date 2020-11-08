@@ -31,8 +31,9 @@ HostLobbyDialog::~HostLobbyDialog()
 
 void HostLobbyDialog::cancel()
 {
-    this->close();
-    setBool(true);
+//    this->close();
+//    setBool(true);
+    emit backToMain(0);
 }
 
 bool HostLobbyDialog::getBool(){
