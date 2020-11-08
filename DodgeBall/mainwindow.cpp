@@ -9,11 +9,15 @@ MainWindow::MainWindow(QWidget *parent) :
     quitDialog = new QuitDialog(this);
     hostDialog = new HostLobbyDialog(this);
     joinDialog = new JoinLobbyDialog(this);
+    ui->stackedWidget->addWidget(hostDialog);
+    ui->stackedWidget->addWidget(joinDialog);
     connect(ui->mainhostbutton, SIGNAL(pressed()), this, SLOT(hostFunc()));
     connect(ui->mainjoinbutton, SIGNAL(pressed()), this, SLOT(joinFunc()));
     connect(ui->mainexitbutton, SIGNAL(pressed()), this, SLOT(exitFunc()));
     connect(quitDialog, SIGNAL(quit()), this, SLOT(exit()));
     connect(hostDialog, SIGNAL(hostNew()), this, SLOT(hostNew()));
+    connect(joinDialog, SIGNAL(backToMain(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
+    connect(hostDialog, SIGNAL(backToMain(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
 }
 
 MainWindow::~MainWindow()
@@ -28,22 +32,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::hostFunc(){
     qDebug("Host");
-    this->hide();
-    hostDialog->exec();
+//    this->hide();
+//    hostDialog->exec();
 
-    if(hostDialog->getBool()){
-        this->show();
-    }
+//    if(hostDialog->getBool()){
+//        this->show();
+//    }
+    ui->stackedWidget->setCurrentWidget(hostDialog);
 }
 
 void MainWindow::joinFunc(){
-    qDebug("Join");
-    this->hide();
-    joinDialog->exec();
+//    qDebug("Join");
+//    this->hide();
+//    joinDialog->exec();
 
-    if(joinDialog->getBool()){
-        this->show();
-    }
+//    if(joinDialog->getBool()){
+//        this->show();
+//    }
+    ui->stackedWidget->setCurrentWidget(joinDialog);
 
 }
 

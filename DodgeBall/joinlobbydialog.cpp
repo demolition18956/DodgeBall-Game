@@ -29,8 +29,9 @@ JoinLobbyDialog::~JoinLobbyDialog()
 
 void JoinLobbyDialog::cancel()
 {
-    this->close();
-    setBool(true);
+//    this->close();
+//    setBool(true);
+    emit backToMain(0);
 }
 
 bool JoinLobbyDialog::getBool(){
@@ -51,4 +52,5 @@ void JoinLobbyDialog::join()
     int portNumber_int = portNumber.toInt();
 
 }
+
 

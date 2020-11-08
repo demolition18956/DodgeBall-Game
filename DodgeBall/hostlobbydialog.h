@@ -30,6 +30,7 @@ private slots:
 
 signals:
     void hostNew();
+    void backToMain(int index);
 
 };
 

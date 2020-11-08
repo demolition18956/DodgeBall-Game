@@ -24,6 +24,9 @@ private:
     bool back;
     QUdpSocket* socket;
 
+signals:
+    void backToMain(int index);
+
 
 private slots:
     void cancel();

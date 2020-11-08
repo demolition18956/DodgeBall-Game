@@ -44,7 +44,7 @@ void HostLobbyDialog::setBool(bool value){
 }
 
 void HostLobbyDialog::createLobby(){
-    this->hide();
+//    this->hide();
     emit hostNew();   // creation of lobby and server object handled in MainWindow
 }
 
