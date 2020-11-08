@@ -44,18 +44,7 @@ void HostLobbyDialog::setBool(bool value){
 }
 
 void HostLobbyDialog::createLobby(){
-//    lobby *gameLobby = new lobby(true);
-//    GameServer *server = new GameServer;
-    emit hostNew();
     this->hide();
+    emit hostNew();   // creation of lobby and server object handled in MainWindow
 }
 
-void HostLobbyDialog::processMessage(){
-    QByteArray datagram;
-
-    QString msg;
-    QTextStream in(&datagram, QIODevice::ReadOnly);
-
-    msg = in.readLine();
-    qDebug() << msg;
-}

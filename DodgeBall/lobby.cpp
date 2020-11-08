@@ -15,6 +15,15 @@ lobby::lobby(bool host_,QWidget *parent) :
              qDebug() << address.toString();
     }
     host = host_;
+    if(host ==  true)   // if player is the host
+    {
+        socket.connectToHost(QHostAddress::LocalHost,5678);   // open tcp socket on local machine (where server should be running)
+    }
+    else
+    {
+        // non-host connection
+    }
+    connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
 }
 
 lobby::~lobby()
@@ -37,3 +46,32 @@ bool lobby::isHost()
     return host;
 }
 
+void lobby::initialConnect()
+{
+    if(!socket.waitForReadyRead(5000))
+    {
+        qDebug() << "never got a message!";
+    }
+    else
+    {
+        QTextStream incoming(&socket);
+        QString msg;
+        incoming >> msg;
+        qDebug() << socket.bytesAvailable();
+        qDebug() << msg;
+        int data = msg.toInt();
+        if(data == 1)
+        {
+            qDebug() << "connection accepted!";
+        }
+        else if(data == 0)
+        {
+            qDebug() << "connection refused!";
+            socket.abort();
+        }
+        else
+        {
+            qDebug() << "something went wrong!";
+        }
+    }
+}

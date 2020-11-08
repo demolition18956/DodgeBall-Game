@@ -18,16 +18,17 @@ class lobby : public QMainWindow
 public:
     explicit lobby(bool host_,QWidget *parent = nullptr);
     ~lobby();
-    QTcpSocket socket;
     bool isHost();
 
 private:
     Ui::lobby *ui;
     QString playerName;
-    bool host;
+    bool host;   // is the player the host?
+    QTcpSocket socket;
 
 private slots:
     void processMessage();
+    void initialConnect();
 };
 
 #endif // LOBBY_H

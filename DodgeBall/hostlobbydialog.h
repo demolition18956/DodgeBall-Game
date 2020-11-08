@@ -23,12 +23,9 @@ public:
 private:
     Ui::HostLobbyDialog *ui;
     bool back; //variable to show the main window again if hosting is cancelled
-    QTcpSocket* socket;
-
 
 private slots:
     void cancel();
-    void processMessage();
     void createLobby();
 
 signals:

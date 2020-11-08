@@ -7,12 +7,18 @@ GameServer::GameServer()
     setMaxPendingConnections(6);
     connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
     listen(QHostAddress::Any,5678);
+    playerCount = 0;
+    for(int i=0;i<6;i++)
+    {
+        players[i] = new Player();
+    }
 }
 
 void GameServer::ProcessNewConnections()
 {
     while(hasPendingConnections())
     {
+        qDebug() << "processing incoming connection";
         if(playerCount >= 6)
         {
             QTcpSocket* sock = nextPendingConnection();
@@ -21,10 +27,12 @@ void GameServer::ProcessNewConnections()
             sock->write(ba);
             sock->abort();
             delete sock;
+            qDebug() << "player rejected!";
             return;
         }
         for(int i=0;i<6;i++)
         {
+            qDebug() << "getting socket";
             if(players[i]->getSocket())
             {
                 continue;   // this player slot is already taken
@@ -32,12 +40,11 @@ void GameServer::ProcessNewConnections()
             else
             {
                 QTcpSocket* sock = nextPendingConnection();
-                players[i] = new Player();
                 players[i]->setSocket(sock);
+                players[i]->getSocket()->write("1");
                 playerCount++;
-                QByteArray ba;
-                ba.setNum(1);   // 1 for Accepted
-                players[i]->getSocket()->write(ba);
+
+                qDebug() << "player accepted!";
                 break;
             }
         }
