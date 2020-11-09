@@ -3,6 +3,7 @@
 Player::Player()
 {
     ready = false;
+    socket = new QTcpSocket();
 }
 
 int Player::GetX()
@@ -28,16 +29,6 @@ bool Player::isHoldingBall()
 void Player::setReady(bool flag)
 {
     ready = flag;
-}
-
-QTcpSocket* Player::getSocket()
-{
-    return socket;
-}
-
-void Player::setSocket(QTcpSocket *sock)
-{
-    socket = sock;
 }
 
 bool Player::isHost()

@@ -19,15 +19,14 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     host = host_;
     if(host ==  true)   // if player is the host
     {
-        //socket.connectToHost(QHostAddress::LocalHost,5678);   // open tcp socket on local machine (where server should be running)
-        server = new GameServer;
+        server = new GameServer();
+        socket.connectToHost(ipAddress,portNumber);   // open tcp socket on local machine (where server should be running)
     }
     else
     {
-       socket.connectToHost(ipAddress,portNumber);   // open tcp socket on local machine (where server should be running) // non-host connection
-       connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
+       socket.connectToHost(ipAddress,portNumber);   // non-host connection
     }
-    
+    connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
 }
 
 lobby::~lobby()
@@ -42,7 +41,7 @@ void lobby::processMessage(){
     QTextStream in(&datagram, QIODevice::ReadOnly);
 
     msg = in.readAll();
-    qDebug() << msg << "A player has joined";
+    qDebug() << msg << "HOST: A player has joined";
 }
 
 bool lobby::isHost()
@@ -54,7 +53,7 @@ void lobby::initialConnect()
 {
     if(!socket.waitForReadyRead(5000))
     {
-        qDebug() << "never got a message!";
+        qDebug() << "HOST: never got a message!";
     }
     else
     {
@@ -66,16 +65,16 @@ void lobby::initialConnect()
         int data = msg.toInt();
         if(data == 1)
         {
-            qDebug() << "connection accepted!";
+            qDebug() << "HOST: connection accepted!";
         }
         else if(data == 0)
         {
-            qDebug() << "connection refused!";
+            qDebug() << "HOST: connection refused!";
             socket.abort();
         }
         else
         {
-            qDebug() << "something went wrong!";
+            qDebug() << "HOST: something went wrong!";
         }
     }
 }

@@ -24,34 +24,36 @@ void GameServer::ProcessNewConnections()
 {
     while(hasPendingConnections())
     {
-        qDebug() << "processing incoming connection";
+        qDebug() << "SERVER: processing incoming connection";
         if(playerCount >= 6)
         {
             QTcpSocket* sock = nextPendingConnection();
-            QByteArray ba;
-            ba.setNum(0);   // 0 for Rejected
-            sock->write(ba);
+            sock->write("0");   // 0 for Rejected
             sock->abort();
             delete sock;
-            qDebug() << "player rejected!";
+            qDebug() << "SERVER: player rejected!";
             return;
         }
         for(int i=0;i<6;i++)
         {
-            qDebug() << "getting socket";
-            if(players[i]->getSocket())
+            qDebug() << "SERVER: getting socket";
+            if(players[i]->socket->state() == QAbstractSocket::ConnectedState)
             {
                 continue;   // this player slot is already taken
             }
             else
             {
                 QTcpSocket* sock = nextPendingConnection();
-                players[i]->setSocket(sock);
-                players[i]->getSocket()->write("1");
+                QByteArray ba;
+                ba.append("1");
+                sock->write(ba);
+                //delete players[i]->socket;
+                //players[i]->socket = sock;
+                //players[i]->socket->write("1");   // 1 for Accepted
                 playerCount++;
                 
 
-                qDebug() << "player accepted!";
+                qDebug() << "SERVER: player accepted!";
                 break;
             }
         }

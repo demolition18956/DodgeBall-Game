@@ -7,7 +7,6 @@ class Player
 {
 
 private:
-    QTcpSocket* socket;
     int x;   // the player's position
     int y;
     bool ready;   // is the player ready?
@@ -17,12 +16,11 @@ private:
 
 public:
     Player();
+    QTcpSocket* socket;
     int GetX();
     int GetY();
     bool isReady();
     bool isHoldingBall();
-    QTcpSocket* getSocket();
-    void setSocket(QTcpSocket* sock);
     bool isHost();
     ~Player();
 };
