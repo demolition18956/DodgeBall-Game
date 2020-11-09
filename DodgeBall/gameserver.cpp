@@ -7,10 +7,10 @@ GameServer::GameServer()
     setMaxPendingConnections(6);
     connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
     if(!this->listen(QHostAddress::Any,5678)){
-        qDebug() << "Could not start server";
+        qDebug() << "SERVER: Could not start server";
     }
     else{
-        qDebug() << "Listening";
+        qDebug() << "SERVER: Listening";
     }
     
     playerCount = 0;
@@ -43,16 +43,12 @@ void GameServer::ProcessNewConnections()
             }
             else
             {
-                QTcpSocket* sock = nextPendingConnection();
-                QByteArray ba;
-                ba.append("1");
-                sock->write(ba);
-                //delete players[i]->socket;
-                //players[i]->socket = sock;
-                //players[i]->socket->write("1");   // 1 for Accepted
+                QTcpSocket* sock = this->nextPendingConnection();
+                delete players[i]->socket;
+                players[i]->socket = sock;
+                players[i]->socket->write("1");   // 1 for Accepted
+                players[i]->socket->flush();
                 playerCount++;
-                
-
                 qDebug() << "SERVER: player accepted!";
                 break;
             }

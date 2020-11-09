@@ -42,7 +42,7 @@ void lobby::processMessage(){
     QTextStream in(&datagram, QIODevice::ReadOnly);
 
     msg = in.readAll();
-    qDebug() << msg << "HOST: A player has joined";
+    qDebug() << msg << "CLIENT: A player has joined";
 }
 
 bool lobby::isHost()
@@ -52,32 +52,31 @@ bool lobby::isHost()
 
 void lobby::initialConnect()
 {
-    if(!socket.waitForReadyRead(5000))
-    {
-        qDebug() << "HOST: never got a message!";
-    }
-    else
+    if(socket.waitForReadyRead(5000))
     {
         QTextStream incoming(&socket);
         QString msg;
         incoming >> msg;
-        qDebug() << socket.bytesAvailable();
-        qDebug() << msg;
         int data = msg.toInt();
         if(data == 1)
         {
-            qDebug() << "HOST: connection accepted!";
+            qDebug() << "CLIENT: connection accepted!";
         }
         else if(data == 0)
         {
-            qDebug() << "HOST: connection refused!";
+            qDebug() << "CLIENT: connection refused!";
             socket.abort();
         }
         else
         {
-            qDebug() << "HOST: something went wrong!";
+            qDebug() << "CLIENT: something went wrong!";
         }
     }
+    else
+    {
+        qDebug() << "CLIENT: Never got a message!";
+    }
+
 }
 
 void lobby::playerReady(){
