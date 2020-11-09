@@ -31,7 +31,11 @@ private:
     int portNum;
     GameServer* server;
 
+signals:
+    void ready();
 
+public slots:
+    void playerReady();
 
 private slots:
     void processMessage();

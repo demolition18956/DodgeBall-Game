@@ -8,6 +8,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     ui(new Ui::lobby)
 {
     ui->setupUi(this);
+    connect(ui->readyButton, SIGNAL(pressed()), this, SLOT(playerReady()));
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
     qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
     for (const QHostAddress &address: QNetworkInterface::allAddresses()) {
@@ -77,4 +78,9 @@ void lobby::initialConnect()
             qDebug() << "HOST: something went wrong!";
         }
     }
+}
+
+void lobby::playerReady(){
+    emit ready();
+    qDebug("Player ready");
 }
