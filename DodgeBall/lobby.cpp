@@ -18,6 +18,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     portNum = portNumber;
     address = QHostAddress(ipAddress);
     host = host_;
+    connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
     if(host ==  true)   // if player is the host
     {
         server = new GameServer();
@@ -31,7 +32,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
            qDebug() << "CLIENT: Couldn't Connect";
        }
     }
-    connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
+
 }
 
 lobby::~lobby()
