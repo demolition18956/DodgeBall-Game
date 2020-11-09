@@ -2,6 +2,7 @@
 #define LOBBY_H
 
 #include <QMainWindow>
+#include "gameserver.h"
 #include <QHostAddress>
 #include <QNetworkInterface>
 #include <QtDebug>
@@ -16,7 +17,7 @@ class lobby : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit lobby(bool host_,QWidget *parent = nullptr);
+    explicit lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent = nullptr);
     ~lobby();
     bool isHost();
 
@@ -25,6 +26,12 @@ private:
     QString playerName;
     bool host;   // is the player the host?
     QTcpSocket socket;
+    int playersJoined;
+    QHostAddress address;
+    int portNum;
+    GameServer* server;
+
+
 
 private slots:
     void processMessage();

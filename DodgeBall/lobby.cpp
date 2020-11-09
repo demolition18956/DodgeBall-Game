@@ -3,7 +3,7 @@
 
 
 
-lobby::lobby(bool host_,QWidget *parent) :
+lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::lobby)
 {
@@ -14,16 +14,20 @@ lobby::lobby(bool host_,QWidget *parent) :
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
              qDebug() << address.toString();
     }
+    portNum = portNumber;
+    address = QHostAddress(ipAddress);
     host = host_;
     if(host ==  true)   // if player is the host
     {
-        socket.connectToHost(QHostAddress::LocalHost,5678);   // open tcp socket on local machine (where server should be running)
+        //socket.connectToHost(QHostAddress::LocalHost,5678);   // open tcp socket on local machine (where server should be running)
+        server = new GameServer;
     }
     else
     {
-        // non-host connection
+       socket.connectToHost(ipAddress,portNumber);   // open tcp socket on local machine (where server should be running) // non-host connection
+       connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
     }
-    connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
+    
 }
 
 lobby::~lobby()

@@ -18,7 +18,7 @@ JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);
-
+    
     connect(ui->joinButton, SIGNAL(clicked()), this, SLOT(join()));
 }
 
@@ -50,6 +50,7 @@ void JoinLobbyDialog::join()
     ipAddress = ui->ipEdit->text();
     portNumber = ui->portEdit->text();
     int portNumber_int = portNumber.toInt();
+    emit joinNew(ipAddress, portNumber_int);
 
 }
 

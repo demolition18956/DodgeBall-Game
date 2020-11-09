@@ -25,8 +25,9 @@ public:
 public slots:
     void hostNew();
     void hostFunc();
-    void joinFunc();
+    void joinNew(QString ipAddress, int portNumber);
     void exitFunc();
+    void joinFunc();
 
 private slots:
     void exit();
