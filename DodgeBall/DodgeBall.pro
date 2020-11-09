@@ -31,6 +31,7 @@ SOURCES += \
         lobby.cpp \
         main.cpp \
         mainwindow.cpp \
+        mapdialog.cpp \
         player.cpp \
         quitdialog.cpp
 
@@ -40,6 +41,7 @@ HEADERS += \
         joinlobbydialog.h \
     lobby.h \
         mainwindow.h \
+    mapdialog.h \
     player.h \
         quitdialog.h \
 
@@ -48,6 +50,7 @@ FORMS += \
         joinlobbydialog.ui \
         lobby.ui \
         mainwindow.ui \
+        mapdialog.ui \
         quitdialog.ui
 
 # Default rules for deployment.
