@@ -26,7 +26,7 @@ private:
 
 signals:
     void backToMain(int index);
-    void joinNew( QString ipAddress, int portNumber);
+    void joinNew(QString ipAddress, int portNumber);
 
 
 private slots:

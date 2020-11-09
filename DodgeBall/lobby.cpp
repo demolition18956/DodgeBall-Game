@@ -26,6 +26,10 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     else
     {
        socket.connectToHost(ipAddress,portNumber);   // non-host connection
+       if(!socket.waitForConnected(5000))
+       {
+           qDebug() << "CLIENT: Couldn't Connect";
+       }
     }
     connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
 }
