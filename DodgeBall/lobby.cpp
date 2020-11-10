@@ -1,8 +1,6 @@
 #include "lobby.h"
 #include "ui_lobby.h"
 
-
-
 lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::lobby)
@@ -84,7 +82,8 @@ void lobby::initialConnect()
 
 }
 
-void lobby::playerReady(){
+void lobby::playerReady()
+{
     emit ready();
     qDebug("Player ready");
 }

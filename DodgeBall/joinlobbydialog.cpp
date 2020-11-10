@@ -29,16 +29,16 @@ JoinLobbyDialog::~JoinLobbyDialog()
 
 void JoinLobbyDialog::cancel()
 {
-//    this->close();
-//    setBool(true);
     emit backToMain(0);
 }
 
-bool JoinLobbyDialog::getBool(){
+bool JoinLobbyDialog::getBool()
+{
     return back;
 }
 
-void JoinLobbyDialog::setBool(bool value){
+void JoinLobbyDialog::setBool(bool value)
+{
     back = value;
 }
 
@@ -51,7 +51,6 @@ void JoinLobbyDialog::join()
     portNumber = ui->portEdit->text();
     int portNumber_int = portNumber.toInt();
     emit joinNew(ipAddress, portNumber_int);
-
 }
 
 

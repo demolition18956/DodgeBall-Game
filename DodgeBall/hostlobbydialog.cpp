@@ -31,21 +31,21 @@ HostLobbyDialog::~HostLobbyDialog()
 
 void HostLobbyDialog::cancel()
 {
-//    this->close();
-//    setBool(true);
     emit backToMain(0);
 }
 
-bool HostLobbyDialog::getBool(){
+bool HostLobbyDialog::getBool()
+{
     return back;
 }
 
-void HostLobbyDialog::setBool(bool value){
+void HostLobbyDialog::setBool(bool value)
+{
     back = value;
 }
 
-void HostLobbyDialog::createLobby(){
-//    this->hide();
+void HostLobbyDialog::createLobby()
+{
     emit hostNew();   // creation of lobby and server object handled in MainWindow
 }
 

@@ -31,27 +31,14 @@ MainWindow::~MainWindow()
     delete server;
 }
 
-void MainWindow::hostFunc(){
+void MainWindow::hostFunc()
+{
     qDebug("Host");
-//    this->hide();
-//    hostDialog->exec();
-
-//    if(hostDialog->getBool()){
-//        this->show();
-//    }
     ui->stackedWidget->setCurrentWidget(hostDialog);
 }
 
-void MainWindow::joinNew(QString ipAddress, int portNumber){
-//    qDebug("Join");
-//    this->hide();
-//    joinDialog->exec();
-
-//    if(joinDialog->getBool()){
-//        this->show();
-//    }
-
-
+void MainWindow::joinNew(QString ipAddress, int portNumber)
+{
     gameLobby = new lobby(QHostAddress(ipAddress), portNumber, false);
     gameLobby->show();
     this->hide();
