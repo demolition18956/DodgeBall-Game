@@ -49,11 +49,12 @@ void GameServer::ProcessNewConnections()
                 players[i]->socket->write("1");   // 1 for Accepted
                 players[i]->socket->flush();
                 playerCount++;
-                playerJoined(playerCount);
+                playerJoined();
 
 
 
                 qDebug() << "SERVER: player accepted!";
+                qDebug() << playerCount;
                 break;
             }
         }
@@ -68,12 +69,14 @@ GameServer::~GameServer()
     }
 }
 
-void GameServer::playerJoined(int playersCount)
+void GameServer::playerJoined()
 {
     for(int i = 0; i < 6; i++)
     {
         if(players[i]->socket->state() == QAbstractSocket::ConnectedState)
         {
+            QTcpSocket* sock = this->nextPendingConnection();
+            players[i]->socket = sock;
             players[i]->socket->write("2");
         }
     }
