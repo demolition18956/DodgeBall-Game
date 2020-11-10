@@ -14,7 +14,7 @@ JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(ipInput, ui->ipEdit);
     ui->ipEdit->setValidator(ipValidator);
 
-    ui->portEdit->setText("5678");
+    ui->portEdit->setText("6000");
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);
