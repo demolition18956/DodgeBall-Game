@@ -20,7 +20,8 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     if(host ==  true)   // if player is the host
     {
         server = new GameServer();
-        socket.connectToHost(ipAddress,portNumber);   // open tcp socket on local machine (where server should be running)
+        socket.connectToHost(ipAddress, portNum);   // open tcp socket on local machine (where server should be running)
+
     }
     else
     {
@@ -57,6 +58,7 @@ void lobby::initialConnect()
 {
     if(socket.waitForReadyRead(5000))
     {
+        qDebug()  << "hello";
         QTextStream incoming(&socket);
         QString msg;
         incoming >> msg;
@@ -80,6 +82,9 @@ void lobby::initialConnect()
         else
         {
             qDebug() << "CLIENT: something went wrong!";
+            int n = ui->playercountLabel->text().toInt();
+            n++;
+            ui->playercountLabel->setText(QString::number(n));
         }
     }
     else
