@@ -75,9 +75,8 @@ void GameServer::playerJoined()
     {
         if(players[i]->socket->state() == QAbstractSocket::ConnectedState)
         {
-            QTcpSocket* sock = this->nextPendingConnection();
-            players[i]->socket = sock;
             players[i]->socket->write("2");
+            players[i]->socket->flush();
         }
     }
 
