@@ -20,7 +20,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     if(host ==  true)   // if player is the host
     {
         server = new GameServer();
-        socket.connectToHost(ipAddress, portNum);   // open tcp socket on local machine (where server should be running)
+        socket.connectToHost(QHostAddress::LocalHost, portNum);   // open tcp socket on local machine (where server should be running)
 
     }
     else
@@ -28,7 +28,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
        socket.connectToHost(ipAddress,portNumber);   // non-host connection
        if(!socket.waitForConnected(5000))
        {
-           qDebug() << "CLIENT: Couldn't Connect";
+           qDebug() << "CLIENT: Couldn't Connect due to errors";
        }
     }
 
