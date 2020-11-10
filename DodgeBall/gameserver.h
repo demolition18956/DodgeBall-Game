@@ -22,6 +22,7 @@ public:
     int GetPlayerCount();
     bool isInLobby();
     ~GameServer();
+    void playerJoined(int n);
 
 signals:
     void AllReady();   // emitted when all players are ready

@@ -70,6 +70,13 @@ void lobby::initialConnect()
             qDebug() << "CLIENT: connection refused!";
             socket.abort();
         }
+        else if(data == 2)
+        {
+            //QString s = ui->playercountLabel
+            int n = ui->playercountLabel->text().toInt();
+            n++;
+            ui->playercountLabel->setText(QString::number(n));
+        }
         else
         {
             qDebug() << "CLIENT: something went wrong!";
