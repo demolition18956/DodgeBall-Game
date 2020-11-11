@@ -1,5 +1,6 @@
 #include "quitdialog.h"
 #include "ui_quitdialog.h"
+#include <QtDebug>
 
 QuitDialog::QuitDialog(QWidget *parent) :
     QDialog(parent),

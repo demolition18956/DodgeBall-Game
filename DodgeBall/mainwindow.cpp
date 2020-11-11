@@ -24,11 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete quitDialog;
-    delete hostDialog;
-    delete joinDialog;
-    delete gameLobby;
-    delete server;
 }
 
 void MainWindow::hostFunc()
@@ -59,7 +54,7 @@ void MainWindow::exit()
 
 void MainWindow::hostNew()
 {
-    gameLobby = new lobby(QHostAddress::LocalHost, 6000, true);
+    gameLobby = new lobby(QHostAddress::LocalHost, 2224, true);
     //server = new GameServer();// I think the server has to be created in the lobby object
     gameLobby->show();
     this->hide();

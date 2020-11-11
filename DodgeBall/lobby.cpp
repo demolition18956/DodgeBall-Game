@@ -31,6 +31,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
            qDebug() << "CLIENT: Couldn't Connect due to errors";
        }
     }
+    connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
 
 }
 
@@ -40,11 +41,8 @@ lobby::~lobby()
 }
 
 void lobby::processMessage(){
-    QByteArray datagram;
-
     QString msg;
-    QTextStream in(&datagram, QIODevice::ReadOnly);
-
+    QTextStream in(&socket);
     msg = in.readAll();
     qDebug() << msg << "CLIENT: A player has joined";
 }
@@ -56,42 +54,26 @@ bool lobby::isHost()
 
 void lobby::initialConnect()
 {
-    if(socket.waitForReadyRead(5000))
-    {
-        qDebug()  << "hello";
-        QTextStream incoming(&socket);
-        QString msg;
-        incoming >> msg;
-        int data = msg.toInt();
-        if(data == 1)
-        {
-            qDebug() << "CLIENT: connection accepted!";
-            int n = ui->playercountLabel->text().toInt();
-            n++;
-            ui->playercountLabel->setText(QString::number(n));
-        }
-        else if(data == 0)
-        {
-            qDebug() << "CLIENT: connection refused!";
-            socket.abort();
-        }
-        else
-        {
-            qDebug() << "CLIENT: something went wrong!";
-            int n = ui->playercountLabel->text().toInt();
-            n++;
-            ui->playercountLabel->setText(QString::number(n));
-        }
-    }
-    else
-    {
-        qDebug() << "CLIENT: Never got a message!";
-    }
+    connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
+
 
 }
 
 void lobby::playerReady()
 {
-    emit ready();
+    static bool readyPrev = false;
     qDebug("Player ready");
+    QByteArray block;
+    QTextStream out(&block, QIODevice::WriteOnly);
+    if (!readyPrev){
+        out << QString::number(1) << " Ready" << endl;
+        ui->readyButton->setText("UnReady");
+    }
+    else {
+        out << QString::number(1) << " NotReady" << endl;
+        ui->readyButton->setText("Ready");
+    }
+    readyPrev ^= true;
+    socket.write(block);
+    qDebug() << block;
 }
