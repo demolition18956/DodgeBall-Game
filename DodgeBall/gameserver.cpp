@@ -19,11 +19,6 @@ GameServer::GameServer(QObject* parent) :
     {
         players[i] = new Player();
     }
-    playerCount = 0;
-    for(int i=0;i<6;i++)
-    {
-        players[i] = new Player();
-    }
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(":memory:");
     if (!db.open()) {
@@ -91,12 +86,13 @@ void GameServer::ProcessNewConnections()
         int sNum = getMinSocket();
         qqqq.prepare("INSERT INTO players(UID, playername, ready, ip) VALUES(?, ?, ?, ?)");
         qqqq.addBindValue(playerCount);
-        //qDebug() << playerCount;
+        qDebug() << "Player Count " << playerCount;
         qqqq.addBindValue("Player " + QString::number(playerCount));
-        //qDebug() << "Player " + QString::number(playerCount);
+        qDebug() << "Player " + QString::number(playerCount);
         int dfault = 0;
         qqqq.addBindValue(dfault);
         qqqq.addBindValue(sock->peerAddress().toString());
+        qDebug() << sock->peerAddress().toString();
         if (!qqqq.exec()) {
            qDebug() << qqqq.lastError();
            qDebug() << "Error on INSERT";
@@ -135,6 +131,10 @@ void GameServer::UpdateClients() {
             out << "Number: " << QString::number(info.value(0).toInt()) << endl
                 << "Player Name: " << info.value(1).toString() << endl
                 << "Ready: " << QString::number(info.value(2).toInt()) << endl;
+        }
+        QSqlQuery ready("SELECT COUNT(ready) FROM players");
+        if (ready.next()){
+            out << "Joined: " << QString::number(ready.value(0).toInt()) << endl;
         }
 //        sock = players[i]->socket;
         sock->write(block);
@@ -228,10 +228,7 @@ void GameServer::UpdateReady() {
 //        sock = players[i]->socket;
         sock->write(block);
         qDebug() << block;
-        QSqlQuery ready("SELECT SUM(ready) FROM players");
-        if (ready.next()){
-            sock->write("Readies: " + QByteArray::number(ready.value(0).toInt()));
-        }
+
 
     }
 }

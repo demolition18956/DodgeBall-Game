@@ -116,8 +116,8 @@ void lobby::processMessage(){
                 qDebug() << "That's illegal";
             }
         }
-        else if ((ind = msg.indexOf("Readies: ")) != -1){
-            ind += 9;
+        else if ((ind = msg.indexOf("Joined: ")) != -1){
+            ind += 8;
             int readySum = msg.right(msg.length() - ind).toInt(&ok);
             ui->playercountLabel->setNum(readySum);
         }
