@@ -54,13 +54,9 @@ void GameServer::ProcessNewConnections()
                 {
                     if(players[i]->socket->state() == QAbstractSocket::ConnectedState)
                     {
-                        players[i]->socket->write("2");
-                        players[i]->socket->flush();
                         qDebug() << "lineline";
                     }
                 }
-
-
 
                 qDebug() << "SERVER: player accepted!";
                 qDebug() << playerCount;

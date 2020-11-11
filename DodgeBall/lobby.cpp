@@ -66,18 +66,14 @@ void lobby::initialConnect()
         if(data == 1)
         {
             qDebug() << "CLIENT: connection accepted!";
+            int n = ui->playercountLabel->text().toInt();
+            n++;
+            ui->playercountLabel->setText(QString::number(n));
         }
         else if(data == 0)
         {
             qDebug() << "CLIENT: connection refused!";
             socket.abort();
-        }
-        else if(data == 2)
-        {
-            //QString s = ui->playercountLabel
-            int n = ui->playercountLabel->text().toInt();
-            n++;
-            ui->playercountLabel->setText(QString::number(n));
         }
         else
         {
