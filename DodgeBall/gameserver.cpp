@@ -7,7 +7,7 @@ GameServer::GameServer(QObject* parent) :
 {
     setMaxPendingConnections(6);
     connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
-    if(!this->listen(QHostAddress::Any,6000)){
+    if(!this->listen(QHostAddress::Any,2224)){
         qDebug() << "SERVER: Could not start server";
     }
     else{

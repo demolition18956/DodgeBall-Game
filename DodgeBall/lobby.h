@@ -30,6 +30,7 @@ private:
     QHostAddress address;
     int portNum;
     GameServer* server;
+    int playeruid;
 
 signals:
     void ready();

@@ -41,10 +41,87 @@ lobby::~lobby()
 }
 
 void lobby::processMessage(){
+    QByteArray datagram;
     QString msg;
     QTextStream in(&socket);
-    msg = in.readAll();
-    qDebug() << msg << "CLIENT: A player has joined";
+    int ind, playNum;
+    bool ok;
+    while (in.readLineInto(&msg)){
+        int num = msg.toInt(&ok);
+        if (ok){
+            if (num != 0)
+                playeruid = num;
+            else {
+                // Full Lobby Error
+                break;
+            }
+        }
+        if ((ind = msg.indexOf("Number: ")) != -1){
+            ind += 8;
+            playNum = msg.right(msg.length() - ind).toInt(&ok);
+            qDebug() << "Number " << msg.right(msg.length() - ind) << ok;
+        }
+        else if ((ind = msg.indexOf("Player Name: ")) != -1) {
+            ind += 13;
+            QString playName = msg.right(msg.length() - ind);
+            qDebug() << "Name " << playName;
+            switch(playNum){
+            case 1:
+                ui->player1NameLabel->setText(playName);
+                break;
+            case 2:
+                ui->player2NameLabel->setText(playName);
+                break;
+            case 3:
+                ui->player3NameLabel->setText(playName);
+                break;
+            case 4:
+                ui->player4NameLabel->setText(playName);
+                break;
+            case 5:
+                ui->player5NameLabel->setText(playName);
+                break;
+            case 6:
+                ui->player6NameLabel->setText(playName);
+                break;
+            default:
+                qDebug() << "That's illegal";
+            }
+        }
+        else if ((ind = msg.indexOf("Ready: ")) != -1){
+            ind += 7;
+            int ready = msg.right(msg.length() - ind).toInt(&ok);
+            qDebug() << "Ready " << msg.right(msg.length() - ind) << ok;
+            QString readyStr = (ready == 0) ? "Not Ready" : "Ready";
+            switch(playNum){
+            case 1:
+                ui->player1ReadyLabel->setText(readyStr);
+                break;
+            case 2:
+                ui->player2ReadyLabel->setText(readyStr);
+                break;
+            case 3:
+                ui->player3ReadyLabel->setText(readyStr);
+                break;
+            case 4:
+                ui->player4ReadyLabel->setText(readyStr);
+                break;
+            case 5:
+                ui->player5ReadyLabel->setText(readyStr);
+                break;
+            case 6:
+                ui->player6ReadyLabel->setText(readyStr);
+                break;
+            default:
+                qDebug() << "That's illegal";
+            }
+        }
+        else if ((ind = msg.indexOf("Readies: ")) != -1){
+            ind += 9;
+            int readySum = msg.right(msg.length() - ind).toInt(&ok);
+            ui->playercountLabel->setNum(readySum);
+        }
+    }
 }
 
 bool lobby::isHost()
@@ -54,6 +131,32 @@ bool lobby::isHost()
 
 void lobby::initialConnect()
 {
+    connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
+    if(socket.waitForReadyRead(5000))
+    {
+        QTextStream incoming(&socket);
+        QString msg;
+        incoming >> msg;
+        int data = msg.toInt();
+        if(data == 1)
+        {
+            qDebug() << "CLIENT: connection accepted!";
+        }
+//        else if(data == 0)
+//        {
+//            qDebug() << "CLIENT: connection refused!";
+//            socket.abort();
+//        }
+        else
+        {
+            qDebug() << "CLIENT: something went wrong!";
+        }
+    }
+    else
+    {
+        qDebug() << "CLIENT: Never got a message!";
+    }
+
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
 
 
@@ -66,14 +169,14 @@ void lobby::playerReady()
     QByteArray block;
     QTextStream out(&block, QIODevice::WriteOnly);
     if (!readyPrev){
-        out << QString::number(1) << " Ready" << endl;
+        out << QString::number(playeruid) << " Ready" << endl;
         ui->readyButton->setText("UnReady");
     }
     else {
-        out << QString::number(1) << " NotReady" << endl;
+        out << QString::number(playeruid) << " NotReady" << endl;
         ui->readyButton->setText("Ready");
     }
+
     readyPrev ^= true;
     socket.write(block);
-    qDebug() << block;
 }
