@@ -15,10 +15,6 @@ GameServer::GameServer(QObject* parent) :
     }
 
     playerCount = 0;
-    for(int i=0;i<6;i++)
-    {
-        players[i] = new Player();
-    }
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(":memory:");
     if (!db.open()) {
@@ -100,15 +96,13 @@ void GameServer::ProcessNewConnections()
         playerSockets[sNum] = sock;
         this->UpdateClients();
         connect(playerSockets[sNum], &QTcpSocket::readyRead,this, &GameServer::ReportReady);
+        connect(playerSockets[sNum], &QTcpSocket::disconnected, this, &GameServer::clientDisconnected);
     }
 }
 
 GameServer::~GameServer()
 {
-    for(int i=0;i<6;i++)
-    {
-        delete players[i];
-    }
+
 }
 
 void GameServer::UpdateClients() {
@@ -141,19 +135,6 @@ void GameServer::UpdateClients() {
         qDebug() << block;
 
     }
-}
-
-void GameServer::playerJoined()
-{
-    for(int i = 0; i < 6; i++)
-    {
-        if(players[i]->socket->state() == QAbstractSocket::ConnectedState)
-        {
-            players[i]->socket->write("2");
-            players[i]->socket->flush();
-        }
-    }
-
 }
 
 int GameServer::getMinSocket()
@@ -230,5 +211,26 @@ void GameServer::UpdateReady() {
         qDebug() << block;
 
 
+    }
+}
+
+void GameServer::clientDisconnected()
+{
+    for(int i=0;i<6;i++)
+    {
+        if(playerSockets[i] != nullptr)
+        {
+            if(playerSockets[i]->state() == QAbstractSocket::ConnectedState)
+            {
+                continue;
+            }
+            else
+            {
+                playerSockets[i] = nullptr;
+                playerCount--;
+                // SQL HERE
+                this->UpdateClients();
+            }
+        }
     }
 }

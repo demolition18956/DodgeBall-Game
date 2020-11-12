@@ -16,10 +16,8 @@ public:
     int GetPlayerCount();
     bool isInLobby();
     ~GameServer();
-    void playerJoined();
 
 private:
-    Player* players[6];   // array of 6 player objects
     int playerCount;
     bool inLobby;   // is the server currently in lobby or playing?
     bool addNewPlayer(Player &p);   // attempts to add a new player to the lobby
@@ -33,6 +31,7 @@ private slots:
     void StartGame();   // starts game when AllReady() is emitted
     void ProcessNewConnections();
     void ReportReady();
+    void clientDisconnected();
 
 
 signals:
