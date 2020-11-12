@@ -20,7 +20,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     if(host ==  true)   // if player is the host
     {
         server = new GameServer();
-        socket.connectToHost(QHostAddress::LocalHost, portNum);   // open tcp socket on local machine (where server should be running)
+        socket.connectToHost(server->serverAddress(), portNum);   // open tcp socket on local machine (where server should be running)
 
     }
     else
@@ -31,6 +31,8 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
            qDebug() << "CLIENT: Couldn't Connect due to errors";
        }
     }
+
+    connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
 
 }
@@ -179,4 +181,17 @@ void lobby::playerReady()
 
     readyPrev ^= true;
     socket.write(block);
+}
+
+void lobby::leave(){
+    int button = QMessageBox::question(this, "Confirm Drop",
+                                       "Are you sure you sure you want to leave?",
+                                       QMessageBox::Yes, QMessageBox::No);
+
+    if(button == QMessageBox::Yes){
+        this->close();
+        if(host == true) server->close();
+        emit showAgain();
+    }
+
 }

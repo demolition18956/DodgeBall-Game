@@ -19,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(joinDialog, SIGNAL(backToMain(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
     connect(hostDialog, SIGNAL(backToMain(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
     connect(joinDialog, SIGNAL(joinNew(QString, int)), this, SLOT(joinNew(QString, int)));
+
+    int a = 1;
+    char n = a + 48 ;
+    qDebug() << n;
 }
 
 MainWindow::~MainWindow()
@@ -37,6 +41,7 @@ void MainWindow::joinNew(QString ipAddress, int portNumber)
     gameLobby = new lobby(QHostAddress(ipAddress), portNumber, false);
     gameLobby->show();
     this->hide();
+    connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
     qDebug() << ipAddress;
 
 }
@@ -58,9 +63,16 @@ void MainWindow::hostNew()
     //server = new GameServer();// I think the server has to be created in the lobby object
     gameLobby->show();
     this->hide();
+    connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
+
 }
 
 void MainWindow::joinFunc()
 {
     ui->stackedWidget->setCurrentWidget(joinDialog);
+}
+
+void MainWindow::showBack(){
+    ui->stackedWidget->setCurrentIndex(0);
+    this->show();
 }

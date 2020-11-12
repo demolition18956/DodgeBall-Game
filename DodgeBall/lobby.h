@@ -7,6 +7,7 @@
 #include <QNetworkInterface>
 #include <QtDebug>
 #include <QTcpSocket>
+#include <QMessageBox>
 
 namespace Ui {
 class lobby;
@@ -34,9 +35,11 @@ private:
 
 signals:
     void ready();
+    void showAgain();
 
 public slots:
     void playerReady();
+    void leave();
 
 private slots:
     void processMessage();

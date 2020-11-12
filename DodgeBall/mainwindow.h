@@ -28,6 +28,7 @@ public slots:
     void joinNew(QString ipAddress, int portNumber);
     void exitFunc();
     void joinFunc();
+    void showBack();
 
 private slots:
     void exit();
