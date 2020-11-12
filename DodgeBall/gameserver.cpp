@@ -124,8 +124,8 @@ void GameServer::UpdateClients() {
         QSqlQuery info("SELECT playername, ready FROM players");
         while (info.next()){
             out << "Number: " << QString::number(++playNum) << endl
-                << "Player Name: " << info.value(1).toString() << endl
-                << "Ready: " << QString::number(info.value(2).toInt()) << endl;
+                << "Player Name: " << info.value(0).toString() << endl
+                << "Ready: " << QString::number(info.value(1).toInt()) << endl;
         }
         QSqlQuery ready("SELECT COUNT(ready) FROM players");
         if (ready.next()){
@@ -216,7 +216,7 @@ void GameServer::UpdateReady() {
         QSqlQuery info("SELECT ready FROM players");
         while (info.next()){
             out << "Number: " << QString::number(++playNum) << endl
-                << "Ready: " << QString::number(info.value(1).toInt()) << endl;
+                << "Ready: " << QString::number(info.value(0).toInt()) << endl;
         }
 //        sock = players[i]->socket;
         sock->write(block);
