@@ -28,8 +28,13 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
        socket.connectToHost(ipAddress,portNumber);   // non-host connection
        if(!socket.waitForConnected(5000))
        {
+           int ret = QMessageBox::warning(this, tr("My Application"),
+                                          tr("Couldn´t connect to erver, try again."));
+
+           emit showDialog();
            qDebug() << "CLIENT: Couldn't Connect due to errors";
        }
+       else this->show();
     }
 
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
@@ -188,6 +193,7 @@ void lobby::leave(){
     int button = QMessageBox::question(this, "Confirm Drop",
                                        "Are you sure you sure you want to leave?",
                                        QMessageBox::Yes, QMessageBox::No);
+
 
     if(button == QMessageBox::Yes){
         this->close();

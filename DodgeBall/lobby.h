@@ -36,6 +36,7 @@ private:
 signals:
     void ready();
     void showAgain();
+    void showDialog();
 
 public slots:
     void playerReady();
