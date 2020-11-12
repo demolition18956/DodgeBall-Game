@@ -199,7 +199,7 @@ void lobby::leave(){
 
 
     if(button == QMessageBox::Yes){
-        this->close();
+        this->deleteLater();
         if(host == true) server->close();
         emit showAgain();
     }

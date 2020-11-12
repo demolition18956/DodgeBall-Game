@@ -62,10 +62,10 @@ void MainWindow::exit()
 
 void MainWindow::hostNew()
 {
+    this->hide();
     gameLobby = new lobby(QHostAddress::LocalHost, 2224, true);
     //server = new GameServer();// I think the server has to be created in the lobby object
-    //gameLobby->show();
-    this->hide();
+    gameLobby->show();
     connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
 
 }

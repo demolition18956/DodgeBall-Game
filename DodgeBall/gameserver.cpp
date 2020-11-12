@@ -96,7 +96,7 @@ void GameServer::ProcessNewConnections()
         playerSockets[sNum] = sock;
         this->UpdateClients();
         connect(playerSockets[sNum], &QTcpSocket::readyRead,this, &GameServer::ReportReady);
-        connect(playerSockets[sNum], &QTcpSocket::disconnected, this, &GameServer::clientDisconnected);
+        connect(playerSockets[sNum], &QTcpSocket::stateChanged, this, &GameServer::clientDisconnected);
     }
 }
 
@@ -126,6 +126,11 @@ void GameServer::UpdateClients() {
             out << "Number: " << QString::number(++playNum) << endl
                 << "Player Name: " << info.value(0).toString() << endl
                 << "Ready: " << QString::number(info.value(1).toInt()) << endl;
+        }
+        while (playNum < 6){
+            out << "Number: " << QString::number(++playNum) << endl
+                << "Player Name: No Player" << endl
+                << "Ready: Not Ready" << endl;
         }
         QSqlQuery ready("SELECT COUNT(ready) FROM players");
         if (ready.next()){
@@ -240,9 +245,10 @@ void GameServer::clientDisconnected()
             {
                 continue;
             }
-            else
+            else if (playerSockets[i]->state() == QAbstractSocket::UnconnectedState)
             {
-                delete playerSockets[i];
+                playerSockets[i]->deleteLater();
+                playerSockets[i] = nullptr;
                 playerCount--;
                 // SQL HERE
                 QSqlQuery del;
@@ -252,7 +258,6 @@ void GameServer::clientDisconnected()
                 }
                 this->UpdateClients();
                 qDebug() << "Done";
-                break;
             }
         }
     }
