@@ -44,6 +44,7 @@ public slots:
 private slots:
     void processMessage();
     void initialConnect();
+    void changeName();
 };
 
 #endif // LOBBY_H

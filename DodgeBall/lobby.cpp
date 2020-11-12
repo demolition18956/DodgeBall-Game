@@ -34,6 +34,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
 
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
+    connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
 
 }
 
@@ -194,4 +195,16 @@ void lobby::leave(){
         emit showAgain();
     }
 
+}
+
+void lobby::changeName(){
+    QString msg = ui->nameEdit->text();
+    if (msg.isEmpty())
+        return;
+    ui->nameEdit->clear();
+    QByteArray block;
+    QTextStream out(&block, QIODevice::WriteOnly);
+    out << QString::number(playeruid) << " Name " << msg << endl;
+
+    socket.write(block);
 }

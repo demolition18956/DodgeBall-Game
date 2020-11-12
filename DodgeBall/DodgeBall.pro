@@ -43,7 +43,7 @@ HEADERS += \
         mainwindow.h \
     mapdialog.h \
     player.h \
-        quitdialog.h \
+        quitdialog.h
 
 FORMS += \
         hostlobbydialog.ui \
