@@ -49,6 +49,7 @@ lobby::~lobby()
 }
 
 void lobby::processMessage(){
+    qDebug() << "Message Processing";
     QByteArray datagram;
     QString msg;
     QTextStream in(&socket);
@@ -57,8 +58,10 @@ void lobby::processMessage(){
     while (in.readLineInto(&msg)){
         int num = msg.toInt(&ok);
         if (ok){
-            if (num != 0)
+            if (num != 0){
+                qDebug() << "UID set";
                 playeruid = num;
+            }
             else {
                 // Full Lobby Error
                 break;

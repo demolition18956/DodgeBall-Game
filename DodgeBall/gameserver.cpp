@@ -114,8 +114,8 @@ void GameServer::UpdateClients() {
 
     }
     qDebug() << "Updating";
-    int playNum = 0;
     while(socks.next()){
+        int playNum = 0;
         qDebug() << "Round";
         QTcpSocket* sock = playerSockets[socks.value(0).toInt()-1];
         qDebug() << sock;
@@ -207,16 +207,18 @@ void GameServer::UpdateReady() {
 
     }
 //    qDebug() << "Updating";
-    int playNum = 0;
+
     while(socks.next()){
+        int playNum = 0;
         QTcpSocket* sock = playerSockets[socks.value(0).toInt()-1];
         qDebug() << sock;
         QByteArray block;
         QTextStream out(&block, QIODevice::WriteOnly);
-        QSqlQuery info("SELECT ready FROM players");
+        QSqlQuery info("SELECT playername, ready FROM players");
         while (info.next()){
             out << "Number: " << QString::number(++playNum) << endl
-                << "Ready: " << QString::number(info.value(0).toInt()) << endl;
+                << "Player Name: " << info.value(0).toString() << endl
+                << "Ready: " << QString::number(info.value(1).toInt()) << endl;
         }
 //        sock = players[i]->socket;
         sock->write(block);
@@ -230,23 +232,26 @@ void GameServer::clientDisconnected()
 {
     for(int i=0;i<6;i++)
     {
+        qDebug() << playerSockets[i];
         if(playerSockets[i] != nullptr)
         {
+            qDebug() << playerSockets[i]->state();
             if(playerSockets[i]->state() == QAbstractSocket::ConnectedState)
             {
                 continue;
             }
             else
             {
-                playerSockets[i] = nullptr;
+                delete playerSockets[i];
                 playerCount--;
                 // SQL HERE
                 QSqlQuery del;
-                if (!del.exec("DELETE FROM players WHERE uid=" + QString::number(i))){
+                if (!del.exec("DELETE FROM players WHERE uid=" + QString::number(i+1))){
                     qDebug() << del.lastError();
                     qDebug() << "Error on DELETE";
                 }
                 this->UpdateClients();
+                qDebug() << "Done";
                 break;
             }
         }
