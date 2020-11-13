@@ -77,13 +77,13 @@ void GameServer::ProcessNewConnections()
         }
         QTcpSocket* sock = this->nextPendingConnection();
 
-        sock->write(QByteArray::number(++playerCount) + QByteArray("\n"));
-        QSqlQuery qqqq;
         int sNum = getMinSocket();
+        sock->write(QByteArray::number(sNum+1) + QByteArray("\n"));
+        QSqlQuery qqqq;
         qqqq.prepare("INSERT INTO players(UID, playername, ready, ip) VALUES(?, ?, ?, ?)");
-        qqqq.addBindValue(playerCount);
+        qqqq.addBindValue(sNum+1);
+        qqqq.addBindValue("Player " + QString::number(++playerCount));
         qDebug() << "Player Count " << playerCount;
-        qqqq.addBindValue("Player " + QString::number(playerCount));
         qDebug() << "Player " + QString::number(playerCount);
         int dfault = 0;
         qqqq.addBindValue(dfault);
@@ -130,7 +130,7 @@ void GameServer::UpdateClients() {
         while (playNum < 6){
             out << "Number: " << QString::number(++playNum) << endl
                 << "Player Name: No Player" << endl
-                << "Ready: Not Ready" << endl;
+                << "Ready: 0" << endl;
         }
         QSqlQuery ready("SELECT COUNT(ready) FROM players");
         if (ready.next()){
@@ -252,7 +252,7 @@ void GameServer::clientDisconnected()
                 playerCount--;
                 // SQL HERE
                 QSqlQuery del;
-                if (!del.exec("DELETE FROM players WHERE uid=" + QString::number(i+1))){
+                if (!del.exec("DELETE FROM players WHERE UID=" + QString::number(i+1))){
                     qDebug() << del.lastError();
                     qDebug() << "Error on DELETE";
                 }
