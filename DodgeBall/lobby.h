@@ -21,6 +21,8 @@ public:
     explicit lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent = nullptr);
     ~lobby();
     bool isHost();
+    void connection_error();
+    bool getConnected();
 
 private:
     Ui::lobby *ui;
@@ -32,11 +34,12 @@ private:
     int portNum;
     GameServer* server;
     int playeruid;
+    bool connected;
 
 signals:
     void ready();
     void showAgain();
-    void showDialog();
+
 
 public slots:
     void playerReady();

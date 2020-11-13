@@ -39,13 +39,19 @@ void MainWindow::hostFunc()
 void MainWindow::joinNew(QString ipAddress, int portNumber)
 {
     gameLobby = new lobby(QHostAddress(ipAddress), portNumber, false);
-    //gameLobby->show();
-    this->hide();
+
     connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
-    connect(gameLobby, SIGNAL(showDialog()), this, SLOT(joinFunc()));
-    //delete gameLobby;
-    qDebug() << ipAddress;
-    this->show();
+
+    if(gameLobby->getConnected() == true)
+    {
+        gameLobby->show();
+        this->hide();
+    }
+    else
+    {
+        this->show();
+        delete gameLobby;
+    }
 
 }
 

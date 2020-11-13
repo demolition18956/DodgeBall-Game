@@ -31,17 +31,17 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
            int ret = QMessageBox::warning(this, tr("My Application"),
                                           tr("Couldn´t connect to erver, try again."));
 
-           emit showDialog();
            qDebug() << "CLIENT: Couldn't Connect due to errors";
+           connected = false;
        }
-       else this->show();
-    }
 
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
 
+    }
 }
+
 
 lobby::~lobby()
 {
@@ -216,4 +216,8 @@ void lobby::changeName(){
     out << QString::number(playeruid) << " Name " << msg << endl;
 
     socket.write(block);
+}
+
+bool lobby::getConnected(){
+    return connected;
 }
