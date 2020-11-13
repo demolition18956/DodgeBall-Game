@@ -1,5 +1,7 @@
 #include "lobby.h"
 #include "ui_lobby.h"
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 
 lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent) :
     QMainWindow(parent),
@@ -44,6 +46,9 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
+    QRegularExpression nameInput ("[A-z]{1,10}");
+    QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(nameInput, ui->nameEdit);
+    ui->nameEdit->setValidator(ipValidator);
 }
 
 
