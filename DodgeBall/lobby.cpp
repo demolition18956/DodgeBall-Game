@@ -29,28 +29,28 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
        if(!socket.waitForConnected(5000))
        {
            int ret = QMessageBox::warning(this, tr("My Application"),
-                                          tr("Couldn´t connect to erver, try again."));
+                                          tr("Couldn´t connect to server, try again."));
 
            qDebug() << "CLIENT: Couldn't Connect due to errors";
            connected = false;
+           return;
        }
        else
        {
           this->show();
           connected = true;
        }
-
+    }
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
-
-    }
 }
 
 
 lobby::~lobby()
 {
     delete ui;
+    delete server;
 }
 
 void lobby::processMessage(){
