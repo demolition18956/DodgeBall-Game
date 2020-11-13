@@ -34,6 +34,11 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
            qDebug() << "CLIENT: Couldn't Connect due to errors";
            connected = false;
        }
+       else
+       {
+          this->show();
+          connected = true;
+       }
 
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
