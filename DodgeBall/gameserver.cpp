@@ -176,6 +176,18 @@ void GameServer::ReportReady()
                         qDebug() << "Error on UPDATE";
 
                      }
+                    if (!qq.exec("SELECT COUNT(UID) FROM players WHERE ready=1"))
+                    {
+                        qDebug() << qq.lastError();
+                        qDebug() << "Error on SELECT";
+                    }
+                    qq.next();
+                    qDebug() << qq.value(0).toInt();
+                    if((qq.value(0).toInt() == playerCount) && playerCount >= 2)
+                    {
+                        qDebug() << "Starting Game " << qq.value(0).toInt();
+                        StartGame();
+                    }
                 }
                 else if ((ind = str.indexOf(" NotReady")) != -1){
                     qDebug() << str.left(1);
@@ -261,4 +273,9 @@ void GameServer::clientDisconnected()
             }
         }
     }
+}
+
+void GameServer::StartGame()
+{
+    qDebug() << "Starting Game";
 }
