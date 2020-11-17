@@ -2,6 +2,8 @@
 #define MAPDIALOG_H
 
 #include <QDialog>
+#include <QGraphicsItem>
+#include <QGraphicsScene>
 
 namespace Ui {
 class mapDialog;
@@ -17,6 +19,7 @@ public:
 
 private:
     Ui::mapDialog *ui;
+    QGraphicsScene* scene;
 };
 
 #endif // MAPDIALOG_H

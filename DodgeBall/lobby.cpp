@@ -144,6 +144,7 @@ void lobby::processMessage(){
         }
         else if ((ind = msg.indexOf("start")) != -1){
             qDebug() << "Starting Game!";
+            map.setWindowState(Qt::WindowFullScreen);
             map.show();
         }
     }
