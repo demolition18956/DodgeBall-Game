@@ -1,6 +1,8 @@
 #include "gameserver.h"
 #include <QTcpSocket>
 #include <QByteArray>
+#include <QPixmap>
+#include <QFile>
 
 GameServer::GameServer(QObject* parent) :
     QTcpServer(parent)
@@ -57,7 +59,7 @@ GameServer::GameServer(QObject* parent) :
         qDebug() << "Error: unable to complete query";
         return;
     }
-
+    timer = new QTimer(this);
 }
 
 void GameServer::ProcessNewConnections()
@@ -185,7 +187,7 @@ void GameServer::ReportReady()
                     qDebug() << qq.value(0).toInt();
                     if((qq.value(0).toInt() == playerCount) && playerCount >= 2)
                     {
-                        qDebug() << "Starting Game " << qq.value(0).toInt();
+                        qDebug() << "SERVER: Starting Game " << qq.value(0).toInt();
                         StartGame();
                     }
                 }
@@ -278,8 +280,83 @@ void GameServer::clientDisconnected()
 void GameServer::StartGame()
 //send a message to start the game
 {
-    qDebug() << "Starting Game";
+    qDebug() << "SERVER: Starting Game";
     this->sendAll("start");
+    QSqlQuery start;
+    if(!start.exec("CREATE TABLE sprites(pixmaps BLOB, team TEXT, hasBall INT)"))
+    {
+        qDebug() << start.lastError();
+        qDebug() << "Error on CREATE";
+    }
+    if(!start.exec("CREATE TABLE in_game(UID INT, x INT, y INT, hasBall INT, team TEXT)"))
+    {
+        qDebug() << start.lastError();
+        qDebug() << "Error on CREATE";
+    }
+    QFile r("Red.png");
+    if(!r.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Problem with red: " << r.error();
+        return;
+    }
+    QFile b("Blue.png");
+    if(!b.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Problem with blue: " << r.error();
+        return;
+    }
+    QByteArray red = r.readAll();
+    QByteArray blue = b.readAll();
+    QSqlQuery q;
+    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
+    q.bindValue(":pixmap", red);
+    q.bindValue(":team", "red");
+    q.bindValue(":hasBall", 0);
+    if(!q.exec())
+    {
+        qDebug() << start.lastError();
+        qDebug() << "Error on INSERT";
+    }
+    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
+    q.bindValue(":pixmap", blue);
+    q.bindValue(":team", "blue");
+    q.bindValue(":hasBall", 0);
+    if(!q.exec())
+    {
+        qDebug() << start.lastError();
+        qDebug() << "Error on INSERT";
+    }
+    if(!q.exec("SELECT UID FROM players"))  // now going to populate the in_game table
+    {
+        qDebug() << start.lastError();
+        qDebug() << "Error on SELECT";
+    }
+    QString team = "red";
+    while(q.next())
+    {
+        if(team == "red")
+        {
+            team = "blue";
+        }
+        else
+        {
+            team = "red";
+        }
+        QSqlQuery qq;
+        qq.prepare("INSERT INTO in_game VALUES(:uid, :x, :y, :hasBall, :team)");
+        qq.bindValue(":uid", q.value(0).toInt());
+        qq.bindValue(":x", 0);
+        qq.bindValue(":y", 0);
+        qq.bindValue(":hasBall", 0);
+        qq.bindValue(":team", team);
+        if(!qq.exec())
+        {
+            qDebug() << start.lastError();
+            qDebug() << "Error on INSERT";
+        }
+    }
+    timer->start(250);
+    connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
 }
 
 //function that sends a message to everybody
@@ -288,7 +365,6 @@ void GameServer::sendAll(QString message){
 
        for(int i = 0; i < 6; i++){
             if((playerSockets[i] != nullptr) && (playerSockets[i]->state() == QAbstractSocket::ConnectedState)){
-                //QTcpSocket* sock = playerSockets[i];
                 qDebug() << playerSockets[i];
                 QByteArray block;
                 QTextStream out(&block, QIODevice::ReadWrite);
@@ -298,4 +374,78 @@ void GameServer::sendAll(QString message){
             }
 
         }
+}
+
+void GameServer::onTimeout()
+{
+    QSqlQuery q;
+    if(!q.exec("SELECT UID FROM in_game"))
+    {
+        qDebug() << q.lastError();
+        qDebug() << "Error on SELECT";
+    }
+    while(q.next())
+    {
+        QSqlQuery qq;
+        QString msg;
+        QString team;
+        int x;
+        int y;
+        bool hasBall;
+        QByteArray ba;
+        int uid;
+        uid = q.value(0).toInt();
+        qq.prepare("SELECT team FROM in_game WHERE UID=:uid");
+        qq.bindValue(":uid",uid);
+        if(!q.exec())
+        {
+            qDebug() << q.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
+        qq.next();
+        team = qq.value(0).toString();
+        qq.prepare("SELECT x FROM in_game WHERE UID=:uid");
+        qq.bindValue(":uid",uid);
+        if(!q.exec())
+        {
+            qDebug() << q.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
+        qq.next();
+        x = qq.value(0).toInt();
+        qq.prepare("SELECT y FROM in_game WHERE UID=:uid");
+        qq.bindValue(":uid",uid);
+        if(!q.exec())
+        {
+            qDebug() << q.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
+        qq.next();
+        y = qq.value(0).toInt();
+        qq.prepare("SELECT hasBall FROM in_game WHERE UID=:uid");
+        qq.bindValue(":uid",uid);
+        if(!q.exec())
+        {
+            qDebug() << q.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
+        qq.next();
+        hasBall = qq.value(0).toInt();
+        qq.prepare("SELECT pixmaps FROM sprites WHERE team=:team AND hasBall=:hasBall");
+        qq.bindValue(":team",uid);
+        qq.bindValue(":hasBall",hasBall);
+        if(!q.exec())
+        {
+            qDebug() << q.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
+        qq.next();
+        ba = qq.value(0).toByteArray();
+    }
+    qDebug() << "SERVER: Sent Data";
 }

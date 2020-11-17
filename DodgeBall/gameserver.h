@@ -7,6 +7,7 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQueryModel>
+#include <QTimer>
 
 class GameServer : public QTcpServer
 {
@@ -26,6 +27,7 @@ private:
     QTcpSocket* playerSockets[6] = {nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
     int getMinSocket();
     void UpdateReady();
+    QTimer* timer;
 
 private slots:
     void StartGame();   // starts game when AllReady() is emitted
@@ -33,6 +35,7 @@ private slots:
     void ReportReady();
     void clientDisconnected();
     void sendAll(QString);
+    void onTimeout();
 
 
 signals:
