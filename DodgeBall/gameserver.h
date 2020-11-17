@@ -32,6 +32,7 @@ private slots:
     void ProcessNewConnections();
     void ReportReady();
     void clientDisconnected();
+    void sendAll(QString);
 
 
 signals:

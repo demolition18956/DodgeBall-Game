@@ -276,6 +276,26 @@ void GameServer::clientDisconnected()
 }
 
 void GameServer::StartGame()
+//send a message to start the game
 {
     qDebug() << "Starting Game";
+    this->sendAll("start");
+}
+
+//function that sends a message to everybody
+void GameServer::sendAll(QString message){
+        qDebug() << "Sending message to everybody";
+
+       for(int i = 0; i < 6; i++){
+            if(playerSockets[i]->state() == QAbstractSocket::ConnectedState){
+                QTcpSocket* sock = playerSockets[i];
+                qDebug() << sock;
+                QByteArray block;
+                QTextStream out(&block, QIODevice::ReadWrite);
+                out << message << endl;
+                sock->write(block);
+                sock->flush();
+            }
+
+        }
 }
