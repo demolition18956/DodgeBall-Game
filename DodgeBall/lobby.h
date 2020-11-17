@@ -8,6 +8,7 @@
 #include <QtDebug>
 #include <QTcpSocket>
 #include <QMessageBox>
+#include "mapdialog.h"
 
 namespace Ui {
 class lobby;
@@ -35,6 +36,7 @@ private:
     GameServer* server;
     int playeruid;
     bool connected;
+    mapDialog map;
 
 signals:
     void ready();

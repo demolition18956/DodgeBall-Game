@@ -142,6 +142,10 @@ void lobby::processMessage(){
             int readySum = msg.right(msg.length() - ind).toInt(&ok);
             ui->playercountLabel->setNum(readySum);
         }
+        else if ((ind = msg.indexOf("start")) != -1){
+            qDebug() << "Starting Game!";
+            map.show();
+        }
     }
 }
 
