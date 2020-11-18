@@ -2,14 +2,14 @@
 #include <QTcpSocket>
 #include <QByteArray>
 #include <QPixmap>
-#include <QFile>
+#include <QBuffer>
 
 GameServer::GameServer(QObject* parent) :
     QTcpServer(parent)
 {
     setMaxPendingConnections(6);
     connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
-    if(!this->listen(QHostAddress::Any,2224)){
+    if(!this->listen(QHostAddress::Any,2227)){
         qDebug() << "SERVER: Could not start server";
     }
     else{
@@ -287,26 +287,37 @@ void GameServer::StartGame()
     {
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
+        return;
     }
     if(!start.exec("CREATE TABLE in_game(UID INT, x INT, y INT, hasBall INT, team TEXT)"))
     {
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
     }
-    QFile r("Red.png");
-    if(!r.open(QIODevice::ReadOnly))
+    QPixmap r("../DodgeBall/pixmaps/Red.png");
+    QByteArray red;
+    QBuffer buf(&red);
+    if(!buf.open(QIODevice::WriteOnly))
     {
-        qDebug() << "Problem with red: " << r.error();
+        qDebug() << buf.errorString();
+    }
+    if(!r.save(&buf, "PNG"))
+    {
+        qDebug() << "Problem with pixmap";
+    }
+    QPixmap b("../DodgeBall/pixmaps/Blue.png");
+    QByteArray blue;
+    QBuffer bbuf(&blue);
+    if(!bbuf.open(QIODevice::WriteOnly))
+    {
+        qDebug() << bbuf.errorString();
+    }
+    if(!b.save(&bbuf, "PNG"))
+    {
+        qDebug() << "Problem with pixmap";
         return;
     }
-    QFile b("Blue.png");
-    if(!b.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "Problem with blue: " << r.error();
-        return;
-    }
-    QByteArray red = r.readAll();
-    QByteArray blue = b.readAll();
+
     QSqlQuery q;
     q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
     q.bindValue(":pixmap", red);
@@ -357,6 +368,7 @@ void GameServer::StartGame()
     }
     timer->start(250);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
+    qDebug() << "SERVER: Timer Started!";
 }
 
 //function that sends a message to everybody
@@ -383,6 +395,7 @@ void GameServer::onTimeout()
     {
         qDebug() << q.lastError();
         qDebug() << "Error on SELECT";
+        timer->stop();
     }
     while(q.next())
     {
@@ -395,6 +408,8 @@ void GameServer::onTimeout()
         QByteArray ba;
         int uid;
         uid = q.value(0).toInt();
+        qDebug() << "Got the UID: " << uid;
+        qDebug() << q.lastError();
         qq.prepare("SELECT team FROM in_game WHERE UID=:uid");
         qq.bindValue(":uid",uid);
         if(!q.exec())
