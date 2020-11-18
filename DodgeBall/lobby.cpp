@@ -166,7 +166,7 @@ void lobby::processMessage(){
             int x;
             int y;
             bool hasBall;
-            QByteArray pixmap;
+//            QByteArray pixmap;
             buffer.clear();
             message >> buffer;  // uid read
             uid = buffer.toInt();
@@ -183,18 +183,19 @@ void lobby::processMessage(){
             message >> buffer;   // hasBall read
             hasBall = buffer.toInt();
             buffer.clear();
-            message >> buffer;   // pixmap read
-            qDebug() << buffer;
-            QTextStream pix(&buffer, QIODevice::ReadOnly);  // text stream to readyfrom buffer(QString) to pixmap(ByteArray)
-            pix >> pixmap;
-            buffer.clear();
+//            message >> buffer;   // pixmap read
+//            qDebug() << buffer;
+//            //QTextStream pix(&buffer, QIODevice::ReadOnly);  // text stream to readyfrom buffer(QString) to pixmap(ByteArray)
+//            //pix >> pixmap;
+//            pixmap = buffer.toUtf8();
+//            buffer.clear();
             qDebug() << "Player Data Read: ";
             qDebug() << "UID: " << uid;
             qDebug() << "Team: " << team;
             qDebug() << "x: " << x;
             qDebug() << "y: " << y;
             qDebug() << "hasBall: " << hasBall;
-            qDebug() << "pixmap: " << pixmap;
+//            qDebug() << "pixmap: " << pixmap;
         }
     }
     qDebug() << "CLIENT MESSAGE: " << msg;

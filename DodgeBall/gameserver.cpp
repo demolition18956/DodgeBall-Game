@@ -283,58 +283,58 @@ void GameServer::StartGame()
     qDebug() << "SERVER: Starting Game";
     this->sendAll("start");
     QSqlQuery start;
-    if(!start.exec("CREATE TABLE sprites(pixmaps BLOB, team TEXT, hasBall INT)"))
-    {
-        qDebug() << start.lastError();
-        qDebug() << "Error on CREATE";
-        return;
-    }
+//    if(!start.exec("CREATE TABLE sprites(pixmaps BLOB, team TEXT, hasBall INT)"))
+//    {
+//        qDebug() << start.lastError();
+//        qDebug() << "Error on CREATE";
+//        return;
+//    }
     if(!start.exec("CREATE TABLE in_game(UID INT, x INT, y INT, hasBall INT, team TEXT)"))
     {
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
     }
-    QByteArray red;
-    QFile in("../DodgeBall/pixmaps/Red.png");
-    if(!in.open(QIODevice::ReadOnly))
-    {
-        qDebug() << in.errorString();
-    }
-    red = in.readAll();
-    in.close();
-    in.setFileName("../DodgeBall/pixmaps/Blue.png");
-    QByteArray blue;
-    if(!in.open(QIODevice::ReadOnly))
-    {
-        qDebug() << in.errorString();
-    }
-    blue = in.readAll();
-    in.close();
+//    QByteArray red;
+//    QFile in("../DodgeBall/pixmaps/Red.png");
+//    if(!in.open(QIODevice::ReadOnly))
+//    {
+//        qDebug() << in.errorString();
+//    }
+//    red = in.readAll();
+//    in.close();
+//    in.setFileName("../DodgeBall/pixmaps/Blue.png");
+//    QByteArray blue;
+//    if(!in.open(QIODevice::ReadOnly))
+//    {
+//        qDebug() << in.errorString();
+//    }
+//    blue = in.readAll();
+//    in.close();
 
-    qDebug() << "Red array: " << red;
-    qDebug() << "Blue array: " << blue;
+//    qDebug() << "Red array: " << red;
+//    qDebug() << "Blue array: " << blue;
 
     QSqlQuery q;
-    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
-    q.bindValue(":pixmap", red);
-    q.bindValue(":team", "red");
-    q.bindValue(":hasBall", 0);
-    if(!q.exec())
-    {
-        qDebug() << start.lastError();
-        qDebug() << "Error on INSERT";
-    }
-    q.clear();
-    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
-    q.bindValue(":pixmap", blue);
-    q.bindValue(":team", "blue");
-    q.bindValue(":hasBall", 0);
-    if(!q.exec())
-    {
-        qDebug() << start.lastError();
-        qDebug() << "Error on INSERT";
-    }
-    q.clear();
+//    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
+//    q.bindValue(":pixmap", red);
+//    q.bindValue(":team", "red");
+//    q.bindValue(":hasBall", 0);
+//    if(!q.exec())
+//    {
+//        qDebug() << start.lastError();
+//        qDebug() << "Error on INSERT";
+//    }
+//    q.clear();
+//    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
+//    q.bindValue(":pixmap", blue);
+//    q.bindValue(":team", "blue");
+//    q.bindValue(":hasBall", 0);
+//    if(!q.exec())
+//    {
+//        qDebug() << start.lastError();
+//        qDebug() << "Error on INSERT";
+//    }
+//    q.clear();
     if(!q.exec("SELECT UID FROM players"))  // now going to populate the in_game table
     {
         qDebug() << start.lastError();
@@ -404,7 +404,7 @@ void GameServer::onTimeout()
         int x;
         int y;
         bool hasBall;
-        QByteArray ba;
+//        QByteArray ba;
         int uid;
         uid = q.value(0).toInt();
         qDebug() << "Got the UID: " << uid;
@@ -457,19 +457,19 @@ void GameServer::onTimeout()
         hasBall = qq.value(0).toInt();
         qDebug() << "Player hasBall" << hasBall;
         qq.clear();
-        qq.prepare("SELECT pixmaps FROM sprites WHERE team=:team AND hasBall=:hasBall");
-        qq.bindValue(":team",team);
-        qq.bindValue(":hasBall",hasBall);
-        if(!qq.exec())
-        {
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
-            timer->stop();
-        }
-        qq.next();
-        ba = qq.value(0).toByteArray();
-        qDebug() << "Byte Array " << ba;
-        qq.clear();
+//        qq.prepare("SELECT pixmaps FROM sprites WHERE team=:team AND hasBall=:hasBall");
+//        qq.bindValue(":team",team);
+//        qq.bindValue(":hasBall",hasBall);
+//        if(!qq.exec())
+//        {
+//            qDebug() << qq.lastError();
+//            qDebug() << "Error on SELECT";
+//            timer->stop();
+//        }
+//        qq.next();
+//        ba = qq.value(0).toByteArray();
+//        qDebug() << "Byte Array " << ba;
+//        qq.clear();
 
         // build packet and send  (packet string layout--> "PLAYER: uid team x y hasBall pixmap") spaces are how the client knows the difference
         msg.append("PLAYER: ");
@@ -482,8 +482,8 @@ void GameServer::onTimeout()
         msg.append(QString::number(y));
         msg.append(" ");
         msg.append(QString::number(hasBall));
-        msg.append(" ");
-        msg.append(ba);
+//        msg.append(" ");
+//        msg.append(QString::fromUtf8(ba));
         qDebug() << "Message to be sent: " << msg;
         sendAll(msg);
     }
