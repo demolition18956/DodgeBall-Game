@@ -470,6 +470,23 @@ void GameServer::onTimeout()
         ba = qq.value(0).toByteArray();
         qDebug() << "Byte Array " << ba;
         qq.clear();
+
+        // build packet and send  (packet string layout--> "PLAYER: uid team x y hasBall pixmap") spaces are how the client knows the difference
+        msg.append("PLAYER: ");
+        msg.append(QString::number(uid));
+        msg.append(" ");
+        msg.append(team);
+        msg.append(" ");
+        msg.append(QString::number(x));
+        msg.append(" ");
+        msg.append(QString::number(y));
+        msg.append(" ");
+        msg.append(QString::number(hasBall));
+        msg.append(" ");
+        msg.append(ba);
+        qDebug() << "Message to be sent: " << msg;
+        sendAll(msg);
     }
+
     qDebug() << "SERVER: Sent Data";
 }

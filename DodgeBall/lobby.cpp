@@ -66,6 +66,7 @@ void lobby::processMessage(){
     int ind, playNum;
     bool ok;
     while (in.readLineInto(&msg)){
+        qDebug() << msg;
         int num = msg.toInt(&ok);
         if (ok){
             if (num != 0){
@@ -77,6 +78,7 @@ void lobby::processMessage(){
                 break;
             }
         }
+        qDebug() << msg;
         if ((ind = msg.indexOf("Number: ")) != -1){
             ind += 8;
             playNum = msg.right(msg.length() - ind).toInt(&ok);
@@ -147,7 +149,55 @@ void lobby::processMessage(){
             map.setWindowState(Qt::WindowFullScreen);
             map.show();
         }
+
+        // Either Player info or Ball info
+        QTextStream message(&msg, QIODevice::ReadOnly);
+        QString buffer;
+        message >> buffer;
+        qDebug() << "BUFFER: " << buffer;
+
+
+        // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall pixmap")
+        if(buffer == "PLAYER:")
+        {
+            qDebug() << "WE are in";
+            int uid;
+            QString team;
+            int x;
+            int y;
+            bool hasBall;
+            QByteArray pixmap;
+            buffer.clear();
+            message >> buffer;  // uid read
+            uid = buffer.toInt();
+            buffer.clear();
+            message >> buffer;  // team read
+            team = buffer;
+            buffer.clear();
+            message >> buffer;   // x pos read
+            x = buffer.toInt();
+            buffer.clear();
+            message >> buffer;   // y pos read
+            y = buffer.toInt();
+            buffer.clear();
+            message >> buffer;   // hasBall read
+            hasBall = buffer.toInt();
+            buffer.clear();
+            message >> buffer;   // pixmap read
+            qDebug() << buffer;
+            QTextStream pix(&buffer, QIODevice::ReadOnly);  // text stream to readyfrom buffer(QString) to pixmap(ByteArray)
+            pix >> pixmap;
+            buffer.clear();
+            qDebug() << "Player Data Read: ";
+            qDebug() << "UID: " << uid;
+            qDebug() << "Team: " << team;
+            qDebug() << "x: " << x;
+            qDebug() << "y: " << y;
+            qDebug() << "hasBall: " << hasBall;
+            qDebug() << "pixmap: " << pixmap;
+        }
     }
+    qDebug() << "CLIENT MESSAGE: " << msg;
 }
 
 bool lobby::isHost()
