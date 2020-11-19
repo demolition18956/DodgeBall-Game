@@ -11,10 +11,11 @@ mapDialog::mapDialog(QWidget *parent) :
     ui->setupUi(this);
     scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
-    QRectF bounds = scene->itemsBoundingRect();
-    bounds.setWidth(bounds.width()*0.9);
-    bounds.setHeight(bounds.height()*0.9);
-    ui->graphicsView->fitInView(bounds, Qt::IgnoreAspectRatio);
+    //QRectF bounds = scene->itemsBoundingRect();
+    //bounds.setWidth(bounds.width()*0.9);
+    //bounds.setHeight(bounds.height()*0.9);
+    //ui->graphicsView->fitInView(bounds, Qt::IgnoreAspectRatio);
+    showNormal();
     ui->graphicsView->centerOn(0, 0);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing);
     myPlayer = new Player(0,0,true,"red");

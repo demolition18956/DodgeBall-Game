@@ -22,7 +22,8 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     {
         teamColors.load(":/pixmaps/Blue.png");
     }
-    if (isUser){
+    if (isUser)
+    {
         heart.moveTo(x,y+h*1.0/4.0);
         heart.cubicTo(x-w/4.0,y-h*1.0/4.0,x,y-h/4.0,x,y-h/16.0);
         heart.moveTo(x,y+h*1.0/4.0);
@@ -175,10 +176,12 @@ void Player::move(PlayerDirection dir)
     {
         //leave cat running it same direction it was
         dx=0;
-    } else if (dir==PlayerDirection::pickup){
+    } else if (dir==PlayerDirection::pickup)
+    {
         ballAttempt = true;
     }
-    else if (dir == PlayerDirection::stoppick){
+    else if (dir == PlayerDirection::stoppick)
+    {
         ballAttempt = false;
     }
 }

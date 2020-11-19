@@ -50,7 +50,8 @@ void MainWindow::joinNew(QString ipAddress, int portNumber)
 
 }
 
-void MainWindow::exitFunc(){
+void MainWindow::exitFunc()
+{
     qDebug("Exit");
     quitDialog->exec();
 }
@@ -78,7 +79,8 @@ void MainWindow::joinFunc()
     qDebug() << "here";
 }
 
-void MainWindow::showBack(){
+void MainWindow::showBack()
+{
     ui->stackedWidget->setCurrentIndex(0);
     this->show();
 }

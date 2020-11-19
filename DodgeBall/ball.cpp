@@ -23,7 +23,8 @@ void Ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Ball::advance(int phase)
 {
-    if (phase != 0){
+    if (phase != 0)
+    {
         this->moveBy(0,0);
     }
     return;

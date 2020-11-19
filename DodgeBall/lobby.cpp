@@ -11,7 +11,8 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     connect(ui->readyButton, SIGNAL(pressed()), this, SLOT(playerReady()));
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
     qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
-    for (const QHostAddress &address: QNetworkInterface::allAddresses()) {
+    for (const QHostAddress &address: QNetworkInterface::allAddresses())
+    {
         if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
              qDebug() << address.toString();
     }
@@ -69,7 +70,8 @@ void lobby::processMessage(){
     while (in.readLineInto(&msg)){
         qDebug() << msg;
         int num = msg.toInt(&ok);
-        if (ok){
+        if (ok)
+        {
             if (num != 0){
                 qDebug() << "UID set";
                 playeruid = num;
@@ -80,16 +82,19 @@ void lobby::processMessage(){
             }
         }
         qDebug() << msg;
-        if ((ind = msg.indexOf("Number: ")) != -1){
+        if ((ind = msg.indexOf("Number: ")) != -1)
+        {
             ind += 8;
             playNum = msg.right(msg.length() - ind).toInt(&ok);
             qDebug() << "Number " << msg.right(msg.length() - ind) << ok;
         }
-        else if ((ind = msg.indexOf("Player Name: ")) != -1) {
+        else if ((ind = msg.indexOf("Player Name: ")) != -1)
+        {
             ind += 13;
             QString playName = msg.right(msg.length() - ind);
             qDebug() << "Name " << playName;
-            switch(playNum){
+            switch(playNum)
+            {
             case 1:
                 ui->player1NameLabel->setText(playName);
                 break;
@@ -112,7 +117,9 @@ void lobby::processMessage(){
                 qDebug() << "That's illegal";
             }
         }
-        else if ((ind = msg.indexOf("Ready: ")) != -1){
+
+        else if ((ind = msg.indexOf("Ready: ")) != -1)
+        {
             ind += 7;
             int ready = msg.right(msg.length() - ind).toInt(&ok);
             qDebug() << "Ready " << msg.right(msg.length() - ind) << ok;
@@ -140,12 +147,16 @@ void lobby::processMessage(){
                 qDebug() << "That's illegal";
             }
         }
-        else if ((ind = msg.indexOf("Joined: ")) != -1){
+
+        else if ((ind = msg.indexOf("Joined: ")) != -1)
+        {
             ind += 8;
             int readySum = msg.right(msg.length() - ind).toInt(&ok);
             ui->playercountLabel->setNum(readySum);
         }
-        else if ((ind = msg.indexOf("start")) != -1){
+
+        else if ((ind = msg.indexOf("start")) != -1)
+        {
             qDebug() << "Starting Game!";
             map = new mapDialog(this);
             map->SetSocket(&socket);
@@ -261,13 +272,15 @@ void lobby::playerReady()
     socket.write(block);
 }
 
-void lobby::leave(){
+void lobby::leave()
+{
     int button = QMessageBox::question(this, "Confirm Drop",
                                        "Are you sure you sure you want to leave?",
                                        QMessageBox::Yes, QMessageBox::No);
 
 
-    if(button == QMessageBox::Yes){
+    if(button == QMessageBox::Yes)
+    {
         this->deleteLater();
         if(host == true) server->close();
 //        socket.disconnectFromHost();
@@ -276,7 +289,8 @@ void lobby::leave(){
 
 }
 
-void lobby::changeName(){
+void lobby::changeName()
+{
     QString msg = ui->nameEdit->text();
     if (msg.isEmpty())
         return;
@@ -288,6 +302,7 @@ void lobby::changeName(){
     socket.write(block);
 }
 
-bool lobby::getConnected(){
+bool lobby::getConnected()
+{
     return connected;
 }
