@@ -23,6 +23,11 @@ mapDialog::mapDialog(QWidget *parent) :
     scene->addItem(testBall);
     scene->addItem(myPlayer);
     setFixedSize(XMAX + 100,YMAX + 100);
+    QPen pen;
+    pen.setColor(QColor(255,255,255));
+    pen.setWidth(10);
+    scene->addLine(0, YMAX/2, 0, -YMAX/2, pen);
+
 
     ui->graphicsView->setScene(scene);
     ui->graphicsView->show();

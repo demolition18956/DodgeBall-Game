@@ -39,6 +39,7 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
 //    starpts[7] = QPointF(x-w/2+(3.5/14 * (float)w),y-h/2+(9.0/14 * (float)h));
 //    starpts[8] = QPointF(x-w/2+(0.0/14 * (float)w),y-h/2+(5.5/14 * (float)h));
 //    starpts[9] = QPointF(x-w/2+(5.0/14 * (float)w),y-h/2+(5.0/14 * (float)h));
+
 }
 
 QRectF Player::boundingRect() const
@@ -74,6 +75,7 @@ void Player::advance(int phase)
                 }
             }
         }
+
         if ((this->pos().y() < -YMAX/2 + h/2) || (this->pos().y() > YMAX/2 - h/2)){
             qDebug() << "Max Y Hit";
             this->moveBy(0,-dy);

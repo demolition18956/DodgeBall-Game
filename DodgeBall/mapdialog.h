@@ -31,6 +31,7 @@ private:
     QTcpSocket* socket;
     Player* myPlayer;
     QTimer* timer;
+    QLine line;
 };
 
 #endif // MAPDIALOG_H
