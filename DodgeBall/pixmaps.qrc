@@ -1,6 +1,6 @@
 <RCC>
-    <qresource prefix="/:">
-        <file>pixmaps/Blue.png</file>
-        <file>pixmaps/Red.png</file>
+    <qresource prefix="/pixmaps">
+        <file>Blue.png</file>
+        <file>Red.png</file>
     </qresource>
 </RCC>

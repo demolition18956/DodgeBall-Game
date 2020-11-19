@@ -40,6 +40,7 @@ private:
     JoinLobbyDialog *joinDialog;
     GameServer* server;
     lobby* gameLobby;
+
 };
 
 #endif // MAINWINDOW_H

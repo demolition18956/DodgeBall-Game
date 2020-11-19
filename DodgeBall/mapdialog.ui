@@ -34,16 +34,11 @@
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
-  <widget class="QGraphicsView" name="graphicsView">
-   <property name="geometry">
-    <rect>
-     <x>5</x>
-     <y>1</y>
-     <width>591</width>
-     <height>301</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGraphicsView" name="graphicsView"/>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

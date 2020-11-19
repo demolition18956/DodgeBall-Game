@@ -33,7 +33,8 @@ SOURCES += \
         mainwindow.cpp \
         mapdialog.cpp \
         player.cpp \
-        quitdialog.cpp
+        quitdialog.cpp \
+    ball.cpp
 
 HEADERS += \
     gameserver.h \
@@ -43,7 +44,9 @@ HEADERS += \
         mainwindow.h \
     mapdialog.h \
     player.h \
-        quitdialog.h
+        quitdialog.h \
+    defs.h \
+    ball.h
 
 FORMS += \
         hostlobbydialog.ui \
@@ -52,6 +55,9 @@ FORMS += \
         mainwindow.ui \
         mapdialog.ui \
         quitdialog.ui
+
+RESOURCES += \
+        pixmaps.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

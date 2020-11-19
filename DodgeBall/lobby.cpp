@@ -54,6 +54,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
 
 lobby::~lobby()
 {
+
     delete ui;
     delete server;
 }
@@ -146,8 +147,10 @@ void lobby::processMessage(){
         }
         else if ((ind = msg.indexOf("start")) != -1){
             qDebug() << "Starting Game!";
-            map.setWindowState(Qt::WindowFullScreen);
-            map.show();
+            map = new mapDialog(this);
+            map->SetSocket(&socket);
+            map->setWindowState(Qt::WindowFullScreen);
+            map->show();
         }
 
         // Either Player info or Ball info
@@ -267,6 +270,7 @@ void lobby::leave(){
     if(button == QMessageBox::Yes){
         this->deleteLater();
         if(host == true) server->close();
+//        socket.disconnectFromHost();
         emit showAgain();
     }
 

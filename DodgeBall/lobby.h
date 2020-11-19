@@ -36,7 +36,7 @@ private:
     GameServer* server;
     int playeruid;
     bool connected;
-    mapDialog map;
+    mapDialog* map;
 
 signals:
     void ready();
