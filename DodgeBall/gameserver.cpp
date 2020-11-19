@@ -303,7 +303,7 @@ void GameServer::clientDisconnected()
 }
 
 void GameServer::StartGame()
-//send a message to start the game
+// send a message to start the game
 {
     qDebug() << "SERVER: Starting Game";
     this->sendAll("start");
