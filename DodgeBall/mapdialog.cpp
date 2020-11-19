@@ -46,22 +46,22 @@ mapDialog::~mapDialog()
 void mapDialog::keyPressEvent(QKeyEvent *e)
 {
     if(e!=NULL){
-        if(e->key()==Qt::Key_W)
+        if(e->key()==Qt::Key_W || e->key()==Qt::Key_Up)
         {
             qDebug() << "up";
             myPlayer->move(PlayerDirection::up);
         }
-        else if(e->key()==Qt::Key_A)
+        else if(e->key()==Qt::Key_A || e->key()==Qt::Key_Left)
         {
             qDebug() << "left";
             myPlayer->move(PlayerDirection::left);
         }
-        else if(e->key()==Qt::Key_S)
+        else if(e->key()==Qt::Key_S || e->key()==Qt::Key_Down)
         {
             qDebug() << "down";
             myPlayer->move(PlayerDirection::down);
         }
-        else if(e->key()==Qt::Key_D)
+        else if(e->key()==Qt::Key_D || e->key()==Qt::Key_Right)
         {
             qDebug() << "right";
             myPlayer->move(PlayerDirection::right);
@@ -79,12 +79,12 @@ void mapDialog::keyReleaseEvent(QKeyEvent *e)
 {
     if (e!=NULL)
     {
-        if((e->key()==Qt::Key_W) || (e->key()==Qt::Key_S))
+        if((e->key()==Qt::Key_W) || (e->key()==Qt::Key_S) || ((e->key()==Qt::Key_Up) || (e->key()==Qt::Key_Down)))
         {
             qDebug() << "up";
             myPlayer->move(PlayerDirection::vstop);
         }
-        else if((e->key()==Qt::Key_A) || (e->key()==Qt::Key_D))
+        else if((e->key()==Qt::Key_A) || (e->key()==Qt::Key_D) || ((e->key()==Qt::Key_Left) || (e->key()==Qt::Key_Right)))
         {
             qDebug() << "left";
             myPlayer->move(PlayerDirection::hstop);
