@@ -12,6 +12,7 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     y = _y;
     dx = 0;
     dy = 0;
+    ballAttempt = false;
     hasBall = false;
     isUser = _isUser;
     QString team = _team;
@@ -24,11 +25,12 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     }
     if (isUser)
     {
-        heart.moveTo(x,y+h*1.0/4.0);
-        heart.cubicTo(x-w/4.0,y-h*1.0/4.0,x,y-h/4.0,x,y-h/16.0);
-        heart.moveTo(x,y+h*1.0/4.0);
-        heart.cubicTo(x+w/4.0,y-h*1.0/4.0,x,y-h/4.0,x,y-h/16.0);
+        heart.moveTo(0,h*1.0/4.0);
+        heart.cubicTo(-w/4.0,-h*1.0/4.0,0,-h/4.0,0,-h/16.0);
+        heart.moveTo(0,h*1.0/4.0);
+        heart.cubicTo(w/4.0,-h*1.0/4.0,0,-h/4.0,0,-h/16.0);
     }
+    this->setPos(x, y);
 //    starpts[0] = QPointF(x-w/2+(6.5/14 * (float)w),y-h/2+(0.0/14 * h));
 //    starpts[1] = QPointF(x-w/2+(9.0/14 * (float)w),y-h/2+(5.0/14 * (float)h));
 //    starpts[2] = QPointF(x-w/2+(14.0/14 * (float)w),y-h/2+(5.5/14 * (float)h));
@@ -51,8 +53,6 @@ QRectF Player::boundingRect() const
 void Player::advance(int phase)
 {
     if(phase==0){
-        this->pos().setX(x);
-        this->pos().setY(y);
         return;
     }
     else
@@ -62,17 +62,25 @@ void Player::advance(int phase)
         y = this->pos().y();
         QList<QGraphicsItem*> collisions = this->collidingItems();
         qDebug() << collisions.size();
-        if (ballAttempt && collisions.size()>0)
+        if (collisions.size()>0)
         {
             foreach(QGraphicsItem *i, collisions)
             {
-                Ball* b = dynamic_cast<Ball *>(i);
-                if(b)
-                {
-                    qDebug() << b->type();
-                    this->scene()->removeItem(b);
-                    hasBall = true;
+                if (ballAttempt){
+                    Ball* b = dynamic_cast<Ball *>(i);
+                    if(b)
+                    {
+                        qDebug() << b->type();
+                        this->scene()->removeItem(b);
+                        hasBall = true;
+                    }
                 }
+                QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
+                if (line)
+                {
+                    this->moveBy(-dx,0);
+                }
+
             }
         }
 

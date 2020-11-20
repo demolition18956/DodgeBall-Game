@@ -18,7 +18,7 @@ mapDialog::mapDialog(QWidget *parent) :
     showNormal();
     ui->graphicsView->centerOn(0, 0);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing);
-    myPlayer = new Player(0,0,true,"red");
+    myPlayer = new Player(200,200,true,"red");
     Ball *testBall = new Ball(100,100);
     scene->addItem(testBall);
     scene->addItem(myPlayer);
