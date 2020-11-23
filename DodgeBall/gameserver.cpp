@@ -381,15 +381,6 @@ void GameServer::StartGame()
     while(q.next())
     {
         qreal x;
-        if(team == "red")
-        {
-            team = "blue";
-        }
-        else
-        {
-            off += YMAX/plays;
-            team = "red";
-        }
         x = (team == "red") ? -XMAX/2 + 100 : XMAX/2 - 100;
         qDebug() << "X = " << x;
         qDebug() << "Offset = " << off;
@@ -406,6 +397,15 @@ void GameServer::StartGame()
             qDebug() << "Error on INSERT";
         }
         qq.clear();
+        if(team == "red")
+        {
+            team = "blue";
+        }
+        else
+        {
+            off += YMAX/plays;
+            team = "red";
+        }
     }
     timer->start(250);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);

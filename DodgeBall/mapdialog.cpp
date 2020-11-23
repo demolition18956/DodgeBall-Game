@@ -114,7 +114,7 @@ void mapDialog::processMessage()
 
 
     // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall pixmap")
-    if(buffer == "PLAYER:")
+    while(buffer == "PLAYER:")
     {
         int uid;
         QString team;
@@ -125,24 +125,31 @@ void mapDialog::processMessage()
         buffer.clear();
         message >> buffer;  // uid read
         uid = buffer.toInt();
+        qDebug() << "Recieved the UID:" << uid;
         buffer.clear();
         message >> buffer;  // team read
         team = buffer;
+        qDebug() << "Recieved the Team:" << team;
         buffer.clear();
         message >> buffer;   // x pos read
         x = buffer.toInt();
+        qDebug() << "Recieved the X:" << x;
         buffer.clear();
         message >> buffer;   // y pos read
         y = buffer.toInt();
+        qDebug() << "Recieved the Y:" << y;
         buffer.clear();
         message >> buffer;   // hasBall read
         hasBall = buffer.toInt();
+        qDebug() << "Recieved the HasBall" << hasBall;
         buffer.clear();
         if (playersUid[uid] == nullptr){
             qDebug() << "yo";
             playersUid[uid] = new Player(x,y,uid == myPlayer,team);
             scene->addItem(playersUid[uid]);
         }
+        message.readLine();
+        message >> buffer;
 
     }
 }
