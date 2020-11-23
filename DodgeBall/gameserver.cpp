@@ -4,6 +4,10 @@
 #include <QPixmap>
 #include <QFile>
 
+//*************************************************************************************************//
+//                                      Constructor                                                //
+//*************************************************************************************************//
+
 GameServer::GameServer(QObject* parent) :
     QTcpServer(parent)
 {
@@ -82,6 +86,10 @@ GameServer::GameServer(QObject* parent) :
     timer = new QTimer(this);
 }
 
+//*************************************************************************************************//
+//                                      Connections                                                //
+//*************************************************************************************************//
+
 // A potential Client has been detected
 void GameServer::ProcessNewConnections()
 {
@@ -135,10 +143,60 @@ void GameServer::ProcessNewConnections()
     }
 }
 
+int GameServer::getMinSocket()
+{
+    QSqlQuery q;
+    if (!q.exec("SELECT MIN(UID) FROM sockets WHERE UID NOT IN (SELECT UID FROM players)"))
+    {
+        qDebug() << q.lastError();
+        qDebug() << "Error on MIN";
+    }
+    while (q.next())
+    {
+        return (q.value(0).toInt() - 1);
+    }
+    return -1;
+}
+
+void GameServer::clientDisconnected()
+{
+    for(int i=0;i<6;i++)
+    {
+        qDebug() << playerSockets[i];
+        if(playerSockets[i] != nullptr)
+        {
+            qDebug() << playerSockets[i]->state();
+            if(playerSockets[i]->state() == QAbstractSocket::ConnectedState)
+            {
+                continue;
+            }
+            else if (playerSockets[i]->state() == QAbstractSocket::UnconnectedState)
+            {
+                playerSockets[i]->deleteLater();
+                playerSockets[i] = nullptr;
+                playerCount--;
+                // SQL HERE
+                QSqlQuery del;
+                if (!del.exec("DELETE FROM players WHERE UID=" + QString::number(i+1)))
+                {
+                    qDebug() << del.lastError();
+                    qDebug() << "Error on DELETE";
+                }
+                this->UpdateClients();
+                qDebug() << "Done";
+            }
+        }
+    }
+}
+
 GameServer::~GameServer()
 {
 
 }
+
+//*************************************************************************************************//
+//                                      Client Details                                             //
+//*************************************************************************************************//
 
 // Function for Updating Clients on mutual information in Lobby
 void GameServer::UpdateClients() {
@@ -184,20 +242,9 @@ void GameServer::UpdateClients() {
     }
 }
 
-int GameServer::getMinSocket()
-{
-    QSqlQuery q;
-    if (!q.exec("SELECT MIN(UID) FROM sockets WHERE UID NOT IN (SELECT UID FROM players)"))
-    {
-        qDebug() << q.lastError();
-        qDebug() << "Error on MIN";
-    }
-    while (q.next())
-    {
-        return (q.value(0).toInt() - 1);
-    }
-    return -1;
-}
+//*************************************************************************************************//
+//                                      Ready Up Information                                       //
+//*************************************************************************************************//
 
 void GameServer::ReportReady()
 {
@@ -266,6 +313,7 @@ void GameServer::ReportReady()
         }
     }
 }
+
 void GameServer::UpdateReady()
 {
 
@@ -297,36 +345,9 @@ void GameServer::UpdateReady()
     }
 }
 
-void GameServer::clientDisconnected()
-{
-    for(int i=0;i<6;i++)
-    {
-        qDebug() << playerSockets[i];
-        if(playerSockets[i] != nullptr)
-        {
-            qDebug() << playerSockets[i]->state();
-            if(playerSockets[i]->state() == QAbstractSocket::ConnectedState)
-            {
-                continue;
-            }
-            else if (playerSockets[i]->state() == QAbstractSocket::UnconnectedState)
-            {
-                playerSockets[i]->deleteLater();
-                playerSockets[i] = nullptr;
-                playerCount--;
-                // SQL HERE
-                QSqlQuery del;
-                if (!del.exec("DELETE FROM players WHERE UID=" + QString::number(i+1)))
-                {
-                    qDebug() << del.lastError();
-                    qDebug() << "Error on DELETE";
-                }
-                this->UpdateClients();
-                qDebug() << "Done";
-            }
-        }
-    }
-}
+//*************************************************************************************************//
+//                                      Server Details                                             //
+//*************************************************************************************************//
 
 void GameServer::StartGame()
 // send a message to start the game

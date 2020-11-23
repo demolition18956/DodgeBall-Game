@@ -3,6 +3,10 @@
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
 
+//*************************************************************************************************//
+//                                      Constructor                                                //
+//*************************************************************************************************//
+
 lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::lobby)
@@ -60,7 +64,12 @@ lobby::~lobby()
     delete server;
 }
 
+//*************************************************************************************************//
+//                                      Client Handling                                            //
+//*************************************************************************************************//
+
 void lobby::processMessage(){
+
     qDebug() << "Message Processing";
     QByteArray datagram;
     QString msg;
@@ -86,14 +95,17 @@ void lobby::processMessage(){
         if ((ind = msg.indexOf("Number: ")) != -1)
         {
             ind += 8;
+
             playNum = msg.right(msg.length() - ind).toInt(&ok);
             qDebug() << "Number " << msg.right(msg.length() - ind) << ok;
         }
         else if ((ind = msg.indexOf("Player Name: ")) != -1)
         {
             ind += 13;
+
             QString playName = msg.right(msg.length() - ind);
             qDebug() << "Name " << playName;
+
             switch(playNum)
             {
             case 1:
@@ -122,9 +134,11 @@ void lobby::processMessage(){
         else if ((ind = msg.indexOf("Ready: ")) != -1)
         {
             ind += 7;
+
             int ready = msg.right(msg.length() - ind).toInt(&ok);
             qDebug() << "Ready " << msg.right(msg.length() - ind) << ok;
             QString readyStr = (ready == 0) ? "Not Ready" : "Ready";
+
             switch(playNum){
             case 1:
                 ui->player1ReadyLabel->setText(readyStr);
@@ -159,9 +173,11 @@ void lobby::processMessage(){
         else if ((ind = msg.indexOf("start")) != -1)
         {
             qDebug() << "Starting Game!";
+
             map = new mapDialog(playeruid,this);
             map->SetSocket(&socket);
             map->setWindowState(Qt::WindowFullScreen);
+
             disconnect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             map->show();
             return;
@@ -177,13 +193,14 @@ void lobby::processMessage(){
         // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall pixmap")
         if(buffer == "PLAYER:")
         {
+
             qDebug() << "WE are in";
             int uid;
             QString team;
             int x;
             int y;
             bool hasBall;
-//            QByteArray pixmap;
+
             buffer.clear();
             message >> buffer;  // uid read
             uid = buffer.toInt();
@@ -200,19 +217,13 @@ void lobby::processMessage(){
             message >> buffer;   // hasBall read
             hasBall = buffer.toInt();
             buffer.clear();
-//            message >> buffer;   // pixmap read
-//            qDebug() << buffer;
-//            //QTextStream pix(&buffer, QIODevice::ReadOnly);  // text stream to readyfrom buffer(QString) to pixmap(ByteArray)
-//            //pix >> pixmap;
-//            pixmap = buffer.toUtf8();
-//            buffer.clear();
+
             qDebug() << "Player Data Read: ";
             qDebug() << "UID: " << uid;
             qDebug() << "Team: " << team;
             qDebug() << "x: " << x;
             qDebug() << "y: " << y;
             qDebug() << "hasBall: " << hasBall;
-//            qDebug() << "pixmap: " << pixmap;
         }
     }
     qDebug() << "CLIENT MESSAGE: " << msg;
@@ -222,6 +233,10 @@ bool lobby::isHost()
 {
     return host;
 }
+
+//*************************************************************************************************//
+//                                      Connections                                                //
+//*************************************************************************************************//
 
 void lobby::initialConnect()
 {
@@ -278,9 +293,8 @@ void lobby::playerReady()
 void lobby::leave()
 {
     int button = QMessageBox::question(this, "Confirm Drop",
-                                       "Are you sure you sure you want to leave?",
-                                       QMessageBox::Yes, QMessageBox::No);
-
+        "Are you sure you sure you want to leave?",
+            QMessageBox::Yes, QMessageBox::No);
 
     if(button == QMessageBox::Yes)
     {
