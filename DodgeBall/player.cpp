@@ -58,8 +58,6 @@ void Player::advance(int phase)
     else
     {
         this->moveBy(dx,dy);
-        x = this->pos().x();
-        y = this->pos().y();
         QList<QGraphicsItem*> collisions = this->collidingItems();
         qDebug() << collisions.size();
         if (collisions.size()>0)
@@ -93,6 +91,9 @@ void Player::advance(int phase)
             this->moveBy(-dx,0);
         }
 
+        x = this->pos().x();
+        y = this->pos().y();
+
     }
 }
 
@@ -106,8 +107,8 @@ void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         outline = Qt::white;
     }
     painter->drawPixmap(-w/2,-h/2,w,h,teamColors);
-    painter->setPen(QPen(outline, 2, Qt::SolidLine, Qt::FlatCap));
-    painter->drawRect((-w/2),(-h/2),w,h);
+    painter->setPen(QPen(outline, 5, Qt::SolidLine, Qt::FlatCap));
+    painter->drawRect((-w/2),(-h/2),w-1,h-1);
     if (isUser)
     {
         painter->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::FlatCap));

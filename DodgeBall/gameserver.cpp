@@ -8,7 +8,10 @@ GameServer::GameServer(QObject* parent) :
     QTcpServer(parent)
 {
     setMaxPendingConnections(6);
+    // Listen and Process new connections
     connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
+
+    // Open Port for Server at port 2224
     if(!this->listen(QHostAddress::Any,2224))
     {
         qDebug() << "SERVER: Could not start server";
@@ -18,7 +21,10 @@ GameServer::GameServer(QObject* parent) :
         qDebug() << "SERVER: Listening";
     }
 
+    // initialize Player Count
     playerCount = 0;
+
+    // Configure SQL Server
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(":memory:");
     if (!db.open())
@@ -28,6 +34,7 @@ GameServer::GameServer(QObject* parent) :
     }
     QSqlQuery setup;
 
+    // Create Players Table to record player info
     setup.exec("CREATE TABLE players(UID INT, playername TEXT, ready INT, ip TEXT, check(UID<=6))");
     if (!setup.isActive())
     {
@@ -35,6 +42,7 @@ GameServer::GameServer(QObject* parent) :
         qDebug() << "Creating Table 1 Error: unable to complete query";
         return;
     }
+    // Create Sockets Table to number Players
     setup.exec("CREATE TABLE sockets(UID INT check(UID<=6))");
     if (!setup.isActive())
     {
@@ -42,6 +50,8 @@ GameServer::GameServer(QObject* parent) :
         qDebug() << "Creating Table 2 Error: unable to complete query";
         return;
     }
+
+    // Insert Values 1-6
     setup.exec("INSERT INTO sockets VALUES(1)");
     if (!setup.isActive())
     {
@@ -67,17 +77,24 @@ GameServer::GameServer(QObject* parent) :
         qDebug() << "Error: unable to complete query";
         return;
     }
+
+    // Initialize timer
     timer = new QTimer(this);
 }
 
+// A potential Client has been detected
 void GameServer::ProcessNewConnections()
 {
     qDebug() << "Signal Emitted";
+    // Loop until all Connections are taken care of
     while(hasPendingConnections())
     {
         qDebug() << "SERVER: processing incoming connection";
+
+        // If Lobby is already full
         if(playerCount >= 6)
         {
+            // Reject the player and return function
             QTcpSocket* sock = nextPendingConnection();
             sock->write("0");   // 0 for Rejected
             sock->abort();
@@ -85,27 +102,34 @@ void GameServer::ProcessNewConnections()
             qDebug() << "SERVER: player rejected!";
             return;
         }
+
+        // Else,
         QTcpSocket* sock = this->nextPendingConnection();
 
-        int sNum = getMinSocket();
-        sock->write(QByteArray::number(sNum+1) + QByteArray("\n"));
-        QSqlQuery qqqq;
-        qqqq.prepare("INSERT INTO players(UID, playername, ready, ip) VALUES(?, ?, ?, ?)");
-        qqqq.addBindValue(sNum+1);
-        qqqq.addBindValue("Player " + QString::number(++playerCount));
+        // Choose the last socket
+        int sNum = getMinSocket();                                      // Grab the Socket offset from pointer
+        sock->write(QByteArray::number(sNum+1) + QByteArray("\n"));     // Alert the player of their socket position (UID)
+
+        QSqlQuery qqqq;                                                                     // Prepare to update insert Player
+        qqqq.prepare("INSERT INTO players(UID, playername, ready, ip) VALUES(?, ?, ?, ?)"); // info into PLAYERS table
+        qqqq.addBindValue(sNum+1);                                              // Bind UID
+        qqqq.addBindValue("Player " + QString::number(++playerCount));          // Bind Default Name
         qDebug() << "Player Count " << playerCount;
         qDebug() << "Player " + QString::number(playerCount);
         int dfault = 0;
-        qqqq.addBindValue(dfault);
-        qqqq.addBindValue(sock->peerAddress().toString());
+        qqqq.addBindValue(dfault);                                              // Bind Default Ready Status (0 = false)
+        qqqq.addBindValue(sock->peerAddress().toString());                       // Bind IP address (never used tho... oops)
         qDebug() << sock->peerAddress().toString();
+        // Execute and Verify if command worked
         if (!qqqq.exec())
         {
            qDebug() << qqqq.lastError();
            qDebug() << "Error on INSERT";
         }
-        playerSockets[sNum] = sock;
-        this->UpdateClients();
+        playerSockets[sNum] = sock;                     // Set pointer to created socket
+        this->UpdateClients();                          // Update all sockets on Player Info
+
+        // Set up Reading Parsing Slot and Disconnection Slot
         connect(playerSockets[sNum], &QTcpSocket::readyRead,this, &GameServer::ReportReady);
         connect(playerSockets[sNum], &QTcpSocket::stateChanged, this, &GameServer::clientDisconnected);
     }
@@ -116,7 +140,9 @@ GameServer::~GameServer()
 
 }
 
+// Function for Updating Clients on mutual information in Lobby
 void GameServer::UpdateClients() {
+
 
     QSqlQuery socks;
     if (!socks.exec("SELECT UID FROM players"))
@@ -319,68 +345,38 @@ void GameServer::StartGame()
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
     }
-//    QByteArray red;
-//    QFile in("../DodgeBall/pixmaps/Red.png");
-//    if(!in.open(QIODevice::ReadOnly))
-//    {
-//        qDebug() << in.errorString();
-//    }
-//    red = in.readAll();
-//    in.close();
-//    in.setFileName("../DodgeBall/pixmaps/Blue.png");
-//    QByteArray blue;
-//    if(!in.open(QIODevice::ReadOnly))
-//    {
-//        qDebug() << in.errorString();
-//    }
-//    blue = in.readAll();
-//    in.close();
-
-//    qDebug() << "Red array: " << red;
-//    qDebug() << "Blue array: " << blue;
-
+    qDebug() << "In-game table created";
     QSqlQuery q;
-//    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
-//    q.bindValue(":pixmap", red);
-//    q.bindValue(":team", "red");
-//    q.bindValue(":hasBall", 0);
-//    if(!q.exec())
-//    {
-//        qDebug() << start.lastError();
-//        qDebug() << "Error on INSERT";
-//    }
-//    q.clear();
-//    q.prepare("INSERT INTO sprites VALUES( :pixmap, :team, :hasBall )");
-//    q.bindValue(":pixmap", blue);
-//    q.bindValue(":team", "blue");
-//    q.bindValue(":hasBall", 0);
-//    if(!q.exec())
-//    {
-//        qDebug() << start.lastError();
-//        qDebug() << "Error on INSERT";
-//    }
-//    q.clear();
     if(!q.exec("SELECT UID FROM players"))  // now going to populate the in_game table
     {
-        qDebug() << start.lastError();
+        qDebug() << q.lastError();
         qDebug() << "Error on SELECT";
     }
     QString team = "red";
+    int plays = playerCount/2 + (playerCount % 2);
+    qDebug() << plays;
+    qreal off = -YMAX / 2*(((qreal)plays -1)/plays);
+    qDebug() << off;
     while(q.next())
     {
+        qreal x;
         if(team == "red")
         {
             team = "blue";
         }
         else
         {
+            off += YMAX/plays;
             team = "red";
         }
+        x = (team == "red") ? -XMAX/2 + 100 : XMAX/2 - 100;
+        qDebug() << "X = " << x;
+        qDebug() << "Offset = " << off;
         QSqlQuery qq;
         qq.prepare("INSERT INTO in_game VALUES(:uid, :x, :y, :hasBall, :team)");
         qq.bindValue(":uid", q.value(0).toInt());
-        qq.bindValue(":x", 0);
-        qq.bindValue(":y", 0);
+        qq.bindValue(":x", (int)x);
+        qq.bindValue(":y", (int)off);
         qq.bindValue(":hasBall", 0);
         qq.bindValue(":team", team);
         if(!qq.exec())
@@ -434,7 +430,7 @@ void GameServer::onTimeout()
         int uid;
         uid = q.value(0).toInt();
         qDebug() << "Got the UID: " << uid;
-        qq.prepare("SELECT team FROM in_game WHERE UID=:uid");
+        qq.prepare("SELECT team, x, y, hasBall FROM in_game WHERE UID=:uid");
         qq.bindValue(":uid",uid);
         if(!qq.exec())
         {
@@ -442,45 +438,18 @@ void GameServer::onTimeout()
             qDebug() << "Error on SELECT";
             timer->stop();
         }
-        qDebug() << qq.lastError();
-        qq.next();
+        if (!qq.next()){
+            qDebug() << qq.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
         team = qq.value(0).toString();
         qDebug() << "Got the Team: " << team;
-        qq.clear();
-        qq.prepare("SELECT x FROM in_game WHERE UID=:uid");
-        qq.bindValue(":uid",uid);
-        if(!qq.exec())
-        {
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
-            timer->stop();
-        }
-        qq.next();
-        x = qq.value(0).toInt();
+        x = qq.value(1).toInt();
         qDebug() << "Got the x: " << x;
-        qq.clear();
-        qq.prepare("SELECT y FROM in_game WHERE UID=:uid");
-        qq.bindValue(":uid",uid);
-        if(!qq.exec())
-        {
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
-            timer->stop();
-        }
-        qq.next();
-        y = qq.value(0).toInt();
+        y = qq.value(2).toInt();
         qDebug() << "Got the y: " << y;
-        qq.clear();
-        qq.prepare("SELECT hasBall FROM in_game WHERE UID=:uid");
-        qq.bindValue(":uid",uid);
-        if(!qq.exec())
-        {
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
-            timer->stop();
-        }
-        qq.next();
-        hasBall = qq.value(0).toInt();
+        hasBall = qq.value(3).toInt();
         qDebug() << "Player hasBall" << hasBall;
         qq.clear();
 //        qq.prepare("SELECT pixmaps FROM sprites WHERE team=:team AND hasBall=:hasBall");
@@ -511,8 +480,21 @@ void GameServer::onTimeout()
 //        msg.append(" ");
 //        msg.append(QString::fromUtf8(ba));
         qDebug() << "Message to be sent: " << msg;
+//        disconnect(playerSockets[uid], &QTcpSocket::readyRead,this, &GameServer::ReportReady);
+//        connect(playerSockets[uid], &QTcpSocket::readyRead,this, &GameServer::ReportMovement);
         sendAll(msg);
     }
 
     qDebug() << "SERVER: Sent Data";
+}
+
+void GameServer::ReportMovement()
+{
+    qDebug() << "Updating";
+    QString str;
+    int ind;
+    for (int i = 0; i < 6; i++)
+    {
+
+    }
 }

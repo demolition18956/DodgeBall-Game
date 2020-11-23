@@ -17,7 +17,7 @@ class mapDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit mapDialog(QWidget *parent = nullptr);
+    explicit mapDialog(int _uid, QWidget *parent = nullptr);
     void SetSocket(QTcpSocket* _sock);
     ~mapDialog();
 
@@ -29,9 +29,13 @@ private:
     Ui::mapDialog *ui;
     QGraphicsScene* scene;
     QTcpSocket* socket;
-    Player* myPlayer;
+    int myPlayer;
+    Player* playersUid[6] = {nullptr};
     QTimer* timer;
     QLine line;
+
+private slots:
+    void processMessage();
 };
 
 #endif // MAPDIALOG_H

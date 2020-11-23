@@ -36,6 +36,7 @@ private slots:
     void clientDisconnected();
     void sendAll(QString);
     void onTimeout();
+    void ReportMovement();
 
 
 signals:

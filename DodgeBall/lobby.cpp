@@ -75,6 +75,7 @@ void lobby::processMessage(){
             if (num != 0){
                 qDebug() << "UID set";
                 playeruid = num;
+                qDebug() << "Player UID: " << playeruid;
             }
             else {
                 // Full Lobby Error
@@ -158,10 +159,12 @@ void lobby::processMessage(){
         else if ((ind = msg.indexOf("start")) != -1)
         {
             qDebug() << "Starting Game!";
-            map = new mapDialog(this);
+            map = new mapDialog(playeruid,this);
             map->SetSocket(&socket);
             map->setWindowState(Qt::WindowFullScreen);
+            disconnect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             map->show();
+            return;
         }
 
         // Either Player info or Ball info
