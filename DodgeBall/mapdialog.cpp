@@ -3,6 +3,10 @@
 #include <QKeyEvent>
 #include "defs.h"
 
+//*************************************************************************************************//
+//                                      Constructor                                                //
+//*************************************************************************************************//
+
 mapDialog::mapDialog(int _uid, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::mapDialog)
@@ -10,15 +14,25 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
 
     ui->setupUi(this);
     myPlayer = _uid;
+
+    // Set scene dimensions and background color
     scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
+
+    // Ensures the widget size cannot be changed
     showNormal();
+    setFixedSize(XMAX + 100,YMAX + 100);
+
+    // Disallows widget focus, sets widget center and enables antialiasing
     ui->graphicsView->setFocusPolicy(Qt::NoFocus);
     ui->graphicsView->centerOn(0, 0);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing);
+
+    // Spawns a test ball
     Ball *testBall = new Ball(100,100);
     scene->addItem(testBall);
-    setFixedSize(XMAX + 100,YMAX + 100);
+
+    // Draws the center line that cannot be crossed
     QPen pen;
     pen.setColor(QColor(255,255,255));
     pen.setWidth(10);
@@ -38,29 +52,44 @@ mapDialog::~mapDialog()
     delete ui;
 }
 
+//*************************************************************************************************//
+//                                      Key Press Events                                           //
+//*************************************************************************************************//
+
 void mapDialog::keyPressEvent(QKeyEvent *e)
 {
-    if(e!=NULL){
+    // If a key is pressed
+    if(e!=NULL)
+    {
+        // If the key pressed is W or Up arrow, move player upwards
         if(e->key()==Qt::Key_W || e->key()==Qt::Key_Up)
         {
             qDebug() << "up";
             playersUid[myPlayer]->move(PlayerDirection::up);
         }
+
+        // If the key pressed is A or Left arrow, move player left
         else if(e->key()==Qt::Key_A || e->key()==Qt::Key_Left)
         {
             qDebug() << "left";
             playersUid[myPlayer]->move(PlayerDirection::left);
         }
+
+        // If the key pressed is S or Down arrow, move player upwards
         else if(e->key()==Qt::Key_S || e->key()==Qt::Key_Down)
         {
             qDebug() << "down";
             playersUid[myPlayer]->move(PlayerDirection::down);
         }
+
+        // If the key pressed is D or Right arrow, move player upwards
         else if(e->key()==Qt::Key_D || e->key()==Qt::Key_Right)
         {
             qDebug() << "right";
             playersUid[myPlayer]->move(PlayerDirection::right);
         }
+
+        // If the key pressed is the Space Bar, player will attempt to pick up a ball
         else if (e->key()==Qt::Key_Space)
         {
             qDebug() << "pickup";
@@ -70,26 +99,34 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
         QDialog::keyPressEvent(e);
 }
 
+//*************************************************************************************************//
+//                                      Key Release Events                                         //
+//*************************************************************************************************//
+
 void mapDialog::keyReleaseEvent(QKeyEvent *e)
 {
     if (e!=NULL)
     {
+        // When the W or S, or Up arrow or Down arrow is released, stop the player from moving vertically
         if((e->key()==Qt::Key_W) || (e->key()==Qt::Key_S) || ((e->key()==Qt::Key_Up) || (e->key()==Qt::Key_Down)))
         {
             qDebug() << "up";
             playersUid[myPlayer]->move(PlayerDirection::vstop);
         }
+
+        // When the A or D, or Right arrow or Left arrow is released, stop the player from moving horizontally
         else if((e->key()==Qt::Key_A) || (e->key()==Qt::Key_D) || ((e->key()==Qt::Key_Left) || (e->key()==Qt::Key_Right)))
         {
             qDebug() << "left";
             playersUid[myPlayer]->move(PlayerDirection::hstop);
         }
-        else if (e->key()==Qt::Key_Space){
+
+        // When the Space Bar is released, stop the player from picking up a ball
+        else if (e->key()==Qt::Key_Space)
+        {
             qDebug() << "stoppick";
             playersUid[myPlayer]->move(PlayerDirection::stoppick);
         }
-//       qDebug() << "stop";
-//       myPlayer->move("stop");
     }
     QDialog::keyReleaseEvent(e);
 }
@@ -117,27 +154,27 @@ void mapDialog::processMessage()
         int x;
         int y;
         bool hasBall;
-//            QByteArray pixmap;
+//      QByteArray pixmap;
         buffer.clear();
         message >> buffer;  // uid read
         uid = buffer.toInt();
-        qDebug() << "Recieved the UID:" << uid;
+        qDebug() << "Received the UID:" << uid;
         buffer.clear();
         message >> buffer;  // team read
         team = buffer;
-        qDebug() << "Recieved the Team:" << team;
+        qDebug() << "Received the Team:" << team;
         buffer.clear();
         message >> buffer;   // x pos read
         x = buffer.toInt();
-        qDebug() << "Recieved the X:" << x;
+        qDebug() << "Received the X:" << x;
         buffer.clear();
         message >> buffer;   // y pos read
         y = buffer.toInt();
-        qDebug() << "Recieved the Y:" << y;
+        qDebug() << "Received the Y:" << y;
         buffer.clear();
         message >> buffer;   // hasBall read
         hasBall = buffer.toInt();
-        qDebug() << "Recieved the HasBall" << hasBall;
+        qDebug() << "Received the HasBall" << hasBall;
         buffer.clear();
         if (playersUid[uid] == nullptr){
             qDebug() << "yo";
