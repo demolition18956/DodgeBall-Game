@@ -12,11 +12,8 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     myPlayer = _uid;
     scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
-    //QRectF bounds = scene->itemsBoundingRect();
-    //bounds.setWidth(bounds.width()*0.9);
-    //bounds.setHeight(bounds.height()*0.9);
-    //ui->graphicsView->fitInView(bounds, Qt::IgnoreAspectRatio);
     showNormal();
+    ui->graphicsView->setFocusPolicy(Qt::NoFocus);
     ui->graphicsView->centerOn(0, 0);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing);
     Ball *testBall = new Ball(100,100);
@@ -26,7 +23,6 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     pen.setColor(QColor(255,255,255));
     pen.setWidth(10);
     scene->addLine(0, YMAX/2, 0, -YMAX/2, pen);
-
 
     ui->graphicsView->setScene(scene);
     ui->graphicsView->show();

@@ -300,7 +300,6 @@ void lobby::leave()
     {
         this->deleteLater();
         if(host == true) server->close();
-//        socket.disconnectFromHost();
         emit showAgain();
     }
 
