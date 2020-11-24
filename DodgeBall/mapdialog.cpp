@@ -31,6 +31,8 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     // Spawns a test ball
     Ball *testBall = new Ball(100,100);
     scene->addItem(testBall);
+    //testBall->advance(0);
+
 
     // Draws the center line that cannot be crossed
     QPen pen;
@@ -94,6 +96,26 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
         {
             qDebug() << "pickup";
             playersUid[myPlayer]->move(PlayerDirection::pickup);
+        }
+        else if (e->key() == Qt::Key_C)//if we press c
+        {
+            //player will attempt to throw a ball if tehy have it
+            if(playersUid[myPlayer]->getTeam() == "red" && playersUid[myPlayer]->isHoldingBall())
+            {
+                Ball *testBall = new Ball(playersUid[myPlayer]->GetX(),playersUid[myPlayer]->GetY());
+                testBall->setMove(1);
+                scene->addItem(testBall);
+                playersUid[myPlayer]->setHoldingBall(false); //make the player not hold ball anymore
+
+            }
+            else if(playersUid[myPlayer]->getTeam() == "blue" && playersUid[myPlayer]->isHoldingBall())
+            {
+                Ball *testBall = new Ball(playersUid[myPlayer]->GetX(),playersUid[myPlayer]->GetY());
+                testBall->setMove(2);
+                scene->addItem(testBall);
+                playersUid[myPlayer]->setHoldingBall(false);
+
+            }
         }
     }
         QDialog::keyPressEvent(e);

@@ -6,6 +6,7 @@ Ball::Ball(int _x, int _y, QObject *parent) : QObject(parent)
     y = _y;
     r = 20;
     ellipse.setRect(x-r/2,y-r/2,r,r);
+    move = 0;
 }
 
 QRectF Ball::boundingRect() const
@@ -23,9 +24,31 @@ void Ball::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Ball::advance(int phase)
 {
-    if (phase != 0)
+    if(phase == 0)
     {
         this->moveBy(0,0);
     }
+    else {
+
+        if (getMove() == 1) // if phase == 1, then its red team
+        {
+            this->moveBy(5,0);
+        }
+        else if(getMove() == 2) //blue team
+        {
+            this->moveBy(-5,0);
+        }
+    }
     return;
+}
+
+int Ball::getMove()
+{
+    return move;
+}
+
+//set the bool to whwere we can see if the player is red or blue team
+void Ball::setMove(int a)
+{
+    move = a;
 }

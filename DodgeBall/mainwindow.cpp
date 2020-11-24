@@ -41,12 +41,13 @@ void MainWindow::joinNew(QString ipAddress, int portNumber)
     gameLobby = new lobby(QHostAddress(ipAddress), portNumber, false);
 
     connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
-    this->hide();
+
     if(gameLobby->getConnected() == false)
     {
         this->show();
         delete gameLobby;
     }
+    else this->hide();
 
 }
 

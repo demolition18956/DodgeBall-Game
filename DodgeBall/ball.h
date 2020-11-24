@@ -14,6 +14,8 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);
+    void setMove(int a);
+    int getMove();
 
 signals:
 
@@ -23,6 +25,7 @@ private:
     int x;
     int y;
     int r;
+    int move;
     QRectF ellipse;
 };
 

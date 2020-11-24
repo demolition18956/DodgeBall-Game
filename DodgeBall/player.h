@@ -27,6 +27,8 @@ public:
     bool isHoldingBall();
     bool isHost();
     void move(PlayerDirection);
+    void setHoldingBall(bool a);
+    QString getTeam();
     ~Player();
 
 private:
@@ -44,6 +46,7 @@ private:
     QPixmap teamColors;
     QPainterPath heart;
     bool ballAttempt;
+    QString team;
 
     //QPointF starpts[10];
 };

@@ -15,7 +15,7 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     ballAttempt = false;
     hasBall = false;
     isUser = _isUser;
-    QString team = _team;
+    team = _team;
     if (team == "red")
     {
         teamColors.load(":/pixmaps/Red.png");
@@ -195,4 +195,14 @@ void Player::move(PlayerDirection dir)
     {
         ballAttempt = false;
     }
+}
+
+QString Player::getTeam()
+{
+    return team;
+}
+
+void Player::setHoldingBall(bool a)
+{
+    hasBall = a;
 }
