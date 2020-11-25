@@ -33,6 +33,7 @@ private:
     Player* playersUid[6] = {nullptr};
     QTimer* timer;
     QLine line;
+    void sendPos();
 
 private slots:
     void processMessage();

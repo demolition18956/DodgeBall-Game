@@ -378,10 +378,51 @@ void GameServer::ReportReady(){
                         qDebug() << "Error on UPDATE";
                     }
                 }
-            }
+
+                else if ((ind = str.indexOf("Player: ")) != -1){
+                    qDebug() << "WE are in";
+                    QString buffer;
+                    QTextStream _in(&str, QIODevice::ReadOnly);
+                    _in >> buffer;
+                    int x;
+                    int y;
+                    bool hasBall;
+
+                    buffer.clear();
+                    _in >> buffer;  // x read
+                    x = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;  // y read
+                    y = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;   // hasBall read
+                    hasBall = buffer.toInt();
+
+
+                    qDebug() << "Player Data Read: ";
+                    qDebug() << "x: " << x;
+                    qDebug() << "y: " << y;
+                    qDebug() << "hasBall: " << hasBall;
+
+                    QSqlQuery q;
+                    q.prepare("UPDATE in_game SET x=:X, y=:Y, hasBall=:HasBall WHERE UID=:uid");
+                    q.bindValue(":X",x);
+                    q.bindValue(":Y",y);
+                    q.bindValue(":HasBall",hasBall);
+                    q.bindValue(":uid",i+1);
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on UPDATE";
+                    }
+
+                    break;
+                }
 
             this->UpdateReady();
             break;
+            }
         }
     }
 }
@@ -578,7 +619,7 @@ void GameServer::onTimeout(){
 
         qq.clear();
 
-        // build packet and send  (packet string layout--> "PLAYER: uid team x y hasBall pixmap") spaces are how the client knows the difference
+        // build packet and send  (packet string layout--> "PLAYER: uid team x y hasBall") spaces are how the client knows the difference
         msg.append("PLAYER: ");
         msg.append(QString::number(uid));
         msg.append(" ");
@@ -591,8 +632,8 @@ void GameServer::onTimeout(){
         msg.append(QString::number(hasBall));
 
         qDebug() << "Message to be sent: " << msg;
-//        disconnect(playerSockets[uid], &QTcpSocket::readyRead,this, &GameServer::ReportReady);
-//        connect(playerSockets[uid], &QTcpSocket::readyRead,this, &GameServer::ReportMovement);
+//        disconnect(playerSockets[uid], SIGNAL(readyRead()),this, SLOT(ReportReady()));
+//        connect(playerSockets[uid], SIGNAL(readyRead()),this, SLOT(ReportMovement()));
         sendAll(msg);
     }
 
@@ -606,6 +647,57 @@ void GameServer::ReportMovement(){
     int ind;
 
     for (int i = 0; i < 6; i++){
+        if ((playerSockets[i] != nullptr) && playerSockets[i]->canReadLine()){
 
+            qDebug() << "we're in";
+            QTextStream in(playerSockets[i]);
+
+            while (in.readLineInto(&str)){
+
+                qDebug() << str;
+
+                if ((ind = str.indexOf("Player: ")) != -1){
+                    qDebug() << "WE are in";
+                    QString buffer;
+                    QTextStream _in(&str, QIODevice::ReadOnly);
+                    _in >> buffer;
+                    int x;
+                    int y;
+                    bool hasBall;
+
+                    buffer.clear();
+                    _in >> buffer;  // x read
+                    x = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;  // y read
+                    y = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;   // hasBall read
+                    hasBall = buffer.toInt();
+
+
+                    qDebug() << "Player Data Read: ";
+                    qDebug() << "x: " << x;
+                    qDebug() << "y: " << y;
+                    qDebug() << "hasBall: " << hasBall;
+
+                    QSqlQuery q;
+                    q.prepare("UPDATE in_game SET x=:X, y=:Y, hasBall=:HasBall WHERE UID=:uid");
+                    q.bindValue(":X",x);
+                    q.bindValue(":Y",y);
+                    q.bindValue(":HasBall",hasBall);
+                    q.bindValue(":uid",i+1);
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on UPDATE";
+                    }
+
+                    break;
+                }
+
+            }
+        }
     }
 }

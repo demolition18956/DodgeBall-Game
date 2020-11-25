@@ -168,7 +168,7 @@ void mapDialog::processMessage()
     qDebug() << "WE are in via map";
 
 
-    // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall pixmap")
+    // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall")
     while(buffer == "PLAYER:")
     {
         int uid;
@@ -176,7 +176,6 @@ void mapDialog::processMessage()
         int x;
         int y;
         bool hasBall;
-//      QByteArray pixmap;
         buffer.clear();
         message >> buffer;  // uid read
         uid = buffer.toInt();
@@ -201,10 +200,59 @@ void mapDialog::processMessage()
         if (playersUid[uid] == nullptr){
             qDebug() << "yo";
             playersUid[uid] = new Player(x,y,uid == myPlayer,team);
+            if(uid == myPlayer)
+            {
+                if(playersUid[uid]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+                {
+                    this->sendPos();
+                    playersUid[uid]->updatePos = false;
+                }
+            }
             scene->addItem(playersUid[uid]);
+        }
+        else if(uid != myPlayer)   // movement of myPlayer is handled in advance()
+        {
+            qDebug() << "MAPDIALOG.CPP: SETTING X AND Y FOR OTHER PLAYERS";
+            qDebug() << x;
+            qDebug() << y;
+            playersUid[uid]->SetX(x);   // setting x,y variables. Object is moved in advance()
+            playersUid[uid]->SetY(y);
+        }
+        if(playersUid[uid]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+        {
+            this->sendPos();
+            qDebug() << "Position Sent";
+            playersUid[uid]->updatePos = false;
         }
         message.readLine();
         message >> buffer;
 
     }
+}
+
+//*************************************************************************************************//
+//                               Send Position of myPlayer                                         //
+//*************************************************************************************************//
+void mapDialog::sendPos()   // packet template: "Player: x y hasBall"
+{
+    qDebug() << "CLIENT: Position updated, Sending";
+    QString msg = "Player: ";
+    qDebug() << "myPlayer: " << myPlayer;
+    msg.append(QString::number(playersUid[myPlayer]->GetX()));
+    qDebug() << "got x";
+    msg.append(" ");
+    msg.append(QString::number(playersUid[myPlayer]->GetY()));
+    qDebug() << "got y";
+    msg.append(" ");
+    msg.append(QString::number(playersUid[myPlayer]->isHoldingBall()));
+    qDebug() << "got hasBall";
+    qDebug() << msg;
+
+    QByteArray block;
+    QTextStream out(&block, QIODevice::ReadWrite);
+    out << msg << endl;
+
+    socket->write(block);
+    socket->flush();
+    qDebug() << "CLIENT: POSITION SENT";
 }

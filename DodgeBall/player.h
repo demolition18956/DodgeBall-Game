@@ -23,12 +23,15 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     int GetX();
     int GetY();
+    void SetX(int);
+    void SetY(int);
     bool isReady();
     bool isHoldingBall();
     bool isHost();
     void move(PlayerDirection);
     void setHoldingBall(bool a);
     QString getTeam();
+    bool updatePos;
     ~Player();
 
 private:
