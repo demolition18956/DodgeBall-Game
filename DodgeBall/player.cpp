@@ -57,43 +57,51 @@ void Player::advance(int phase)
     }
     else
     {
-        this->moveBy(dx,dy);
-        QList<QGraphicsItem*> collisions = this->collidingItems();
-        qDebug() << collisions.size();
-        if (collisions.size()>0)
+        if(isUser)
         {
-            foreach(QGraphicsItem *i, collisions)
+            this->moveBy(dx,dy);
+            QList<QGraphicsItem*> collisions = this->collidingItems();
+            qDebug() << collisions.size();
+            if (collisions.size()>0)
             {
-                if (ballAttempt){
-                    Ball* b = dynamic_cast<Ball *>(i);
-                    if(b)
-                    {
-                        qDebug() << b->type();
-                        this->scene()->removeItem(b);
-                        hasBall = true;
-                    }
-                }
-                QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
-                if (line)
+                foreach(QGraphicsItem *i, collisions)
                 {
-                    this->moveBy(-dx,0);
+                    if (ballAttempt){
+                        Ball* b = dynamic_cast<Ball *>(i);
+                        if(b)
+                        {
+                            qDebug() << b->type();
+                            this->scene()->removeItem(b);
+                            hasBall = true;
+                        }
+                    }
+                    QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
+                    if (line)
+                    {
+                        this->moveBy(-dx,0);
+                    }
+
                 }
-
             }
-        }
 
-        if ((this->pos().y() < -YMAX/2 + h/2) || (this->pos().y() > YMAX/2 - h/2)){
-            qDebug() << "Max Y Hit";
-            this->moveBy(0,-dy);
+            if ((this->pos().y() < -YMAX/2 + h/2) || (this->pos().y() > YMAX/2 - h/2)){
+                qDebug() << "Max Y Hit";
+                this->moveBy(0,-dy);
+            }
+            if ((this->pos().x() < -XMAX/2 + w/2) || (this->pos().x() > XMAX/2 - w/2)){
+                qDebug() << "Max X Hit";
+                this->moveBy(-dx,0);
+            }
+            x = this->pos().x();
+            y = this->pos().y();
+            updatePos = true;
         }
-        if ((this->pos().x() < -XMAX/2 + w/2) || (this->pos().x() > XMAX/2 - w/2)){
-            qDebug() << "Max X Hit";
-            this->moveBy(-dx,0);
+        else {
+            this->setPos(x,y);   // for showing other players (!isUser)
+            qDebug() << "PLAYER.CPP: MOVING OTHER PLAYER";
+            qDebug() << x;
+            qDebug() << y;
         }
-
-        x = this->pos().x();
-        y = this->pos().y();
-
     }
 }
 
@@ -195,6 +203,17 @@ void Player::move(PlayerDirection dir)
     {
         ballAttempt = false;
     }
+}
+
+
+void Player::SetX(int X)
+{
+    x = X;
+}
+
+void Player::SetY(int Y)
+{
+    y = Y;
 }
 
 QString Player::getTeam()
