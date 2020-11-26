@@ -67,53 +67,53 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
         if(e->key()==Qt::Key_W || e->key()==Qt::Key_Up)
         {
             qDebug() << "up";
-            playersUid[myPlayer]->move(PlayerDirection::up);
+            playersUid[myPlayer-1]->move(PlayerDirection::up);
         }
 
         // If the key pressed is A or Left arrow, move player left
         else if(e->key()==Qt::Key_A || e->key()==Qt::Key_Left)
         {
             qDebug() << "left";
-            playersUid[myPlayer]->move(PlayerDirection::left);
+            playersUid[myPlayer-1]->move(PlayerDirection::left);
         }
 
         // If the key pressed is S or Down arrow, move player upwards
         else if(e->key()==Qt::Key_S || e->key()==Qt::Key_Down)
         {
             qDebug() << "down";
-            playersUid[myPlayer]->move(PlayerDirection::down);
+            playersUid[myPlayer-1]->move(PlayerDirection::down);
         }
 
         // If the key pressed is D or Right arrow, move player upwards
         else if(e->key()==Qt::Key_D || e->key()==Qt::Key_Right)
         {
             qDebug() << "right";
-            playersUid[myPlayer]->move(PlayerDirection::right);
+            playersUid[myPlayer-1]->move(PlayerDirection::right);
         }
 
         // If the key pressed is the Space Bar, player will attempt to pick up a ball
         else if (e->key()==Qt::Key_Space)
         {
             qDebug() << "pickup";
-            playersUid[myPlayer]->move(PlayerDirection::pickup);
+            playersUid[myPlayer-1]->move(PlayerDirection::pickup);
         }
         else if (e->key() == Qt::Key_C)//if we press c
         {
             //player will attempt to throw a ball if tehy have it
-            if(playersUid[myPlayer]->getTeam() == "red" && playersUid[myPlayer]->isHoldingBall())
+            if(playersUid[myPlayer-1]->getTeam() == "red" && playersUid[myPlayer-1]->isHoldingBall())
             {
-                Ball *testBall = new Ball(playersUid[myPlayer]->GetX(),playersUid[myPlayer]->GetY());
+                Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
                 testBall->setMove(1);
                 scene->addItem(testBall);
-                playersUid[myPlayer]->setHoldingBall(false); //make the player not hold ball anymore
+                playersUid[myPlayer-1]->setHoldingBall(false); //make the player not hold ball anymore
 
             }
-            else if(playersUid[myPlayer]->getTeam() == "blue" && playersUid[myPlayer]->isHoldingBall())
+            else if(playersUid[myPlayer-1]->getTeam() == "blue" && playersUid[myPlayer-1]->isHoldingBall())
             {
-                Ball *testBall = new Ball(playersUid[myPlayer]->GetX(),playersUid[myPlayer]->GetY());
+                Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
                 testBall->setMove(2);
                 scene->addItem(testBall);
-                playersUid[myPlayer]->setHoldingBall(false);
+                playersUid[myPlayer-1]->setHoldingBall(false);
 
             }
         }
@@ -133,21 +133,21 @@ void mapDialog::keyReleaseEvent(QKeyEvent *e)
         if((e->key()==Qt::Key_W) || (e->key()==Qt::Key_S) || ((e->key()==Qt::Key_Up) || (e->key()==Qt::Key_Down)))
         {
             qDebug() << "up";
-            playersUid[myPlayer]->move(PlayerDirection::vstop);
+            playersUid[myPlayer-1]->move(PlayerDirection::vstop);
         }
 
         // When the A or D, or Right arrow or Left arrow is released, stop the player from moving horizontally
         else if((e->key()==Qt::Key_A) || (e->key()==Qt::Key_D) || ((e->key()==Qt::Key_Left) || (e->key()==Qt::Key_Right)))
         {
             qDebug() << "left";
-            playersUid[myPlayer]->move(PlayerDirection::hstop);
+            playersUid[myPlayer-1]->move(PlayerDirection::hstop);
         }
 
         // When the Space Bar is released, stop the player from picking up a ball
         else if (e->key()==Qt::Key_Space)
         {
             qDebug() << "stoppick";
-            playersUid[myPlayer]->move(PlayerDirection::stoppick);
+            playersUid[myPlayer-1]->move(PlayerDirection::stoppick);
         }
     }
     QDialog::keyReleaseEvent(e);
@@ -197,32 +197,32 @@ void mapDialog::processMessage()
         hasBall = buffer.toInt();
         qDebug() << "Received the HasBall" << hasBall;
         buffer.clear();
-        if (playersUid[uid] == nullptr){
+        if (playersUid[uid-1] == nullptr){
             qDebug() << "yo";
-            playersUid[uid] = new Player(x,y,uid == myPlayer,team);
+            playersUid[uid-1] = new Player(x,y,uid == myPlayer,team);
             if(uid == myPlayer)
             {
-                if(playersUid[uid]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+                if(playersUid[uid-1]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
                 {
                     this->sendPos();
-                    playersUid[uid]->updatePos = false;
+                    playersUid[uid-1]->updatePos = false;
                 }
             }
-            scene->addItem(playersUid[uid]);
+            scene->addItem(playersUid[uid-1]);
         }
         else if(uid != myPlayer)   // movement of myPlayer is handled in advance()
         {
             qDebug() << "MAPDIALOG.CPP: SETTING X AND Y FOR OTHER PLAYERS";
             qDebug() << x;
             qDebug() << y;
-            playersUid[uid]->SetX(x);   // setting x,y variables. Object is moved in advance()
-            playersUid[uid]->SetY(y);
+            playersUid[uid-1]->SetX(x);   // setting x,y variables. Object is moved in advance()
+            playersUid[uid-1]->SetY(y);
         }
-        if(playersUid[uid]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+        if(playersUid[uid-1]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
         {
             this->sendPos();
             qDebug() << "Position Sent";
-            playersUid[uid]->updatePos = false;
+            playersUid[uid-1]->updatePos = false;
         }
         message.readLine();
         message >> buffer;
@@ -235,24 +235,27 @@ void mapDialog::processMessage()
 //*************************************************************************************************//
 void mapDialog::sendPos()   // packet template: "Player: x y hasBall"
 {
-    qDebug() << "CLIENT: Position updated, Sending";
-    QString msg = "Player: ";
-    qDebug() << "myPlayer: " << myPlayer;
-    msg.append(QString::number(playersUid[myPlayer]->GetX()));
-    qDebug() << "got x";
-    msg.append(" ");
-    msg.append(QString::number(playersUid[myPlayer]->GetY()));
-    qDebug() << "got y";
-    msg.append(" ");
-    msg.append(QString::number(playersUid[myPlayer]->isHoldingBall()));
-    qDebug() << "got hasBall";
-    qDebug() << msg;
+    if(playersUid[myPlayer-1] != nullptr)
+    {
+        qDebug() << "CLIENT: Position updated, Sending";
+        QString msg = "Player: ";
+        qDebug() << "myPlayer: " << myPlayer;
+        msg.append(QString::number(playersUid[myPlayer-1]->GetX()));
+        qDebug() << "got x";
+        msg.append(" ");
+        msg.append(QString::number(playersUid[myPlayer-1]->GetY()));
+        qDebug() << "got y";
+        msg.append(" ");
+        msg.append(QString::number(playersUid[myPlayer-1]->isHoldingBall()));
+        qDebug() << "got hasBall";
+        qDebug() << msg;
 
-    QByteArray block;
-    QTextStream out(&block, QIODevice::ReadWrite);
-    out << msg << endl;
+        QByteArray block;
+        QTextStream out(&block, QIODevice::ReadWrite);
+        out << msg << endl;
 
-    socket->write(block);
-    socket->flush();
-    qDebug() << "CLIENT: POSITION SENT";
+        socket->write(block);
+        socket->flush();
+        qDebug() << "CLIENT: POSITION SENT";
+    }
 }
