@@ -473,6 +473,7 @@ void GameServer::StartGame(){
     this->sendAll("start");
     QSqlQuery start;
 
+    // table for data associated with active players
     if(!start.exec("CREATE TABLE in_game(UID INT, x INT, y INT, hasBall INT, team TEXT)")){
 
         qDebug() << start.lastError();
@@ -480,9 +481,11 @@ void GameServer::StartGame(){
     }
 
     qDebug() << "In-game table created";
+    start.clear();
+
     QSqlQuery q;
 
-    // Populate in game table
+    // Populate in_game table
     if(!q.exec("SELECT UID FROM players")){
 
         qDebug() << q.lastError();
@@ -535,6 +538,16 @@ void GameServer::StartGame(){
             team = "red";
         }
     }
+    q.clear();
+
+    // table for data associated with active dodgeballs (flying and stationary)
+    if(!start.exec("CREATE TABLE dodgeballs(x INT, y INT, isFlying INT)")){
+
+        qDebug() << start.lastError();
+        qDebug() << "Error on CREATE";
+    }
+
+    qDebug() << "dodgeballs table created";
 
     timer->start(250);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
