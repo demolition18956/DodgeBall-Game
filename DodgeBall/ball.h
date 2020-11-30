@@ -16,6 +16,8 @@ public:
     void advance(int phase);
     void setMove(int a);
     int getMove();
+    void SetX(int _x);
+    void SetY(int _y);
 
 signals:
 

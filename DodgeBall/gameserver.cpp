@@ -541,7 +541,7 @@ void GameServer::StartGame(){
     q.clear();
 
     // table for data associated with active dodgeballs (flying and stationary)
-    if(!start.exec("CREATE TABLE dodgeballs(bid INT, x INT, y INT, isFlying INT)")){
+    if(!start.exec("CREATE TABLE dodgeballs(bid INT, x INT, y INT, isHeld INT)")){
 
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
@@ -549,6 +549,23 @@ void GameServer::StartGame(){
 
     qDebug() << "dodgeballs table created";
     start.clear();
+
+    // populate the dodgeballs table (spawn in first set of dodgeballs)
+    // newly spawned dogdeballs will sit on the middle line
+    for(int i=1;i<=4;i++)
+    {
+        q.prepare("INSERT INTO dodgeballs VALUES(:bid, :x, :y, :isHeld)");
+        q.bindValue(":bid", i);
+        q.bindValue(":x", 0);
+        q.bindValue(":y", YMAX/2-(180*(i-1))-96);
+        q.bindValue(":isHeld", 0);
+        if(!q.exec()){
+
+            qDebug() << q.lastError();
+            qDebug() << "Error on INSERT";
+        }
+        q.clear();
+    }
 
     timer->start(250);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
@@ -588,6 +605,7 @@ void GameServer::onTimeout(){
         timer->stop();
     }
 
+    // send player data
     while(q.next()){
 
         QSqlQuery qq;
@@ -646,8 +664,71 @@ void GameServer::onTimeout(){
         msg.append(QString::number(hasBall));
 
         qDebug() << "Message to be sent: " << msg;
-//        disconnect(playerSockets[uid], SIGNAL(readyRead()),this, SLOT(ReportReady()));
-//        connect(playerSockets[uid], SIGNAL(readyRead()),this, SLOT(ReportMovement()));
+        sendAll(msg);
+    }
+    q.clear();
+
+    if(!q.exec("SELECT bid FROM dodgeballs")){
+
+        qDebug() << q.lastError();
+        qDebug() << "Error on SELECT";
+        timer->stop();
+    }
+
+    // send dodgeball data
+    while(q.next())
+    {
+
+        QSqlQuery qq;
+        QString msg;
+
+        int x;
+        int y;
+        bool isHeld;
+        int bid;
+
+        bid = q.value(0).toInt();
+        qDebug() << "Got the bid: " << bid;
+
+        qq.prepare("SELECT x, y, isHeld FROM dodgeballs WHERE bid=:bid");
+        qq.bindValue(":bid",bid);
+
+        if(!qq.exec()){
+
+            qDebug() << qq.lastError();
+            qDebug() << "Error on SELECT";
+            timer->stop();
+        }
+
+        if (!qq.next()){
+
+            qDebug() << qq.lastError();
+            qDebug() << "Error on NEXT";
+            timer->stop();
+        }
+
+        x = qq.value(0).toInt();
+        qDebug() << "Got the x: " << x;
+
+        y = qq.value(1).toInt();
+        qDebug() << "Got the y: " << y;
+
+        isHeld = qq.value(2).toInt();
+        qDebug() << "Got the isHeld: " << isHeld;
+
+        qq.clear();
+
+        // build packet and send  (packet string layout--> "BALL: bid x y isHeld") spaces are how the client knows the difference
+        msg.append("BALL: ");
+        msg.append(QString::number(bid));
+        msg.append(" ");
+        msg.append(QString::number(x));
+        msg.append(" ");
+        msg.append(QString::number(y));
+        msg.append(" ");
+        msg.append(QString::number(isHeld));
+
+        qDebug() << "Message to be sent: " << msg;
         sendAll(msg);
     }
 

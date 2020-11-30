@@ -31,6 +31,7 @@ private:
     QTcpSocket* socket;
     int myPlayer;
     Player* playersUid[6] = {nullptr};
+    Ball* dodgeballs[4] = {nullptr};
     QTimer* timer;
     QLine line;
     void sendPos();

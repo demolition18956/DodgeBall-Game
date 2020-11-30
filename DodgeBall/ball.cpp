@@ -52,3 +52,13 @@ void Ball::setMove(int a)
 {
     move = a;
 }
+
+void Ball::SetX(int _x)
+{
+    x = _x;
+}
+
+void Ball::SetY(int _y)
+{
+    y = _y;
+}

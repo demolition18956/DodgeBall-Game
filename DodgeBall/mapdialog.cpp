@@ -169,64 +169,103 @@ void mapDialog::processMessage()
 
 
     // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall")
-    while(buffer == "PLAYER:")
+    while((buffer == "PLAYER:") || (buffer == "BALL:"))
     {
-        int uid;
-        QString team;
-        int x;
-        int y;
-        bool hasBall;
-        buffer.clear();
-        message >> buffer;  // uid read
-        uid = buffer.toInt();
-        qDebug() << "Received the UID:" << uid;
-        buffer.clear();
-        message >> buffer;  // team read
-        team = buffer;
-        qDebug() << "Received the Team:" << team;
-        buffer.clear();
-        message >> buffer;   // x pos read
-        x = buffer.toInt();
-        qDebug() << "Received the X:" << x;
-        buffer.clear();
-        message >> buffer;   // y pos read
-        y = buffer.toInt();
-        qDebug() << "Received the Y:" << y;
-        buffer.clear();
-        message >> buffer;   // hasBall read
-        hasBall = buffer.toInt();
-        qDebug() << "Received the HasBall" << hasBall;
-        buffer.clear();
-        if (playersUid[uid-1] == nullptr){
-            qDebug() << "yo";
-            playersUid[uid-1] = new Player(x,y,uid == myPlayer,team);
-            if(uid == myPlayer)
-            {
-                if(playersUid[uid-1]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+        if(buffer == "PLAYER:")
+        {
+            int uid;
+            QString team;
+            int x;
+            int y;
+            bool hasBall;
+            buffer.clear();
+            message >> buffer;  // uid read
+            uid = buffer.toInt();
+            qDebug() << "Received the UID:" << uid;
+            buffer.clear();
+            message >> buffer;  // team read
+            team = buffer;
+            qDebug() << "Received the Team:" << team;
+            buffer.clear();
+            message >> buffer;   // x pos read
+            x = buffer.toInt();
+            qDebug() << "Received the X:" << x;
+            buffer.clear();
+            message >> buffer;   // y pos read
+            y = buffer.toInt();
+            qDebug() << "Received the Y:" << y;
+            buffer.clear();
+            message >> buffer;   // hasBall read
+            hasBall = buffer.toInt();
+            qDebug() << "Received the HasBall" << hasBall;
+            buffer.clear();
+            if (playersUid[uid-1] == nullptr){
+                qDebug() << "yo";
+                playersUid[uid-1] = new Player(x,y,uid == myPlayer,team);
+                if(uid == myPlayer)
                 {
-                    this->sendPos();
-                    playersUid[uid-1]->updatePos = false;
+                    if(playersUid[uid-1]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+                    {
+                        this->sendPos();
+                        playersUid[uid-1]->updatePos = false;
+                    }
                 }
+                scene->addItem(playersUid[uid-1]);
             }
-            scene->addItem(playersUid[uid-1]);
+            else if(uid != myPlayer)   // movement of myPlayer is handled in advance()
+            {
+                qDebug() << "MAPDIALOG.CPP: SETTING X AND Y FOR OTHER PLAYERS";
+                qDebug() << x;
+                qDebug() << y;
+                playersUid[uid-1]->SetX(x);   // setting x,y variables. Object is moved in advance()
+                playersUid[uid-1]->SetY(y);
+            }
+            if(playersUid[uid-1]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
+            {
+                this->sendPos();
+                qDebug() << "Position Sent";
+                playersUid[uid-1]->updatePos = false;
+            }
         }
-        else if(uid != myPlayer)   // movement of myPlayer is handled in advance()
+
+        else if(buffer == "BALL:")
         {
-            qDebug() << "MAPDIALOG.CPP: SETTING X AND Y FOR OTHER PLAYERS";
-            qDebug() << x;
-            qDebug() << y;
-            playersUid[uid-1]->SetX(x);   // setting x,y variables. Object is moved in advance()
-            playersUid[uid-1]->SetY(y);
-        }
-        if(playersUid[uid-1]->updatePos)   // myPlayer updated position, will send to server from mapdialog socket
-        {
-            this->sendPos();
-            qDebug() << "Position Sent";
-            playersUid[uid-1]->updatePos = false;
+            int bid;
+            int x;
+            int y;
+            bool isHeld;
+            buffer.clear();
+            message >> buffer;  // bid read
+            bid = buffer.toInt();
+            qDebug() << "Received the bid:" << bid;
+            buffer.clear();
+            message >> buffer;   // x pos read
+            x = buffer.toInt();
+            qDebug() << "Received the X:" << x;
+            buffer.clear();
+            message >> buffer;   // y pos read
+            y = buffer.toInt();
+            qDebug() << "Received the Y:" << y;
+            buffer.clear();
+            message >> buffer;   // isHeld read
+            isHeld = buffer.toInt();
+            qDebug() << "Received the isHeld" << isHeld;
+            buffer.clear();
+
+            if(dodgeballs[bid-1] == nullptr)
+            {
+                dodgeballs[bid-1] = new Ball(x, y, this);
+                qDebug() << "CLIENT: new Ball created";
+                scene->addItem(dodgeballs[bid-1]);
+            }
+            else
+            {
+                dodgeballs[bid-1]->SetX(x);
+                dodgeballs[bid-1]->SetY(y);
+            }
         }
         message.readLine();
         message >> buffer;
-
     }
 }
 
