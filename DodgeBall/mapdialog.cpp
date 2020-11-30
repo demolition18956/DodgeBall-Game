@@ -252,7 +252,7 @@ void mapDialog::processMessage()
             isHeld = buffer.toInt();
             qDebug() << "Received the isHeld" << isHeld;
             buffer.clear();
-            message >> buffer;   // isHeld read
+            message >> buffer;   // team read
             team = buffer;
             qDebug() << "Received the team" << team;
             buffer.clear();

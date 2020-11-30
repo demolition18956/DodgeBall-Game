@@ -687,11 +687,12 @@ void GameServer::onTimeout(){
         int y;
         bool isHeld;
         int bid;
+        QString team;
 
         bid = q.value(0).toInt();
         qDebug() << "Got the bid: " << bid;
 
-        qq.prepare("SELECT x, y, isHeld FROM dodgeballs WHERE bid=:bid");
+        qq.prepare("SELECT x, y, isHeld, team FROM dodgeballs WHERE bid=:bid");
         qq.bindValue(":bid",bid);
 
         if(!qq.exec()){
@@ -717,9 +718,12 @@ void GameServer::onTimeout(){
         isHeld = qq.value(2).toInt();
         qDebug() << "Got the isHeld: " << isHeld;
 
+        team = qq.value(3).toString();
+        qDebug() << "Got the team: " << team;
+
         qq.clear();
 
-        // build packet and send  (packet string layout--> "BALL: bid x y isHeld") spaces are how the client knows the difference
+        // build packet and send  (packet string layout--> "BALL: bid x y isHeld team") spaces are how the client knows the difference
         msg.append("BALL: ");
         msg.append(QString::number(bid));
         msg.append(" ");
@@ -728,6 +732,8 @@ void GameServer::onTimeout(){
         msg.append(QString::number(y));
         msg.append(" ");
         msg.append(QString::number(isHeld));
+        msg.append(" ");
+        msg.append(team);
 
         qDebug() << "Message to be sent: " << msg;
         sendAll(msg);
