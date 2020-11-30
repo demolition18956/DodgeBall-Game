@@ -541,13 +541,14 @@ void GameServer::StartGame(){
     q.clear();
 
     // table for data associated with active dodgeballs (flying and stationary)
-    if(!start.exec("CREATE TABLE dodgeballs(x INT, y INT, isFlying INT)")){
+    if(!start.exec("CREATE TABLE dodgeballs(bid INT, x INT, y INT, isFlying INT)")){
 
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
     }
 
     qDebug() << "dodgeballs table created";
+    start.clear();
 
     timer->start(250);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
