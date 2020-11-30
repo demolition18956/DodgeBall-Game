@@ -234,6 +234,7 @@ void mapDialog::processMessage()
             int x;
             int y;
             bool isHeld;
+            QString team;
             buffer.clear();
             message >> buffer;  // bid read
             bid = buffer.toInt();
@@ -250,6 +251,10 @@ void mapDialog::processMessage()
             message >> buffer;   // isHeld read
             isHeld = buffer.toInt();
             qDebug() << "Received the isHeld" << isHeld;
+            buffer.clear();
+            message >> buffer;   // isHeld read
+            team = buffer;
+            qDebug() << "Received the team" << team;
             buffer.clear();
 
             if(dodgeballs[bid-1] == nullptr)

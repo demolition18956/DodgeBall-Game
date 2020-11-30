@@ -541,7 +541,7 @@ void GameServer::StartGame(){
     q.clear();
 
     // table for data associated with active dodgeballs (flying and stationary)
-    if(!start.exec("CREATE TABLE dodgeballs(bid INT, x INT, y INT, isHeld INT)")){
+    if(!start.exec("CREATE TABLE dodgeballs(bid INT, x INT, y INT, isHeld INT, team TEXT)")){
 
         qDebug() << start.lastError();
         qDebug() << "Error on CREATE";
@@ -554,11 +554,12 @@ void GameServer::StartGame(){
     // newly spawned dogdeballs will sit on the middle line
     for(int i=1;i<=4;i++)
     {
-        q.prepare("INSERT INTO dodgeballs VALUES(:bid, :x, :y, :isHeld)");
+        q.prepare("INSERT INTO dodgeballs VALUES(:bid, :x, :y, :isHeld, :team)");
         q.bindValue(":bid", i);
         q.bindValue(":x", 0);
         q.bindValue(":y", YMAX/2-(180*(i-1))-96);
         q.bindValue(":isHeld", 0);
+        q.bindValue(":team", "noteam");  // team will be assigned "red" or "blue" once picked up to determine the direction it will be thrown
         if(!q.exec()){
 
             qDebug() << q.lastError();
