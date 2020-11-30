@@ -567,7 +567,7 @@ void GameServer::StartGame(){
         q.clear();
     }
 
-    timer->start(250);
+    timer->start(75);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
     qDebug() << "SERVER: Timer Started!";
 }

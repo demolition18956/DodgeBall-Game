@@ -29,8 +29,8 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     ui->graphicsView->setRenderHints(QPainter::Antialiasing);
 
     // Spawns a test ball
-    Ball *testBall = new Ball(100,100);
-    scene->addItem(testBall);
+//    Ball *testBall = new Ball(100,100);
+//    scene->addItem(testBall);
     //testBall->advance(0);
 
 
