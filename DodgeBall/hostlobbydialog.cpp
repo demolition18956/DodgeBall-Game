@@ -23,6 +23,10 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
              qDebug() << address.toString();
     }
 
+    QRegularExpression portInput ("[0-9]{1,5}");
+    QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
+    ui->portEdit->setValidator(portValidator);
+
 }
 
 HostLobbyDialog::~HostLobbyDialog()
@@ -47,6 +51,10 @@ void HostLobbyDialog::setBool(bool value)
 
 void HostLobbyDialog::createLobby()
 {
-    emit hostNew();   // creation of lobby and server object handled in MainWindow
+    QString portNum;
+
+    portNum = ui->portEdit->text();
+    int portNum_int = portNum.toInt();
+    emit hostNew(portNum_int);
 }
 

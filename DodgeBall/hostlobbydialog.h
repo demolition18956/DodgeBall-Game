@@ -24,14 +24,13 @@ private:
     Ui::HostLobbyDialog *ui;
     bool back; //variable to show the main window again if hosting is cancelled
 
+signals:
+    void hostNew(int portNumber);
+    void backToMain(int index);
+
 private slots:
     void cancel();
     void createLobby();
-
-signals:
-    void hostNew();
-    void backToMain(int index);
-
 };
 
 #endif // HOSTLOBBYDIALOG_H

@@ -15,8 +15,9 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     ui->setupUi(this);
     myPlayer = _uid;
 
+
     // Set scene dimensions and background color
-    scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX, this);
+    scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX + 40, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
 
     // Ensures the widget size cannot be changed
@@ -88,8 +89,13 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
         // If the key pressed is the Space Bar, player will attempt to pick up a ball
         else if ((e->key()==Qt::Key_Space) && (playersUid[myPlayer-1]->isHoldingBall() == false))
         {
-            qDebug() << "pickup";
-            playersUid[myPlayer-1]->move(PlayerDirection::pickup);
+            if(playersUid[myPlayer-1]->isHoldingBall()){
+                return;
+            }
+            else{
+                qDebug() << "pickup";
+                playersUid[myPlayer-1]->move(PlayerDirection::pickup);
+            }
         }
         else if ((e->key() == Qt::Key_Space) && (playersUid[myPlayer-1]->isHoldingBall() == true)) //if we press space
         {

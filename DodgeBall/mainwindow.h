@@ -23,7 +23,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void hostNew();
+    void hostNew(int portNumber);
     void hostFunc();
     void joinNew(QString ipAddress, int portNumber);
     void exitFunc();

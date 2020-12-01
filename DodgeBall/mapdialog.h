@@ -30,11 +30,13 @@ private:
     QGraphicsScene* scene;
     QTcpSocket* socket;
     int myPlayer;
+    int myBall;
     Player* playersUid[6] = {nullptr};
     Ball* dodgeballs[4] = {nullptr};
     QTimer* timer;
     QLine line;
     void sendPos();
+    void sendBallPos();
 
 private slots:
     void processMessage();
