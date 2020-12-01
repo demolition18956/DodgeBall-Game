@@ -32,6 +32,9 @@ public:
     void setHoldingBall(bool a);
     QString getTeam();
     bool updatePos;
+    bool getHoldingBall();
+    void setJustThrew(bool a);
+    bool getJustThrew();
     ~Player();
 
 private:
@@ -50,6 +53,7 @@ private:
     QPainterPath heart;
     bool ballAttempt;
     QString team;
+    bool justThrew;
 
     //QPointF starpts[10];
 };

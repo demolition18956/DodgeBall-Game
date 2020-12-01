@@ -104,16 +104,22 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
             {
                 Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
                 testBall->setMove(1);
+                testBall->setMoving(true);
                 scene->addItem(testBall);
                 playersUid[myPlayer-1]->setHoldingBall(false); //make the player not hold ball anymore
+                //setJustThrew to true
+                playersUid[myPlayer-1]->setJustThrew(true);
 
             }
             else if(playersUid[myPlayer-1]->getTeam() == "blue" && playersUid[myPlayer-1]->isHoldingBall())
             {
                 Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
                 testBall->setMove(2);
+                testBall->setMoving(true);
                 scene->addItem(testBall);
                 playersUid[myPlayer-1]->setHoldingBall(false);
+                //setJustThrew to true
+                playersUid[myPlayer-1]->setJustThrew(true);
 
             }
         }

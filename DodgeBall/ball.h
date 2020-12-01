@@ -18,6 +18,8 @@ public:
     int getMove();
     void SetX(int _x);
     void SetY(int _y);
+    void setMoving(bool m);
+    bool getMoving();
 
 signals:
 
@@ -29,6 +31,7 @@ private:
     int r;
     int move;
     QRectF ellipse;
+    bool isMoving;
 };
 
 #endif // BALL_H

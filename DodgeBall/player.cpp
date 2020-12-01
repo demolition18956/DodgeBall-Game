@@ -12,6 +12,7 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     y = _y;
     dx = 0;
     dy = 0;
+    justThrew = false; // flag used for collision with ball
     ballAttempt = false;
     hasBall = false;
     isUser = _isUser;
@@ -224,4 +225,19 @@ QString Player::getTeam()
 void Player::setHoldingBall(bool a)
 {
     hasBall = a;
+}
+
+bool Player::getHoldingBall()
+{
+    return hasBall;
+}
+//setters and getters for JustThrew
+void Player::setJustThrew(bool a)
+{
+    justThrew = a;
+}
+
+bool Player::getJustThrew()
+{
+    return justThrew;
 }
