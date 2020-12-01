@@ -28,12 +28,6 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     ui->graphicsView->centerOn(0, 0);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing);
 
-    // Spawns a test ball
-//    Ball *testBall = new Ball(100,100);
-//    scene->addItem(testBall);
-    //testBall->advance(0);
-
-
     // Draws the center line that cannot be crossed
     QPen pen;
     pen.setColor(QColor(255,255,255));
@@ -105,10 +99,13 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
                 testBall->setMove(1);
                 testBall->setMoving(true);
-                scene->addItem(testBall);
+                int bid = playersUid[myPlayer-1]->ballHeld;
+                dodgeballs[bid-1] = testBall;
+                scene->addItem(dodgeballs[bid-1]);
                 playersUid[myPlayer-1]->setHoldingBall(false); //make the player not hold ball anymore
                 //setJustThrew to true
                 playersUid[myPlayer-1]->setJustThrew(true);
+                playersUid[myPlayer-1]->ballHeld = -1;
 
             }
             else if(playersUid[myPlayer-1]->getTeam() == "blue" && playersUid[myPlayer-1]->isHoldingBall())
@@ -116,11 +113,13 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
                 testBall->setMove(2);
                 testBall->setMoving(true);
-                scene->addItem(testBall);
+                int bid = playersUid[myPlayer-1]->ballHeld;
+                dodgeballs[bid-1] = testBall;
+                scene->addItem(dodgeballs[bid-1]);
                 playersUid[myPlayer-1]->setHoldingBall(false);
                 //setJustThrew to true
                 playersUid[myPlayer-1]->setJustThrew(true);
-
+                playersUid[myPlayer-1]->ballHeld = -1;
             }
         }
     }
@@ -266,13 +265,14 @@ void mapDialog::processMessage()
             if(dodgeballs[bid-1] == nullptr)
             {
                 dodgeballs[bid-1] = new Ball(x, y, this);
+                dodgeballs[bid-1]->bid = bid;
                 qDebug() << "CLIENT: new Ball created";
                 scene->addItem(dodgeballs[bid-1]);
             }
             else
             {
-                dodgeballs[bid-1]->SetX(x);
-                dodgeballs[bid-1]->SetY(y);
+                //dodgeballs[bid-1]->SetX(x);
+                //dodgeballs[bid-1]->SetY(y);
             }
         }
         message.readLine();

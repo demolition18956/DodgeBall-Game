@@ -6,6 +6,7 @@
 Player::Player(int _x, int _y, bool _isUser, QString _team) :
     QGraphicsItem()
 {
+    ballHeld = -1;
     w = 80;
     h = 80;
     x = _x;
@@ -67,13 +68,16 @@ void Player::advance(int phase)
             {
                 foreach(QGraphicsItem *i, collisions)
                 {
-                    if (ballAttempt){
+                    if ((ballAttempt) && !(this->isHoldingBall())){
                         Ball* b = dynamic_cast<Ball *>(i);
                         if(b)
                         {
                             qDebug() << b->type();
                             this->scene()->removeItem(b);
                             hasBall = true;
+                            ballHeld = b->bid;
+                            delete b;
+                            continue;
                         }
                     }
                     QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);

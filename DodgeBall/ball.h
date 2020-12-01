@@ -20,6 +20,7 @@ public:
     void SetY(int _y);
     void setMoving(bool m);
     bool getMoving();
+    int bid; // identifier for the ball
 
 signals:
 
