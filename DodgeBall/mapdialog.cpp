@@ -86,14 +86,14 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
         }
 
         // If the key pressed is the Space Bar, player will attempt to pick up a ball
-        else if (e->key()==Qt::Key_Space)
+        else if ((e->key()==Qt::Key_Space) && (playersUid[myPlayer-1]->isHoldingBall() == false))
         {
             qDebug() << "pickup";
             playersUid[myPlayer-1]->move(PlayerDirection::pickup);
         }
-        else if (e->key() == Qt::Key_C)//if we press c
+        else if ((e->key() == Qt::Key_Space) && (playersUid[myPlayer-1]->isHoldingBall() == true)) //if we press space
         {
-            //player will attempt to throw a ball if tehy have it
+            //player will attempt to throw a ball if they have it
             if(playersUid[myPlayer-1]->getTeam() == "red" && playersUid[myPlayer-1]->isHoldingBall())
             {
                 Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
