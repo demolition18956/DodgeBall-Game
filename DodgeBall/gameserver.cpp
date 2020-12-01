@@ -420,6 +420,87 @@ void GameServer::ReportReady(){
                     break;
                 }
 
+                else if ((ind = str.indexOf("Throw: ")) != -1){
+
+                    QString buffer;
+                    QTextStream _in(&str, QIODevice::ReadOnly);
+                    _in >> buffer;
+                    int x;
+                    int y;
+                    int bid;
+                    QString team;
+
+                    buffer.clear();
+                    _in >> buffer;  // bid read
+                    bid = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;  // x read
+                    x = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;   // y read
+                    y = buffer.toInt();
+                    buffer.clear();
+                    _in >> buffer;   // team read
+                    team = buffer;
+
+                    qDebug() << "Ball Throw Read: ";
+                    qDebug() << "bid: " << bid;
+                    qDebug() << "x: " << x;
+                    qDebug() << "y: " << y;
+                    qDebug() << "team: " << team;
+
+                    QSqlQuery q;
+                    q.prepare("UPDATE dodgeballs SET x=:X, y=:Y, isHeld=:IsHeld, team=:Team WHERE bid=:BID");
+                    q.bindValue(":BID",bid);
+                    q.bindValue(":X",x);
+                    q.bindValue(":Y",y);
+                    q.bindValue(":IsHeld",0);
+                    q.bindValue(":Team",team);
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on UPDATE";
+                    }
+                }
+
+                else if ((ind = str.indexOf("Grab: ")) != -1){
+
+                    QString buffer;
+                    QTextStream _in(&str, QIODevice::ReadOnly);
+                    _in >> buffer;
+                    int uid = i+1;
+                    int bid;
+
+                    buffer.clear();
+                    _in >> buffer;  // bid read
+                    bid = buffer.toInt();
+
+                    qDebug() << "Ball Grab Read: ";
+                    qDebug() << "bid: " << bid;
+
+                    QSqlQuery q;
+                    q.prepare("UPDATE dodgeballs SET isHeld=:IsHeld WHERE bid=:BID");
+                    q.bindValue(":BID",bid);
+                    q.bindValue(":IsHeld",1);
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on UPDATE";
+                    }
+
+                    q.prepare("UPDATE in_game SET hasBall=:HasBall WHERE UID=:uid");
+                    q.bindValue(":HasBall",1);
+                    q.bindValue(":uid",uid);
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on UPDATE";
+                    }
+                }
+
             this->UpdateReady();
             break;
             }

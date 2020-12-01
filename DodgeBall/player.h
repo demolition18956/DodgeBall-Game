@@ -36,7 +36,8 @@ public:
     void setJustThrew(bool a);
     bool getJustThrew();
     int ballHeld;  // bid of the ball player is holding. will be -1 when no ball held
-
+    bool grab;
+    bool _throw;
     ~Player();
 
 private:

@@ -7,6 +7,8 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     QGraphicsItem()
 {
     ballHeld = -1;
+    grab = false;
+    _throw = false;
     w = 80;
     h = 80;
     x = _x;
@@ -77,6 +79,8 @@ void Player::advance(int phase)
                             hasBall = true;
                             ballHeld = b->bid;
                             delete b;
+                            qDebug() << "CLIENT: PICKING UP BALL";
+                            grab = true;
                             continue;
                         }
                     }

@@ -36,7 +36,7 @@ private:
     QTimer* timer;
     QLine line;
     void sendPos();
-    void sendBallPos();
+    void sendBallInfo();
 
 
 private slots:

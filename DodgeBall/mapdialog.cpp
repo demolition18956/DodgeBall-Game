@@ -97,7 +97,7 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 playersUid[myPlayer-1]->move(PlayerDirection::pickup);
             }
         }
-        else if ((e->key() == Qt::Key_Space) && (playersUid[myPlayer-1]->isHoldingBall() == true)) //if we press space
+        else if ((e->key() == Qt::Key_C) && (playersUid[myPlayer-1]->isHoldingBall() == true)) //if we press space
         {
             //player will attempt to throw a ball if they have it
             if(playersUid[myPlayer-1]->getTeam() == "red" && playersUid[myPlayer-1]->isHoldingBall())
@@ -111,8 +111,8 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 playersUid[myPlayer-1]->setHoldingBall(false); //make the player not hold ball anymore
                 //setJustThrew to true
                 playersUid[myPlayer-1]->setJustThrew(true);
-                playersUid[myPlayer-1]->ballHeld = -1;
-
+                playersUid[myPlayer-1]->_throw = true;
+                this->sendBallInfo();
             }
             else if(playersUid[myPlayer-1]->getTeam() == "blue" && playersUid[myPlayer-1]->isHoldingBall())
             {
@@ -125,7 +125,8 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 playersUid[myPlayer-1]->setHoldingBall(false);
                 //setJustThrew to true
                 playersUid[myPlayer-1]->setJustThrew(true);
-                playersUid[myPlayer-1]->ballHeld = -1;
+                playersUid[myPlayer-1]->_throw = true;
+                this->sendBallInfo();
             }
         }
     }
@@ -221,6 +222,10 @@ void mapDialog::processMessage()
                         this->sendPos();
                         playersUid[uid-1]->updatePos = false;
                     }
+                    if(playersUid[uid-1]->grab)
+                    {
+                        this->sendBallInfo();
+                    }
                 }
                 scene->addItem(playersUid[uid-1]);
             }
@@ -229,6 +234,8 @@ void mapDialog::processMessage()
                 qDebug() << "MAPDIALOG.CPP: SETTING X AND Y FOR OTHER PLAYERS";
                 qDebug() << x;
                 qDebug() << y;
+
+                playersUid[uid-1]->setHoldingBall(hasBall);
                 playersUid[uid-1]->SetX(x);   // setting x,y variables. Object is moved in advance()
                 playersUid[uid-1]->SetY(y);
             }
@@ -269,19 +276,29 @@ void mapDialog::processMessage()
             qDebug() << "Received the team" << team;
             buffer.clear();
 
-            if(dodgeballs[bid-1] == nullptr)
+            if(dodgeballs[bid-1] && isHeld)
+            {
+                qDebug() << "CLIENT: REMOVING FROM SCENE";
+                scene->removeItem(dodgeballs[bid-1]);
+                delete dodgeballs[bid-1];
+                dodgeballs[bid-1] = nullptr;
+            }
+            else if((dodgeballs[bid-1] == nullptr) && !isHeld)
             {
                 dodgeballs[bid-1] = new Ball(x, y, this);
                 dodgeballs[bid-1]->bid = bid;
                 qDebug() << "CLIENT: new Ball created";
+                if(team == "red")
+                {
+                    dodgeballs[bid-1]->setMove(1);
+                }
+                else if(team == "blue")
+                {
+                    dodgeballs[bid-1]->setMove(2);
+                }
                 scene->addItem(dodgeballs[bid-1]);
 
                 ballCounter++;
-            }
-            else
-            {
-                //dodgeballs[bid-1]->SetX(x);
-                //dodgeballs[bid-1]->SetY(y);
             }
         }
         message.readLine();
@@ -316,5 +333,65 @@ void mapDialog::sendPos()   // packet template: "Player: x y hasBall"
         socket->write(block);
         socket->flush();
         qDebug() << "CLIENT: POSITION SENT";
+    }
+}
+
+void mapDialog::sendBallInfo()
+{
+    if((playersUid[myPlayer-1] != nullptr) && (playersUid[myPlayer-1]->ballHeld != -1))
+    {
+        qDebug() << "sendBllInfo: ";
+        qDebug() << "_THROW: " << playersUid[myPlayer-1]->_throw;
+        qDebug() << "GRAB: " << playersUid[myPlayer-1]->grab;
+
+        if(playersUid[myPlayer-1]->grab)
+        {
+            qDebug() << "CLIENT: BallHeld Ball Grabbed, Sending";  // packet: "Grab: bid"
+            QString msg = "Grab: ";
+            qDebug() << "myPlayer: " << myPlayer;
+            msg.append(QString::number(playersUid[myPlayer-1]->ballHeld));
+            qDebug() << "got ballHeld";
+
+            qDebug() << msg;
+
+            QByteArray block;
+            QTextStream out(&block, QIODevice::ReadWrite);
+            out << msg << endl;
+
+            socket->write(block);
+            socket->flush();
+            qDebug() << "CLIENT: Ball Grab Data SENT";
+            playersUid[myPlayer-1]->grab = false;
+        }
+
+        if(playersUid[myPlayer-1]->_throw)  // just threw a ball
+        {
+            qDebug() << "CLIENT: BallHeld Ball Thrown, Sending";  // packet: "Throw: bid x y team"
+            QString msg = "Throw: ";
+            qDebug() << "myPlayer: " << myPlayer;
+            msg.append(QString::number(playersUid[myPlayer-1]->ballHeld));
+            qDebug() << "got ballHeld";
+            msg.append(" ");
+            msg.append(QString::number(playersUid[myPlayer-1]->GetX()));
+            qDebug() << "got x";
+            msg.append(" ");
+            msg.append(QString::number(playersUid[myPlayer-1]->GetY()));
+            qDebug() << "got y";
+            msg.append(" ");
+            msg.append(playersUid[myPlayer-1]->getTeam());
+            qDebug() << "got team";
+
+            qDebug() << msg;
+
+            QByteArray block;
+            QTextStream out(&block, QIODevice::ReadWrite);
+            out << msg << endl;
+
+            socket->write(block);
+            socket->flush();
+            qDebug() << "CLIENT: Ball Thrown Data SENT";
+            playersUid[myPlayer-1]->ballHeld = -1;
+            playersUid[myPlayer-1]->_throw = false;
+        }
     }
 }
