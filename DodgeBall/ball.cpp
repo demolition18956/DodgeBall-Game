@@ -55,8 +55,8 @@ void Ball::advance(int phase)
             //this makes the program crash for some reason, I was trying to set the
             //justThrew flag to 0 when the player throws so that when it is hit by a ball
             //it works
-
-            /*if (player->justThrew)
+            /*
+            if (player->getustTh)
             {
                 player->justThrew = false;
             }*/
@@ -64,11 +64,20 @@ void Ball::advance(int phase)
         }
         if (getMove() == 1) // if phase == 1, then its red team
         {
-            this->moveBy(5,0);
+            this->moveBy(10,0);
         }
         else if(getMove() == 2) //blue team
         {
-            this->moveBy(-5,0);
+            this->moveBy(-10,0);
+        }
+
+        if ((this->pos().x() < -XMAX/2) || (this->pos().x() > XMAX/2)){
+
+            setMove(0);
+            setMoving(false);
+            this->moveBy(0,0);
+            //phase = 0;
+
         }
     }
     return;

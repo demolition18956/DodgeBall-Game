@@ -38,6 +38,7 @@ private:
     void sendPos();
     void sendBallPos();
 
+
 private slots:
     void processMessage();
 };

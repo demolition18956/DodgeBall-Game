@@ -36,6 +36,7 @@ public:
     void setJustThrew(bool a);
     bool getJustThrew();
     int ballHeld;  // bid of the ball player is holding. will be -1 when no ball held
+
     ~Player();
 
 private:
@@ -55,6 +56,7 @@ private:
     bool ballAttempt;
     QString team;
     bool justThrew;
+
 
     //QPointF starpts[10];
 };

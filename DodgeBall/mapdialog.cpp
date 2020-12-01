@@ -182,6 +182,7 @@ void mapDialog::processMessage()
     // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall")
     while((buffer == "PLAYER:") || (buffer == "BALL:"))
     {
+        static int ballCounter = 0;
         if(buffer == "PLAYER:")
         {
             int uid;
@@ -274,6 +275,8 @@ void mapDialog::processMessage()
                 dodgeballs[bid-1]->bid = bid;
                 qDebug() << "CLIENT: new Ball created";
                 scene->addItem(dodgeballs[bid-1]);
+
+                ballCounter++;
             }
             else
             {
