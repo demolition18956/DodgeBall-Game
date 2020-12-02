@@ -61,7 +61,7 @@ void Ball::advance(int phase)
             this->moveBy(-10,0);
         }
 
-        if ((this->pos().x() < -XMAX/2) || (this->pos().x() > XMAX/2)){
+        if ((this->pos().x()+x < -XMAX/2) || (this->pos().x()+x > XMAX/2)){
 
             setMove(0);
             setMoving(false);
