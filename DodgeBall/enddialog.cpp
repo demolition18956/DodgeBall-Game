@@ -12,3 +12,23 @@ endDialog::~endDialog()
 {
     delete ui;
 }
+
+void endDialog::exitFunc()
+{
+    qDebug("Exit");
+    quitDialog->exec();
+}
+
+void endDialog::exit()
+{
+    quitDialog->close();
+    this->close();
+}
+
+void endDialog::determineWinner(int winner){
+    if(winner == 1){
+        ui->winningTeamLabel->setText("Blue");
+    }
+    else
+         ui->winningTeamLabel->setText("Red");
+}

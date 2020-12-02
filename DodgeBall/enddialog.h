@@ -2,6 +2,7 @@
 #define ENDDIALOG_H
 
 #include <QDialog>
+#include <quitdialog.h>
 
 namespace Ui {
 class endDialog;
@@ -17,6 +18,14 @@ public:
 
 private:
     Ui::endDialog *ui;
+    QuitDialog *quitDialog;
+
+private slots:
+    void exit();
+
+public slots:
+    void exitFunc();
+    void determineWinner(int winner);
 };
 
 #endif // ENDDIALOG_H
