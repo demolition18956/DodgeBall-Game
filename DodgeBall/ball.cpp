@@ -40,11 +40,11 @@ void Ball::advance(int phase)
         }
         if (getMove() == 1) // if phase == 1, then its red team
         {
-            this->moveBy(10,0);
+            this->moveBy(25,0);
         }
         else if(getMove() == 2) //blue team
         {
-            this->moveBy(-10,0);
+            this->moveBy(-25,0);
         }
 
         if ((this->pos().x()+x < -XMAX/2) || (this->pos().x()+x > XMAX/2)){
