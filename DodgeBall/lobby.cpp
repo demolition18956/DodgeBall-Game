@@ -177,6 +177,7 @@ void lobby::processMessage(){
             //qDebug() << "Starting Game!";
 
             map = new mapDialog(playeruid,this);
+            connect(map, SIGNAL(finishGame(QString)), this, SLOT(GameFinish(QString)));
             map->SetSocket(&socket);
             map->setWindowState(Qt::WindowFullScreen);
 
@@ -323,4 +324,11 @@ void lobby::changeName()
 bool lobby::getConnected()
 {
     return connected;
+}
+
+void lobby::GameFinish(QString team)
+{
+    qDebug() << "CLIENT: " << team << " WINS!!!";
+    map->close();
+    this->show();
 }

@@ -515,8 +515,8 @@ void GameServer::ReportReady(){
                     _in >> buffer;  // uid read
                     int uid = buffer.toInt();
 
-                    //qDebug() << "SERVER: Hit Read";
-                    //qDebug() << "uid: " << uid;
+                    qDebug() << "SERVER: Hit Read";
+                    qDebug() << "uid: " << uid;
 
                     QSqlQuery q;
                     q.prepare("DELETE FROM in_game WHERE UID=:uid");
@@ -524,21 +524,81 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        //qDebug() << q.lastError();
-                        //qDebug() << "Error on DELETE";
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on DELETE";
                     }
 
                     QString msg = "Hit: ";
                     msg.append(QString::number(uid));
 
                     this->sendAll(msg);
-
-                    q.prepare("SELECT COUNT(UID) FROM in_game");
+                    qDebug() << "CHECKING FOR WINNER";
+                    q.prepare("SELECT COUNT(team) FROM in_game WHERE team=:Team");
+                    q.bindValue(":Team", "red");
 
                     if(!q.exec())
                     {
-                        //qDebug() << q.lastError();
-                        //qDebug() << "Error on SELECT";
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on SELECT";
+                    }
+                    q.next();
+                    if(q.value(0).toInt() == 0)
+                    {
+                        qDebug() << "Only 1 Team Remains!!!";
+
+                        if(!q.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on SELECT";
+                        }
+
+                        qDebug() << "BLUE WINS!!!";
+
+                        msg.clear();
+                        msg = "Finish: blue";
+                        this->sendAll(msg);
+                        timer->stop();
+                        QSqlQuery qq;
+                        qq.prepare("DROP TABLE in_game");
+                        if(!q.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
+                    }
+                    q.clear();
+                    q.prepare("SELECT COUNT(team) FROM in_game WHERE team=:Team");
+                    q.bindValue(":Team", "blue");
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on SELECT";
+                    }
+                    q.next();
+                    if(q.value(0).toInt() == 0)
+                    {
+                        qDebug() << "Only 1 Team Remains!!!";
+
+                        if(!q.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on SELECT";
+                        }
+
+                        qDebug() << "RED WINS!!!";
+
+                        msg.clear();
+                        msg = "Finish: red";
+                        this->sendAll(msg);
+                        timer->stop();
+                        QSqlQuery qq;
+                        qq.prepare("DROP TABLE in_game");
+                        if(!q.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
                     }
                 }
 

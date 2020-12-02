@@ -38,6 +38,8 @@ private:
     void sendPos();
     void sendBallInfo();
 
+signals:
+    void finishGame(QString);
 
 private slots:
     void processMessage();
