@@ -238,3 +238,8 @@ bool Player::getJustThrew()
 {
     return justThrew;
 }
+
+bool Player::getIsPlayer()
+{
+    return isUser;
+}

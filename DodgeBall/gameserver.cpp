@@ -3,6 +3,7 @@
 #include <QByteArray>
 #include <QPixmap>
 #include <QFile>
+#include <QNetworkProxy>
 
 //*************************************************************************************************//
 //                                      Constructor                                                //
@@ -125,6 +126,7 @@ void GameServer::ProcessNewConnections(){
 
             // Reject the player and return function
             QTcpSocket* sock = nextPendingConnection();
+            sock->setProxy(QNetworkProxy::NoProxy);
 
             sock->write("0");   // 0 for Rejected
             sock->abort();
@@ -137,6 +139,7 @@ void GameServer::ProcessNewConnections(){
 
         // Else,
         QTcpSocket* sock = this->nextPendingConnection();
+        sock->setProxy(QNetworkProxy::NoProxy);
 
         // Choose the last socket
         int sNum = getMinSocket();                                      // Grab the Socket offset from pointer

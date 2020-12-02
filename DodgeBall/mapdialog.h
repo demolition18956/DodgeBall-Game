@@ -41,6 +41,7 @@ private:
 
 private slots:
     void processMessage();
+    void player_Hit();
 };
 
 #endif // MAPDIALOG_H

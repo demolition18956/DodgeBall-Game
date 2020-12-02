@@ -23,6 +23,7 @@ public:
     int bid; // identifier for the ball
 
 signals:
+    void playerHit();
 
 public slots:
 

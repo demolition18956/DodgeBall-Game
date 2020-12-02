@@ -47,20 +47,14 @@ void Ball::advance(int phase)
             {
                 if(player and !player->getHoldingBall() and !player->getJustThrew())
                 {
-                    this->scene()->removeItem(player);
+                    //this->scene()->removeItem(player);
                     this->setMove(0);
+                    if(player->getIsPlayer())  // only want to report when user is hit to avoid all players reporting each colission
+                    {
+                        emit playerHit();
+                    }
                 }
             }
-
-            //this makes the program crash for some reason, I was trying to set the
-            //justThrew flag to 0 when the player throws so that when it is hit by a ball
-            //it works
-            /*
-            if (player->getustTh)
-            {
-                player->justThrew = false;
-            }*/
-
         }
         if (getMove() == 1) // if phase == 1, then its red team
         {

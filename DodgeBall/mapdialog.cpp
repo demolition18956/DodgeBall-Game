@@ -107,6 +107,7 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 testBall->setMoving(true);
                 int bid = playersUid[myPlayer-1]->ballHeld;
                 dodgeballs[bid-1] = testBall;
+                connect(dodgeballs[bid-1], SIGNAL(playerHit()), this, SLOT(player_Hit()));
                 scene->addItem(dodgeballs[bid-1]);
                 playersUid[myPlayer-1]->setHoldingBall(false); //make the player not hold ball anymore
                 //setJustThrew to true
@@ -121,6 +122,7 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 testBall->setMoving(true);
                 int bid = playersUid[myPlayer-1]->ballHeld;
                 dodgeballs[bid-1] = testBall;
+                connect(dodgeballs[bid-1], SIGNAL(playerHit()), this, SLOT(player_Hit()));
                 scene->addItem(dodgeballs[bid-1]);
                 playersUid[myPlayer-1]->setHoldingBall(false);
                 //setJustThrew to true
@@ -287,6 +289,7 @@ void mapDialog::processMessage()
             else if( (playersUid[myPlayer-1]->ballHeld != bid) && (dodgeballs[bid-1] == nullptr) && !isHeld)
             {
                 dodgeballs[bid-1] = new Ball(x, y, this);
+                connect(dodgeballs[bid-1], SIGNAL(playerHit()), this, SLOT(player_Hit()));
                 dodgeballs[bid-1]->bid = bid;
                 qDebug() << "CLIENT: new Ball created";
                 if(team == "red")
@@ -397,4 +400,9 @@ void mapDialog::sendBallInfo()
             playersUid[myPlayer-1]->_throw = false;
         }
     }
+}
+
+void mapDialog::player_Hit()
+{
+    qDebug() << "PLAYER HIT!!!!!";
 }

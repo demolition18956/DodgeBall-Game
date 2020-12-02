@@ -2,6 +2,7 @@
 #include "ui_lobby.h"
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QNetworkProxy>
 
 //*************************************************************************************************//
 //                                      Constructor                                                //
@@ -24,6 +25,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     address = QHostAddress(ipAddress);
     host = host_;
     connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
+    socket.setProxy(QNetworkProxy::NoProxy);
     if(host ==  true)   // if player is the host
     {
         server = new GameServer(portNumber, this);

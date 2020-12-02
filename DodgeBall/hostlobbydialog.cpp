@@ -26,7 +26,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);
-
+    ui->portEdit->setText("2224");
 }
 
 HostLobbyDialog::~HostLobbyDialog()
