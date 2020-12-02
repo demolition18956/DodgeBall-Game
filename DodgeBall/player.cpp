@@ -94,6 +94,12 @@ void Player::advance(int phase)
                         }
                     }
 
+                    Player* p = dynamic_cast<Player *>(i);
+                    if(p)
+                    {
+                        this->moveBy(-dx,-dy);
+                    }
+
                     QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
                     if (line)
                     {
