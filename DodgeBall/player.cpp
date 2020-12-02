@@ -71,7 +71,7 @@ void Player::advance(int phase)
                 {
                     if ((ballAttempt) && !(this->isHoldingBall())){
                         Ball* b = dynamic_cast<Ball *>(i);
-                        if(b)
+                        if(b && !b->getMoving())
                         {
                             qDebug() << b->type();
                             this->scene()->removeItem(b);
