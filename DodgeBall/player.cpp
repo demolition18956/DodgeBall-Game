@@ -64,7 +64,7 @@ void Player::advance(int phase)
             }
             this->moveBy(dx,dy);
             QList<QGraphicsItem*> collisions = this->collidingItems();
-            qDebug() << collisions.size();
+            //qDebug() << collisions.size();
             if (collisions.size()>0)
             {
                 foreach(QGraphicsItem *i, collisions)
@@ -73,12 +73,12 @@ void Player::advance(int phase)
                         Ball* b = dynamic_cast<Ball *>(i);
                         if(b && !b->getMoving())
                         {
-                            qDebug() << b->type();
+                            //qDebug() << b->type();
                             this->scene()->removeItem(b);
                             hasBall = true;
                             ballHeld = b->bid;
                             delete b;
-                            qDebug() << "CLIENT: PICKING UP BALL";
+                            //qDebug() << "CLIENT: PICKING UP BALL";
                             grab = true;
                             continue;
                         }
@@ -90,7 +90,7 @@ void Player::advance(int phase)
                         {
                             //b->setMove(0);
                             emit b->playerHit();
-                            qDebug() << "EMITTING PLAYER HIT!!!";
+                            //qDebug() << "EMITTING PLAYER HIT!!!";
                         }
                     }
 
@@ -104,11 +104,11 @@ void Player::advance(int phase)
             }
 
             if ((this->pos().y() < -YMAX/2 + h/2) || (this->pos().y() > YMAX/2 - h/2)){
-                qDebug() << "Max Y Hit";
+                //qDebug() << "Max Y Hit";
                 this->moveBy(0,-dy);
             }
             if ((this->pos().x() < -XMAX/2 + w/2) || (this->pos().x() > XMAX/2 - w/2)){
-                qDebug() << "Max X Hit";
+                //qDebug() << "Max X Hit";
                 this->moveBy(-dx,0);
             }
             x = this->pos().x();
@@ -117,9 +117,9 @@ void Player::advance(int phase)
         }
         else {
             this->setPos(x,y);   // for showing other players (!isUser)
-            qDebug() << "PLAYER.CPP: MOVING OTHER PLAYER";
-            qDebug() << x;
-            qDebug() << y;
+            //qDebug() << "PLAYER.CPP: MOVING OTHER PLAYER";
+            //qDebug() << x;
+            //qDebug() << y;
         }
     }
 }

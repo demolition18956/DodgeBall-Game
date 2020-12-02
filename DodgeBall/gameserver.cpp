@@ -21,11 +21,11 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Open Port for Server at designated port
     if(!this->listen(QHostAddress::Any,portNum)){
 
-        qDebug() << "SERVER: Could not start server";
+        //qDebug() << "SERVER: Could not start server";
     }
     else{
 
-        qDebug() << "SERVER: Listening";
+        //qDebug() << "SERVER: Listening";
     }
 
     // Initialize Player Count
@@ -39,8 +39,8 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Checks validity of database
     if (!db.open()){
 
-            qDebug() << db.lastError();
-            qDebug() << "Error: Unable to connect due to above error";
+            //qDebug() << db.lastError();
+            //qDebug() << "Error: Unable to connect due to above error";
     }
 
     // Otherwise, creates database
@@ -52,8 +52,8 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Checks validity of database
     if (!setup.isActive()){
 
-        qDebug() << setup.lastError();
-        qDebug() << "Creating Table 1 Error: unable to complete query";
+        //qDebug() << setup.lastError();
+        //qDebug() << "Creating Table 1 Error: unable to complete query";
         return;
     }
 
@@ -63,8 +63,8 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Check validity of database
     if (!setup.isActive()){
 
-        qDebug() << setup.lastError();
-        qDebug() << "Creating Table 2 Error: unable to complete query";
+        //qDebug() << setup.lastError();
+        //qDebug() << "Creating Table 2 Error: unable to complete query";
         return;
     }
 
@@ -74,8 +74,8 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Check validity of database
     if (!setup.isActive()){
 
-        qDebug() << setup.lastError();
-        qDebug() << "add 1 Error: unable to complete query";
+        //qDebug() << setup.lastError();
+        //qDebug() << "add 1 Error: unable to complete query";
         return;
     }
 
@@ -84,8 +84,8 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Check validity of database
     if (!setup.isActive()){
 
-        qDebug() << setup.lastError();
-        qDebug() << "add 2 Error: unable to complete query";
+        //qDebug() << setup.lastError();
+        //qDebug() << "add 2 Error: unable to complete query";
         return;
     }
 
@@ -98,8 +98,8 @@ GameServer::GameServer(int portNum, QObject* parent) :
     // Check validity of database
     if (!setup.isActive()){
 
-        qDebug() << setup.lastError();
-        qDebug() << "Error: unable to complete query";
+        //qDebug() << setup.lastError();
+        //qDebug() << "Error: unable to complete query";
         return;
     }
 
@@ -114,12 +114,12 @@ GameServer::GameServer(int portNum, QObject* parent) :
 // A potential Client has been detected
 void GameServer::ProcessNewConnections(){
 
-    qDebug() << "Signal Emitted";
+    //qDebug() << "Signal Emitted";
 
     // Loop until all Connections are taken care of
     while(hasPendingConnections()){
 
-        qDebug() << "SERVER: processing incoming connection";
+        //qDebug() << "SERVER: processing incoming connection";
 
         // If Lobby is already full
         if(!inLobby && playerCount >= 6){
@@ -133,7 +133,7 @@ void GameServer::ProcessNewConnections(){
 
             delete sock;
 
-            qDebug() << "SERVER: player rejected!";
+            //qDebug() << "SERVER: player rejected!";
             return;
         }
 
@@ -151,20 +151,20 @@ void GameServer::ProcessNewConnections(){
         qqqq.addBindValue("Player " + QString::number(++playerCount));          // Bind Default Name
 
         // Print current player count and name
-        qDebug() << "Player Count " << playerCount;
-        qDebug() << "Player " + QString::number(playerCount);
+        //qDebug() << "Player Count " << playerCount;
+        //qDebug() << "Player " + QString::number(playerCount);
 
         int dfault = 0; // Set default to 0, not ready
 
         qqqq.addBindValue(dfault);                                              // Bind Default Ready Status (0 = false)
         qqqq.addBindValue(sock->peerAddress().toString());                       // Bind IP address (never used tho... oops)
-        qDebug() << sock->peerAddress().toString();
+        //qDebug() << sock->peerAddress().toString();
 
         // Execute and Verify if command worked
         if (!qqqq.exec()){
 
-           qDebug() << qqqq.lastError();
-           qDebug() << "Error on INSERT";
+           //qDebug() << qqqq.lastError();
+           //qDebug() << "Error on INSERT";
         }
 
         playerSockets[sNum] = sock;                     // Set pointer to created socket
@@ -185,8 +185,8 @@ int GameServer::getMinSocket(){
     // Test if there are any available sockets
     if (!q.exec("SELECT MIN(UID) FROM sockets WHERE UID NOT IN (SELECT UID FROM players)")){
 
-        qDebug() << q.lastError();
-        qDebug() << "Error on MIN";
+        //qDebug() << q.lastError();
+        //qDebug() << "Error on MIN";
     }
 
     // While there are available sockets, add to list
@@ -203,12 +203,12 @@ void GameServer::clientDisconnected(){
     // For statement relating to max number of players
     for(int i=0;i<6;i++){
 
-        qDebug() << playerSockets[i];
+        //qDebug() << playerSockets[i];
 
         // Check if socket is not null
         if(playerSockets[i] != nullptr){
 
-            qDebug() << playerSockets[i]->state();
+            //qDebug() << playerSockets[i]->state();
 
             // Check if player is still connected
             if(playerSockets[i]->state() == QAbstractSocket::ConnectedState){
@@ -229,13 +229,13 @@ void GameServer::clientDisconnected(){
                 // If unable to delete player from database, throw error
                 if (!del.exec("DELETE FROM players WHERE UID=" + QString::number(i+1))){
 
-                    qDebug() << del.lastError();
-                    qDebug() << "Error on DELETE";
+                    //qDebug() << del.lastError();
+                    //qDebug() << "Error on DELETE";
                 }
 
                 // Update clients of new information
                 this->UpdateClients();
-                qDebug() << "Done";
+                //qDebug() << "Done";
             }
         }
     }
@@ -257,21 +257,21 @@ void GameServer::UpdateClients(){
 
     if (!socks.exec("SELECT UID FROM players")){
 
-       qDebug() << socks.lastError();
-       qDebug() << "Error on INSERT";
+       //qDebug() << socks.lastError();
+       //qDebug() << "Error on INSERT";
 
     }
 
-    qDebug() << "Updating";
+    //qDebug() << "Updating";
 
-    //
+
     while(socks.next()){
 
         int playNum = 0;
-        qDebug() << "Round";
+        //qDebug() << "Round";
 
         QTcpSocket* sock = playerSockets[socks.value(0).toInt()-1];
-        qDebug() << sock;
+        //qDebug() << sock;
 
         QByteArray block;
         QTextStream out(&block, QIODevice::WriteOnly);
@@ -300,7 +300,7 @@ void GameServer::UpdateClients(){
         }
 
         sock->write(block);
-        qDebug() << block;
+        //qDebug() << block;
 
     }
 }
@@ -311,46 +311,46 @@ void GameServer::UpdateClients(){
 
 void GameServer::ReportReady(){
 
-    qDebug() << "Updating";
+    //qDebug() << "Updating";
     QString str;
     int ind;
 
     for (int i = 0; i < 6; i++){
 
-        qDebug() << i;
+        //qDebug() << i;
 
         if ((playerSockets[i] != nullptr) && playerSockets[i]->canReadLine()){
 
-            qDebug() << "we're in";
+            //qDebug() << "we're in";
             QTextStream in(playerSockets[i]);
 
             while (in.readLineInto(&str)){
 
-                qDebug() << str;
+                //qDebug() << str;
 
                 if ((ind = str.indexOf(" Ready")) != -1){
 
-                    qDebug() << str.left(1);
+                    //qDebug() << str.left(1);
                     QSqlQuery qq;
 
                     if (!qq.exec("UPDATE players SET ready = 1 WHERE UID=" + str.left(1))){
 
-                        qDebug() << qq.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << qq.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
 
                     if (!qq.exec("SELECT COUNT(UID) FROM players WHERE ready=1")){
 
-                        qDebug() << qq.lastError();
-                        qDebug() << "Error on SELECT";
+                        //qDebug() << qq.lastError();
+                        //qDebug() << "Error on SELECT";
                     }
 
                     qq.next();
-                    qDebug() << qq.value(0).toInt();
+                    //qDebug() << qq.value(0).toInt();
 
                     if((qq.value(0).toInt() == playerCount) && playerCount >= 1){
 
-                        qDebug() << "SERVER: Starting Game " << qq.value(0).toInt();
+                        //qDebug() << "SERVER: Starting Game " << qq.value(0).toInt();
                         inLobby = false;
                         StartGame();
                     }
@@ -358,13 +358,13 @@ void GameServer::ReportReady(){
 
                 else if ((ind = str.indexOf(" NotReady")) != -1){
 
-                    qDebug() << str.left(1);
+                    //qDebug() << str.left(1);
                     QSqlQuery qq;
 
                     if (!qq.exec("UPDATE players SET ready = 0 WHERE UID=" + str.left(1))){
 
-                        qDebug() << qq.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << qq.lastError();
+                        //qDebug() << "Error on UPDATE";
 
                      }
                 }
@@ -379,13 +379,13 @@ void GameServer::ReportReady(){
                                  + "\" WHERE UID="+str.left(1)))
                     {
 
-                        qDebug() << qq.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << qq.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
                 }
 
                 else if ((ind = str.indexOf("Player: ")) != -1){
-                    qDebug() << "WE are in";
+                    //qDebug() << "WE are in";
                     QString buffer;
                     QTextStream _in(&str, QIODevice::ReadOnly);
                     _in >> buffer;
@@ -404,10 +404,10 @@ void GameServer::ReportReady(){
                     hasBall = buffer.toInt();
 
 
-                    qDebug() << "Player Data Read: ";
-                    qDebug() << "x: " << x;
-                    qDebug() << "y: " << y;
-                    qDebug() << "hasBall: " << hasBall;
+                    //qDebug() << "Player Data Read: ";
+                    //qDebug() << "x: " << x;
+                    //qDebug() << "y: " << y;
+                    //qDebug() << "hasBall: " << hasBall;
 
                     QSqlQuery q;
                     q.prepare("UPDATE in_game SET x=:X, y=:Y, hasBall=:HasBall WHERE UID=:uid");
@@ -418,8 +418,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
 
                 }
@@ -447,11 +447,11 @@ void GameServer::ReportReady(){
                     _in >> buffer;   // team read
                     team = buffer;
 
-                    qDebug() << "Ball Throw Read: ";
-                    qDebug() << "bid: " << bid;
-                    qDebug() << "x: " << x;
-                    qDebug() << "y: " << y;
-                    qDebug() << "team: " << team;
+                    //qDebug() << "Ball Throw Read: ";
+                    //qDebug() << "bid: " << bid;
+                    //qDebug() << "x: " << x;
+                    //qDebug() << "y: " << y;
+                    //qDebug() << "team: " << team;
 
                     QSqlQuery q;
                     q.prepare("UPDATE dodgeballs SET x=:X, y=:Y, isHeld=:IsHeld, team=:Team WHERE bid=:BID");
@@ -463,8 +463,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
                 }
 
@@ -480,8 +480,8 @@ void GameServer::ReportReady(){
                     _in >> buffer;  // bid read
                     bid = buffer.toInt();
 
-                    qDebug() << "Ball Grab Read: ";
-                    qDebug() << "bid: " << bid;
+                    //qDebug() << "Ball Grab Read: ";
+                    //qDebug() << "bid: " << bid;
 
                     QSqlQuery q;
                     q.prepare("UPDATE dodgeballs SET isHeld=:IsHeld WHERE bid=:BID");
@@ -490,8 +490,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
 
                     q.prepare("UPDATE in_game SET hasBall=:HasBall WHERE UID=:uid");
@@ -500,8 +500,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
                 }
 
@@ -515,8 +515,8 @@ void GameServer::ReportReady(){
                     _in >> buffer;  // uid read
                     int uid = buffer.toInt();
 
-                    qDebug() << "SERVER: Hit Read";
-                    qDebug() << "uid: " << uid;
+                    //qDebug() << "SERVER: Hit Read";
+                    //qDebug() << "uid: " << uid;
 
                     QSqlQuery q;
                     q.prepare("DELETE FROM in_game WHERE UID=:uid");
@@ -524,8 +524,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on DELETE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on DELETE";
                     }
 
                     QString msg = "Hit: ";
@@ -537,8 +537,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on SELECT";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on SELECT";
                     }
                 }
 
@@ -558,8 +558,8 @@ void GameServer::UpdateReady(){
 
     if (!socks.exec("SELECT UID FROM players")){
 
-       qDebug() << socks.lastError();
-       qDebug() << "Error on INSERT";
+       //qDebug() << socks.lastError();
+       //qDebug() << "Error on INSERT";
 
     }
 
@@ -568,7 +568,7 @@ void GameServer::UpdateReady(){
         int playNum = 0;
 
         QTcpSocket* sock = playerSockets[socks.value(0).toInt()-1];
-        qDebug() << sock;
+        //qDebug() << sock;
 
         QByteArray block;
         QTextStream out(&block, QIODevice::WriteOnly);
@@ -581,7 +581,7 @@ void GameServer::UpdateReady(){
         }
 
         sock->write(block);
-        qDebug() << block;
+        //qDebug() << block;
 
 
     }
@@ -594,18 +594,18 @@ void GameServer::UpdateReady(){
 // send a message to start the game
 void GameServer::StartGame(){
 
-    qDebug() << "SERVER: Starting Game";
+    //qDebug() << "SERVER: Starting Game";
     this->sendAll("start");
     QSqlQuery start;
 
     // table for data associated with active players
     if(!start.exec("CREATE TABLE in_game(UID INT, x INT, y INT, hasBall INT, team TEXT)")){
 
-        qDebug() << start.lastError();
-        qDebug() << "Error on CREATE";
+        //qDebug() << start.lastError();
+        //qDebug() << "Error on CREATE";
     }
 
-    qDebug() << "In-game table created";
+    //qDebug() << "In-game table created";
     start.clear();
 
     QSqlQuery q;
@@ -613,17 +613,17 @@ void GameServer::StartGame(){
     // Populate in_game table
     if(!q.exec("SELECT UID FROM players")){
 
-        qDebug() << q.lastError();
-        qDebug() << "Error on SELECT";
+        //qDebug() << q.lastError();
+        //qDebug() << "Error on SELECT";
     }
 
     QString team = "red";
 
     int plays = playerCount/2 + (playerCount % 2);
-    qDebug() << plays;
+    //qDebug() << plays;
 
     qreal off = -YMAX / 2*(((qreal)plays -1)/plays);
-    qDebug() << off;
+    //qDebug() << off;
 
     while(q.next()){
 
@@ -631,8 +631,8 @@ void GameServer::StartGame(){
 
         x = (team == "red") ? -XMAX/2 + 100 : XMAX/2 - 100;
 
-        qDebug() << "X = " << x;
-        qDebug() << "Offset = " << off;
+        //qDebug() << "X = " << x;
+        //qDebug() << "Offset = " << off;
 
         QSqlQuery qq;
 
@@ -646,8 +646,8 @@ void GameServer::StartGame(){
 
         if(!qq.exec()){
 
-            qDebug() << start.lastError();
-            qDebug() << "Error on INSERT";
+            //qDebug() << start.lastError();
+            //qDebug() << "Error on INSERT";
         }
 
         qq.clear();
@@ -668,11 +668,11 @@ void GameServer::StartGame(){
     // table for data associated with active dodgeballs (flying and stationary)
     if(!start.exec("CREATE TABLE dodgeballs(bid INT, x INT, y INT, isHeld INT, team TEXT)")){
 
-        qDebug() << start.lastError();
-        qDebug() << "Error on CREATE";
+        //qDebug() << start.lastError();
+        //qDebug() << "Error on CREATE";
     }
 
-    qDebug() << "dodgeballs table created";
+    //qDebug() << "dodgeballs table created";
     start.clear();
 
     // populate the dodgeballs table (spawn in first set of dodgeballs)
@@ -687,26 +687,26 @@ void GameServer::StartGame(){
         q.bindValue(":team", "noteam");  // team will be assigned "red" or "blue" once picked up to determine the direction it will be thrown
         if(!q.exec()){
 
-            qDebug() << q.lastError();
-            qDebug() << "Error on INSERT";
+            //qDebug() << q.lastError();
+            //qDebug() << "Error on INSERT";
         }
         q.clear();
     }
 
     timer->start(75);
     connect(timer, &QTimer::timeout, this, &GameServer::onTimeout);
-    qDebug() << "SERVER: Timer Started!";
+    //qDebug() << "SERVER: Timer Started!";
 }
 
 //function that sends a message to everybody
 void GameServer::sendAll(QString message){
 
-        qDebug() << "Sending message to everybody";
+        //qDebug() << "Sending message to everybody";
 
        for(int i = 0; i < 6; i++){
             if((playerSockets[i] != nullptr) && (playerSockets[i]->state() == QAbstractSocket::ConnectedState)){
 
-                qDebug() << playerSockets[i];
+                //qDebug() << playerSockets[i];
 
                 QByteArray block;
                 QTextStream out(&block, QIODevice::ReadWrite);
@@ -726,8 +726,8 @@ void GameServer::onTimeout(){
 
     if(!q.exec("SELECT UID FROM in_game")){
 
-        qDebug() << q.lastError();
-        qDebug() << "Error on SELECT";
+        //qDebug() << q.lastError();
+        //qDebug() << "Error on SELECT";
         timer->stop();
     }
 
@@ -744,36 +744,36 @@ void GameServer::onTimeout(){
         int uid;
 
         uid = q.value(0).toInt();
-        qDebug() << "Got the UID: " << uid;
+        //qDebug() << "Got the UID: " << uid;
 
         qq.prepare("SELECT team, x, y, hasBall FROM in_game WHERE UID=:uid");
         qq.bindValue(":uid",uid);
 
         if(!qq.exec()){
 
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
+            //qDebug() << qq.lastError();
+            //qDebug() << "Error on SELECT";
             timer->stop();
         }
 
         if (!qq.next()){
 
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
+            //qDebug() << qq.lastError();
+            //qDebug() << "Error on SELECT";
             timer->stop();
         }
 
         team = qq.value(0).toString();
-        qDebug() << "Got the Team: " << team;
+        //qDebug() << "Got the Team: " << team;
 
         x = qq.value(1).toInt();
-        qDebug() << "Got the x: " << x;
+        //qDebug() << "Got the x: " << x;
 
         y = qq.value(2).toInt();
-        qDebug() << "Got the y: " << y;
+        //qDebug() << "Got the y: " << y;
 
         hasBall = qq.value(3).toInt();
-        qDebug() << "Player hasBall" << hasBall;
+        //qDebug() << "Player hasBall" << hasBall;
 
         qq.clear();
 
@@ -789,15 +789,15 @@ void GameServer::onTimeout(){
         msg.append(" ");
         msg.append(QString::number(hasBall));
 
-        qDebug() << "Message to be sent: " << msg;
+        //qDebug() << "Message to be sent: " << msg;
         sendAll(msg);
     }
     q.clear();
 
     if(!q.exec("SELECT bid FROM dodgeballs")){
 
-        qDebug() << q.lastError();
-        qDebug() << "Error on SELECT";
+        //qDebug() << q.lastError();
+        //qDebug() << "Error on SELECT";
         timer->stop();
     }
 
@@ -815,36 +815,36 @@ void GameServer::onTimeout(){
         QString team;
 
         bid = q.value(0).toInt();
-        qDebug() << "Got the bid: " << bid;
+        //qDebug() << "Got the bid: " << bid;
 
         qq.prepare("SELECT x, y, isHeld, team FROM dodgeballs WHERE bid=:bid");
         qq.bindValue(":bid",bid);
 
         if(!qq.exec()){
 
-            qDebug() << qq.lastError();
-            qDebug() << "Error on SELECT";
+            //qDebug() << qq.lastError();
+            //qDebug() << "Error on SELECT";
             timer->stop();
         }
 
         if (!qq.next()){
 
-            qDebug() << qq.lastError();
-            qDebug() << "Error on NEXT";
+            //qDebug() << qq.lastError();
+            //qDebug() << "Error on NEXT";
             timer->stop();
         }
 
         x = qq.value(0).toInt();
-        qDebug() << "Got the x: " << x;
+        //qDebug() << "Got the x: " << x;
 
         y = qq.value(1).toInt();
-        qDebug() << "Got the y: " << y;
+        //qDebug() << "Got the y: " << y;
 
         isHeld = qq.value(2).toInt();
-        qDebug() << "Got the isHeld: " << isHeld;
+        //qDebug() << "Got the isHeld: " << isHeld;
 
         team = qq.value(3).toString();
-        qDebug() << "Got the team: " << team;
+        //qDebug() << "Got the team: " << team;
 
         qq.clear();
 
@@ -860,31 +860,31 @@ void GameServer::onTimeout(){
         msg.append(" ");
         msg.append(team);
 
-        qDebug() << "Message to be sent: " << msg;
+        //qDebug() << "Message to be sent: " << msg;
         sendAll(msg);
     }
 
-    qDebug() << "SERVER: Sent Data";
+    //qDebug() << "SERVER: Sent Data";
 }
 
 void GameServer::ReportMovement(){
 
-    qDebug() << "Updating";
+    //qDebug() << "Updating";
     QString str;
     int ind;
 
     for (int i = 0; i < 6; i++){
         if ((playerSockets[i] != nullptr) && playerSockets[i]->canReadLine()){
 
-            qDebug() << "we're in";
+            //qDebug() << "we're in";
             QTextStream in(playerSockets[i]);
 
             while (in.readLineInto(&str)){
 
-                qDebug() << str;
+                //qDebug() << str;
 
                 if ((ind = str.indexOf("Player: ")) != -1){
-                    qDebug() << "WE are in";
+                    //qDebug() << "WE are in";
                     QString buffer;
                     QTextStream _in(&str, QIODevice::ReadOnly);
                     _in >> buffer;
@@ -903,10 +903,10 @@ void GameServer::ReportMovement(){
                     hasBall = buffer.toInt();
 
 
-                    qDebug() << "Player Data Read: ";
-                    qDebug() << "x: " << x;
-                    qDebug() << "y: " << y;
-                    qDebug() << "hasBall: " << hasBall;
+                    //qDebug() << "Player Data Read: ";
+                    //qDebug() << "x: " << x;
+                    //qDebug() << "y: " << y;
+                    //qDebug() << "hasBall: " << hasBall;
 
                     QSqlQuery q;
                     q.prepare("UPDATE in_game SET x=:X, y=:Y, hasBall=:HasBall WHERE UID=:uid");
@@ -917,8 +917,8 @@ void GameServer::ReportMovement(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on UPDATE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on UPDATE";
                     }
 
                     break;

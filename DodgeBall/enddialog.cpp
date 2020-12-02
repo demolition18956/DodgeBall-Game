@@ -15,7 +15,7 @@ endDialog::~endDialog()
 
 void endDialog::exitFunc()
 {
-    qDebug("Exit");
+    //qDebug("Exit");
     quitDialog->exec();
 }
 

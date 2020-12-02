@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     int a = 1;
     char n = a + 48 ;
-    qDebug() << n;
+    //qDebug() << n;
 }
 
 MainWindow::~MainWindow()
@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::hostFunc()
 {
-    qDebug("Host");
+    //qDebug("Host");
     ui->stackedWidget->setCurrentWidget(hostDialog);
 }
 
@@ -53,7 +53,7 @@ void MainWindow::joinNew(QString ipAddress, int portNumber)
 
 void MainWindow::exitFunc()
 {
-    qDebug("Exit");
+    //qDebug("Exit");
     quitDialog->exec();
 }
 
@@ -66,9 +66,9 @@ void MainWindow::exit()
 void MainWindow::hostNew(int portNumber)
 {
     this->hide();
-    qDebug("here");
+    //qDebug("here");
     gameLobby = new lobby(QHostAddress::LocalHost, portNumber, true);
-    qDebug("there");
+    //qDebug("there");
     gameLobby->show();
     connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
 }
@@ -77,7 +77,7 @@ void MainWindow::joinFunc()
 {
     ui->stackedWidget->setCurrentWidget(joinDialog);
     this->show();
-    qDebug() << "here";
+    //qDebug() << "here";
 }
 
 void MainWindow::showBack()

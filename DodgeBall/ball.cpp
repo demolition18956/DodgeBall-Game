@@ -32,25 +32,11 @@ void Ball::advance(int phase)
         this->moveBy(0,0);
     }
     else {
-        //collision detection with players
-        /*
-         * The justThrew variable is needed because as soon as the player throws the isHolding flag is set to false, which means
-         * that the player throwing was detected as "hit" too so the only way I found to fix this is with this new flag on the player object
-         * Also this removes the player from the scene but doesnt delete the object itself, I didnt want to try anything like that before
-         * really understanding how to manage the database
-         * */
+
         QList<QGraphicsItem*> collisions = this->collidingItems();
         foreach(QGraphicsItem *i, collisions)
         {
             Player* player = dynamic_cast<Player *>(i);
-            if(this->getMoving())
-            {
-                if(player and !player->getJustThrew())
-                {
-                    //this->scene()->removeItem(player);
-                    //this->setMove(0);
-                }
-            }
         }
         if (getMove() == 1) // if phase == 1, then its red team
         {
@@ -66,7 +52,6 @@ void Ball::advance(int phase)
             setMove(0);
             setMoving(false);
             this->moveBy(0,0);
-            //phase = 0;
 
         }
     }

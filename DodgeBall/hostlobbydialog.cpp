@@ -16,11 +16,11 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     connect(ui->joinButton, SIGNAL(clicked()), this, SLOT(createLobby()));
 
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
-    qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
+    //qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
     for (const QHostAddress &address: QNetworkInterface::allAddresses())
     {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
-             qDebug() << address.toString();
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost);
+             //qDebug() << address.toString();
     }
 
     QRegularExpression portInput ("[0-9]{1,5}");

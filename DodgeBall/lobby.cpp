@@ -15,11 +15,11 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     ui->setupUi(this);
     connect(ui->readyButton, SIGNAL(pressed()), this, SLOT(playerReady()));
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
-    qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
+    //qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
     for (const QHostAddress &address: QNetworkInterface::allAddresses())
     {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost)
-             qDebug() << address.toString();
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost);
+             //qDebug() << address.toString();
     }
     portNum = portNumber;
     address = QHostAddress(ipAddress);
@@ -40,7 +40,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
            int ret = QMessageBox::warning(this, tr("My Application"),
                                           tr("Couldn´t connect to server, try again."));
 
-           qDebug() << "CLIENT: Couldn't Connect due to errors";
+           //qDebug() << "CLIENT: Couldn't Connect due to errors";
            connected = false;
            return;
        }
@@ -72,41 +72,41 @@ lobby::~lobby()
 
 void lobby::processMessage(){
 
-    qDebug() << "Message Processing";
+    //qDebug() << "Message Processing";
     QByteArray datagram;
     QString msg;
     QTextStream in(&socket);
     int ind, playNum;
     bool ok;
     while (in.readLineInto(&msg)){
-        qDebug() << msg;
+        //qDebug() << msg;
         int num = msg.toInt(&ok);
         if (ok)
         {
             if (num != 0){
-                qDebug() << "UID set";
+                //qDebug() << "UID set";
                 playeruid = num;
-                qDebug() << "Player UID: " << playeruid;
+                //qDebug() << "Player UID: " << playeruid;
             }
             else {
                 // Full Lobby Error
                 break;
             }
         }
-        qDebug() << msg;
+        //qDebug() << msg;
         if ((ind = msg.indexOf("Number: ")) != -1)
         {
             ind += 8;
 
             playNum = msg.right(msg.length() - ind).toInt(&ok);
-            qDebug() << "Number " << msg.right(msg.length() - ind) << ok;
+            //qDebug() << "Number " << msg.right(msg.length() - ind) << ok;
         }
         else if ((ind = msg.indexOf("Player Name: ")) != -1)
         {
             ind += 13;
 
             QString playName = msg.right(msg.length() - ind);
-            qDebug() << "Name " << playName;
+            //qDebug() << "Name " << playName;
 
             switch(playNum)
             {
@@ -129,7 +129,7 @@ void lobby::processMessage(){
                 ui->player6NameLabel->setText(playName);
                 break;
             default:
-                qDebug() << "That's illegal";
+                break;//qDebug() << "That's illegal";
             }
         }
 
@@ -138,7 +138,7 @@ void lobby::processMessage(){
             ind += 7;
 
             int ready = msg.right(msg.length() - ind).toInt(&ok);
-            qDebug() << "Ready " << msg.right(msg.length() - ind) << ok;
+            //qDebug() << "Ready " << msg.right(msg.length() - ind) << ok;
             QString readyStr = (ready == 0) ? "Not Ready" : "Ready";
 
             switch(playNum){
@@ -174,7 +174,7 @@ void lobby::processMessage(){
 
         else if ((ind = msg.indexOf("start")) != -1)
         {
-            qDebug() << "Starting Game!";
+            //qDebug() << "Starting Game!";
 
             map = new mapDialog(playeruid,this);
             map->SetSocket(&socket);
@@ -189,14 +189,14 @@ void lobby::processMessage(){
         QTextStream message(&msg, QIODevice::ReadOnly);
         QString buffer;
         message >> buffer;
-        qDebug() << "BUFFER: " << buffer;
+        //qDebug() << "BUFFER: " << buffer;
 
 
         // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall pixmap")
         if(buffer == "PLAYER:")
         {
 
-            qDebug() << "WE are in";
+            //qDebug() << "WE are in";
             int uid;
             QString team;
             int x;
@@ -220,15 +220,15 @@ void lobby::processMessage(){
             hasBall = buffer.toInt();
             buffer.clear();
 
-            qDebug() << "Player Data Read: ";
-            qDebug() << "UID: " << uid;
-            qDebug() << "Team: " << team;
-            qDebug() << "x: " << x;
-            qDebug() << "y: " << y;
-            qDebug() << "hasBall: " << hasBall;
+            //qDebug() << "Player Data Read: ";
+            //qDebug() << "UID: " << uid;
+            //qDebug() << "Team: " << team;
+            //qDebug() << "x: " << x;
+            //qDebug() << "y: " << y;
+            //qDebug() << "hasBall: " << hasBall;
         }
     }
-    qDebug() << "CLIENT MESSAGE: " << msg;
+    //qDebug() << "CLIENT MESSAGE: " << msg;
 }
 
 bool lobby::isHost()
@@ -251,21 +251,21 @@ void lobby::initialConnect()
         int data = msg.toInt();
         if(data == 1)
         {
-            qDebug() << "CLIENT: connection accepted!";
+            //qDebug() << "CLIENT: connection accepted!";
         }
 //        else if(data == 0)
 //        {
-//            qDebug() << "CLIENT: connection refused!";
+//            //qDebug() << "CLIENT: connection refused!";
 //            socket.abort();
 //        }
         else
         {
-            qDebug() << "CLIENT: something went wrong!";
+            //qDebug() << "CLIENT: something went wrong!";
         }
     }
     else
     {
-        qDebug() << "CLIENT: Never got a message!";
+        //qDebug() << "CLIENT: Never got a message!";
     }
 
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
@@ -276,7 +276,7 @@ void lobby::initialConnect()
 void lobby::playerReady()
 {
     static bool readyPrev = false;
-    qDebug("Player ready");
+    //qDebug("Player ready");
     QByteArray block;
     QTextStream out(&block, QIODevice::WriteOnly);
     if (!readyPrev){
