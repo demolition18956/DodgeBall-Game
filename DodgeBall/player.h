@@ -58,6 +58,7 @@ private:
     bool ballAttempt;
     QString team;
     bool justThrew;
+    int delay;
 
 
     //QPointF starpts[10];

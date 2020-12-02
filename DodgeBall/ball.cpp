@@ -45,14 +45,10 @@ void Ball::advance(int phase)
             Player* player = dynamic_cast<Player *>(i);
             if(this->getMoving())
             {
-                if(player and !player->getHoldingBall() and !player->getJustThrew())
+                if(player and !player->getJustThrew())
                 {
                     //this->scene()->removeItem(player);
                     this->setMove(0);
-                    if(player->getIsPlayer())  // only want to report when user is hit to avoid all players reporting each colission
-                    {
-                        emit playerHit();
-                    }
                 }
             }
         }

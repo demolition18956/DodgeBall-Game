@@ -6,6 +6,7 @@
 Player::Player(int _x, int _y, bool _isUser, QString _team) :
     QGraphicsItem()
 {
+    delay = 0;
     ballHeld = -1;
     grab = false;
     _throw = false;
@@ -52,6 +53,15 @@ void Player::advance(int phase)
     {
         if(isUser)
         {
+            if(this->getJustThrew())
+            {
+                delay++;
+                if(delay > 15)
+                {
+                    justThrew = false;
+                    delay = 0;
+                }
+            }
             this->moveBy(dx,dy);
             QList<QGraphicsItem*> collisions = this->collidingItems();
             qDebug() << collisions.size();
@@ -73,6 +83,17 @@ void Player::advance(int phase)
                             continue;
                         }
                     }
+                    else
+                    {
+                        Ball* b = dynamic_cast<Ball *>(i);
+                        if(b and !this->getJustThrew() and (b->getMove() > 0))
+                        {
+                            b->setMove(0);
+                            emit b->playerHit();
+                            qDebug() << "EMITTING PLAYER HIT!!!";
+                        }
+                    }
+
                     QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
                     if (line)
                     {
