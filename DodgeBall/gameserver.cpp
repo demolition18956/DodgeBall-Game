@@ -8,7 +8,7 @@
 //                                      Constructor                                                //
 //*************************************************************************************************//
 
-GameServer::GameServer(QObject* parent) :
+GameServer::GameServer(int portNum, QObject* parent) :
     QTcpServer(parent)
 {
     // Set maxmium amount of pending connections
@@ -17,8 +17,8 @@ GameServer::GameServer(QObject* parent) :
     // Listen and Process new connections
     connect(this, &QTcpServer::newConnection, this, &GameServer::ProcessNewConnections);
 
-    // Open Port for Server at port 2224
-    if(!this->listen(QHostAddress::Any,2224)){
+    // Open Port for Server at designated port
+    if(!this->listen(QHostAddress::Any,portNum)){
 
         qDebug() << "SERVER: Could not start server";
     }
@@ -29,6 +29,7 @@ GameServer::GameServer(QObject* parent) :
 
     // Initialize Player Count
     playerCount = 0;
+    inLobby = true;
 
     // Configure SQL Server
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -120,7 +121,7 @@ void GameServer::ProcessNewConnections(){
         qDebug() << "SERVER: processing incoming connection";
 
         // If Lobby is already full
-        if(playerCount >= 6){
+        if(!inLobby && playerCount >= 6){
 
             // Reject the player and return function
             QTcpSocket* sock = nextPendingConnection();
@@ -347,6 +348,7 @@ void GameServer::ReportReady(){
                     if((qq.value(0).toInt() == playerCount) && playerCount >= 1){
 
                         qDebug() << "SERVER: Starting Game " << qq.value(0).toInt();
+                        inLobby = false;
                         StartGame();
                     }
                 }
@@ -417,7 +419,6 @@ void GameServer::ReportReady(){
                         qDebug() << "Error on UPDATE";
                     }
 
-                    break;
                 }
 
                 else if ((ind = str.indexOf("Throw: ")) != -1){
@@ -501,8 +502,11 @@ void GameServer::ReportReady(){
                     }
                 }
 
-            this->UpdateReady();
-            break;
+                if (inLobby){
+                    this->UpdateReady();
+                    break;
+                }
+
             }
         }
     }

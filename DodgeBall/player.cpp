@@ -35,17 +35,6 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
         heart.cubicTo(w/4.0,-h*1.0/4.0,0,-h/4.0,0,-h/16.0);
     }
     this->setPos(x, y);
-//    starpts[0] = QPointF(x-w/2+(6.5/14 * (float)w),y-h/2+(0.0/14 * h));
-//    starpts[1] = QPointF(x-w/2+(9.0/14 * (float)w),y-h/2+(5.0/14 * (float)h));
-//    starpts[2] = QPointF(x-w/2+(14.0/14 * (float)w),y-h/2+(5.5/14 * (float)h));
-//    starpts[3] = QPointF(x-w/2+(10.5/14 * (float)w),y-h/2+(9.0/14 * (float)h));
-//    starpts[4] = QPointF(x-w/2+(12.0/14 * (float)w),y-h/2+(float)h);
-//    starpts[5] = QPointF(x-w/2+(6.5/14 * (float)w),y-h/2+(11.5/14 * (float)h));
-//    starpts[6] = QPointF(x-w/2+(2.0/14 * (float)w),y-h/2+(14.0/14 * (float)h));
-//    starpts[7] = QPointF(x-w/2+(3.5/14 * (float)w),y-h/2+(9.0/14 * (float)h));
-//    starpts[8] = QPointF(x-w/2+(0.0/14 * (float)w),y-h/2+(5.5/14 * (float)h));
-//    starpts[9] = QPointF(x-w/2+(5.0/14 * (float)w),y-h/2+(5.0/14 * (float)h));
-
 }
 
 QRectF Player::boundingRect() const

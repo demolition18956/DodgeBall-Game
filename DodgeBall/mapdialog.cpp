@@ -222,10 +222,7 @@ void mapDialog::processMessage()
                         this->sendPos();
                         playersUid[uid-1]->updatePos = false;
                     }
-                    if(playersUid[uid-1]->grab)
-                    {
-                        this->sendBallInfo();
-                    }
+
                 }
                 scene->addItem(playersUid[uid-1]);
             }
@@ -244,6 +241,10 @@ void mapDialog::processMessage()
                 this->sendPos();
                 qDebug() << "Position Sent";
                 playersUid[uid-1]->updatePos = false;
+            }
+            if(playersUid[uid-1]->grab)
+            {
+                this->sendBallInfo();
             }
         }
 
@@ -276,14 +277,14 @@ void mapDialog::processMessage()
             qDebug() << "Received the team" << team;
             buffer.clear();
 
-            if(dodgeballs[bid-1] && isHeld)
+            if( (playersUid[myPlayer-1]->ballHeld != bid) && dodgeballs[bid-1] && isHeld)
             {
                 qDebug() << "CLIENT: REMOVING FROM SCENE";
                 scene->removeItem(dodgeballs[bid-1]);
                 delete dodgeballs[bid-1];
                 dodgeballs[bid-1] = nullptr;
             }
-            else if((dodgeballs[bid-1] == nullptr) && !isHeld)
+            else if( (playersUid[myPlayer-1]->ballHeld != bid) && (dodgeballs[bid-1] == nullptr) && !isHeld)
             {
                 dodgeballs[bid-1] = new Ball(x, y, this);
                 dodgeballs[bid-1]->bid = bid;
@@ -358,6 +359,8 @@ void mapDialog::sendBallInfo()
             QTextStream out(&block, QIODevice::ReadWrite);
             out << msg << endl;
 
+            qDebug() << "block";
+            qDebug() << block;
             socket->write(block);
             socket->flush();
             qDebug() << "CLIENT: Ball Grab Data SENT";

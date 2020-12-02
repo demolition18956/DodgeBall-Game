@@ -26,7 +26,7 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
     if(host ==  true)   // if player is the host
     {
-        server = new GameServer();
+        server = new GameServer(portNumber, this);
         socket.connectToHost(server->serverAddress(), portNum);   // open tcp socket on local machine (where server should be running)
 
     }

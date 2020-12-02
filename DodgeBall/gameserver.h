@@ -13,7 +13,7 @@ class GameServer : public QTcpServer
 {
 
 public:
-    explicit GameServer(QObject* parent = nullptr);
+    explicit GameServer(int portNum, QObject* parent = nullptr);
     int GetPlayerCount();
     bool isInLobby();
     ~GameServer();
