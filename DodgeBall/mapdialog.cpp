@@ -183,7 +183,7 @@ void mapDialog::processMessage()
 
 
     // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall")
-    while((buffer == "PLAYER:") || (buffer == "BALL:"))
+    while((buffer == "PLAYER:") || (buffer == "BALL:") || (buffer == "Hit:"))
     {
         static int ballCounter = 0;
         if(buffer == "PLAYER:")
@@ -305,6 +305,17 @@ void mapDialog::processMessage()
                 ballCounter++;
             }
         }
+        if(buffer == "Hit:")
+        {
+            int uid;
+            buffer.clear();
+            message >> buffer;  // uid read
+            uid = buffer.toInt();
+            buffer.clear();
+            qDebug() << "CLIENT: Received the uid on HIT -> " << QString::number(uid);
+            qDebug() << "Removing Player";
+            scene->removeItem(playersUid[uid-1]);
+        }
         message.readLine();
         message >> buffer;
     }
@@ -405,4 +416,19 @@ void mapDialog::sendBallInfo()
 void mapDialog::player_Hit()
 {
     qDebug() << "PLAYER HIT!!!!!";
+    qDebug() << "CLIENT: Player Hit, Sending Data";  // packet: "Hit: uid"
+    QString msg = "Hit: ";
+    qDebug() << "myPlayer: " << myPlayer;
+
+    msg.append(QString::number(myPlayer));
+
+    qDebug() << msg;
+
+    QByteArray block;
+    QTextStream out(&block, QIODevice::ReadWrite);
+    out << msg << endl;
+
+    socket->write(block);
+    socket->flush();
+    qDebug() << "CLIENT: Player Hit Data Sent";
 }

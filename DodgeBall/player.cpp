@@ -88,7 +88,7 @@ void Player::advance(int phase)
                         Ball* b = dynamic_cast<Ball *>(i);
                         if(b and !this->getJustThrew() and (b->getMove() > 0))
                         {
-                            b->setMove(0);
+                            //b->setMove(0);
                             emit b->playerHit();
                             qDebug() << "EMITTING PLAYER HIT!!!";
                         }

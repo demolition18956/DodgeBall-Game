@@ -48,7 +48,7 @@ void Ball::advance(int phase)
                 if(player and !player->getJustThrew())
                 {
                     //this->scene()->removeItem(player);
-                    this->setMove(0);
+                    //this->setMove(0);
                 }
             }
         }

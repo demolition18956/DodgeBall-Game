@@ -505,6 +505,43 @@ void GameServer::ReportReady(){
                     }
                 }
 
+                else if ((ind = str.indexOf("Hit: ")) != -1){
+
+                    QString buffer;
+                    QTextStream _in(&str, QIODevice::ReadOnly);
+                    _in >> buffer;
+
+                    buffer.clear();
+                    _in >> buffer;  // uid read
+                    int uid = buffer.toInt();
+
+                    qDebug() << "SERVER: Hit Read";
+                    qDebug() << "uid: " << uid;
+
+                    QSqlQuery q;
+                    q.prepare("DELETE FROM in_game WHERE UID=:uid");
+                    q.bindValue(":uid",uid);
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on DELETE";
+                    }
+
+                    QString msg = "Hit: ";
+                    msg.append(QString::number(uid));
+
+                    this->sendAll(msg);
+
+                    q.prepare("SELECT COUNT(UID) FROM in_game");
+
+                    if(!q.exec())
+                    {
+                        qDebug() << q.lastError();
+                        qDebug() << "Error on SELECT";
+                    }
+                }
+
                 if (inLobby){
                     this->UpdateReady();
                     break;
