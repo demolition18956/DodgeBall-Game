@@ -305,7 +305,7 @@ void mapDialog::processMessage()
                 ballCounter++;
             }
         }
-        else if(buffer == "Hit:")
+        else if(buffer == "Hit:") // Remove a player once they are hit with a ball
         {
             int uid;
             buffer.clear();
@@ -314,10 +314,10 @@ void mapDialog::processMessage()
             buffer.clear();
             //qDebug() << "CLIENT: Received the uid on HIT -> " << QString::number(uid);
             //qDebug() << "Removing Player";
-            scene->removeItem(playersUid[uid-1]); // Remove a player once they are hit with a ball
+            scene->removeItem(playersUid[uid-1]);
         }
         else if(buffer == "Finish:")
-        {
+        {   // End the game when only one team is left standing
             timer->stop();
             delete timer;
             scene->clear();
