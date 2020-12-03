@@ -409,6 +409,7 @@ void GameServer::UpdateClients(){
 //                                      Ready Up Information                                       //
 //*************************************************************************************************//
 
+// Handles information from all clients
 void GameServer::ReportReady(){
 
     //qDebug() << "Updating";
@@ -458,7 +459,8 @@ void GameServer::ReportReady(){
                     }
                 }
 
-                else if ((ind = str.indexOf(" NotReady")) != -1){
+                else if ((ind = str.indexOf(" NotReady")) != -1) // Update when players are not ready
+                {
 
                     //qDebug() << str.left(1);
                     QSqlQuery qq;
@@ -471,7 +473,8 @@ void GameServer::ReportReady(){
                      }
                 }
 
-                else if ((ind = str.indexOf(" Name ")) != -1){
+                else if ((ind = str.indexOf(" Name ")) != -1) // Set player nickname
+                {
 
                     ind += 6;
                     QSqlQuery qq;
@@ -486,7 +489,8 @@ void GameServer::ReportReady(){
                     }
                 }
 
-                else if ((ind = str.indexOf("Player: ")) != -1){
+                else if ((ind = str.indexOf("Player: ")) != -1) // Updates coordinates of other players and if they are holding a ball
+                {
                     //qDebug() << "WE are in";
                     QString buffer;
                     QTextStream _in(&str, QIODevice::ReadOnly);
@@ -526,7 +530,8 @@ void GameServer::ReportReady(){
 
                 }
 
-                else if ((ind = str.indexOf("Throw: ")) != -1){
+                else if ((ind = str.indexOf("Throw: ")) != -1) // Updates ball position
+                {
 
                     QString buffer;
                     QTextStream _in(&str, QIODevice::ReadOnly);
@@ -570,7 +575,8 @@ void GameServer::ReportReady(){
                     }
                 }
 
-                else if ((ind = str.indexOf("Grab: ")) != -1){
+                else if ((ind = str.indexOf("Grab: ")) != -1) // Updates if a player grabs a ball
+                {
 
                     QString buffer;
                     QTextStream _in(&str, QIODevice::ReadOnly);
@@ -607,7 +613,8 @@ void GameServer::ReportReady(){
                     }
                 }
 
-                else if ((ind = str.indexOf("Hit: ")) != -1){
+                else if ((ind = str.indexOf("Hit: ")) != -1)
+                {   // Updates player information upon a successful hit, also updates information for winning team
 
                     QString buffer;
                     QTextStream _in(&str, QIODevice::ReadOnly);
@@ -726,7 +733,8 @@ void GameServer::ReportReady(){
     }
 }
 
-void GameServer::UpdateReady(){
+void GameServer::UpdateReady() // Sends ready information to other players
+{
 
     QSqlQuery socks;
 
@@ -765,7 +773,7 @@ void GameServer::UpdateReady(){
 //                                      Server Details                                             //
 //*************************************************************************************************//
 
-// send a message to start the game
+// sends a message to start the game
 void GameServer::StartGame(){
 
     //qDebug() << "SERVER: Starting Game";
@@ -873,7 +881,8 @@ void GameServer::StartGame(){
 }
 
 //function that sends a message to everybody
-void GameServer::sendAll(QString message){
+void GameServer::sendAll(QString message)
+{
 
         //qDebug() << "Sending message to everybody";
 
@@ -894,7 +903,8 @@ void GameServer::sendAll(QString message){
         }
 }
 
-void GameServer::onTimeout(){
+void GameServer::onTimeout() // Sends all gameplay data to other players
+{
 
     QSqlQuery q;
 
@@ -1041,7 +1051,8 @@ void GameServer::onTimeout(){
     //qDebug() << "SERVER: Sent Data";
 }
 
-void GameServer::ReportMovement(){
+void GameServer::ReportMovement() // Report when a player moves
+{
 
     //qDebug() << "Updating";
     QString str;

@@ -7,7 +7,7 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     QGraphicsItem()
 {
     delay = 0;
-    ballHeld = -1;
+    ballHeld = -1;   // If a player is currently holding a ball
     grab = false;
     _throw = false;
     w = 80;
@@ -16,14 +16,15 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     y = _y;
     dx = 0;
     dy = 0;
-    throws = 0;
-    kills = 0;
+    throws = 0;        // Counts the total number of throws for each player
+    kills = 0;         // Counts the total number of hits for each player
     justThrew = false; // flag used for collision with ball
     ballAttempt = false;
     hasBall = false;
     isUser = _isUser;
     team = _team;
-    if (team == "red")
+
+    if (team == "red") // Loads the player pixmap based on team color
     {
         teamColors.load(":/pixmaps/Red.png");
     } else if (team == "blue")
