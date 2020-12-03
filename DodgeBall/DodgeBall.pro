@@ -35,10 +35,10 @@ SOURCES += \
         mapdialog.cpp \
         player.cpp \
         quitdialog.cpp \
-    ball.cpp
+    ball.cpp \
+    scoredialog.cpp
 
 HEADERS += \
-    enddialog.h \
     gameserver.h \
         hostlobbydialog.h \
         joinlobbydialog.h \
@@ -48,7 +48,8 @@ HEADERS += \
     player.h \
         quitdialog.h \
     defs.h \
-    ball.h
+    ball.h \
+    scoredialog.h
 
 FORMS += \
         enddialog.ui \
@@ -57,7 +58,8 @@ FORMS += \
         lobby.ui \
         mainwindow.ui \
         mapdialog.ui \
-        quitdialog.ui
+        quitdialog.ui \
+        scoredialog.ui
 
 RESOURCES += \
         pixmaps.qrc
