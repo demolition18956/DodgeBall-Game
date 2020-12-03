@@ -42,24 +42,24 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     socket.setProxy(QNetworkProxy::NoProxy);
     if(host ==  true)   // if player is the host
     {
-        try {
-            connected = true;
-            throw server = new GameServer(portNumber, this);
-           // throw socket.connectToHost(server->serverAddress(), portNum);   // open tcp socket on local machine (where server should be running)
-        }  catch (...) {
-            connected = false;
-        }
+            server = new GameServer(portNumber, this);
+            socket.connectToHost(server->serverAddress(), portNum);   // open tcp socket on local machine (where server should be running)
 
-        if(connected == true)
-        {
-            this->show();
-        }
+            if(!socket.waitForConnected(5000))
+            {
+                int ret = QMessageBox::warning(this, tr("My Application"),
+                                               tr("Couldn´t create server, try again."));
 
-        else {
-            int ret = QMessageBox::warning(this, tr("My Application"),
-                                           tr("Couldn´t connect to server, try again."));
-            return;
-        }
+                //qDebug() << "CLIENT: Couldn't Connect due to errors";
+                connected = false;
+                return;
+            }
+
+            else
+            {
+               this->show();
+               connected = true;
+            }
     }
     else
     {
