@@ -524,8 +524,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on DELETE";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on DELETE";
                     }
 
                     QString msg = "Hit: ";
@@ -538,8 +538,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on SELECT";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on SELECT";
                     }
                     q.next();
                     if(q.value(0).toInt() == 0)
@@ -548,8 +548,8 @@ void GameServer::ReportReady(){
 
                         if(!q.exec())
                         {
-                            qDebug() << q.lastError();
-                            qDebug() << "Error on SELECT";
+                            //qDebug() << q.lastError();
+                            //qDebug() << "Error on SELECT";
                         }
 
                         qDebug() << "BLUE WINS!!!";
@@ -558,6 +558,8 @@ void GameServer::ReportReady(){
                         msg = "Finish: blue";
                         this->sendAll(msg);
                         timer->stop();
+                        inLobby = true;
+                        delete timer;
                         QSqlQuery qq;
                         qq.prepare("DROP TABLE in_game");
                         if(!q.exec())
@@ -572,8 +574,8 @@ void GameServer::ReportReady(){
 
                     if(!q.exec())
                     {
-                        qDebug() << q.lastError();
-                        qDebug() << "Error on SELECT";
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on SELECT";
                     }
                     q.next();
                     if(q.value(0).toInt() == 0)
@@ -582,8 +584,8 @@ void GameServer::ReportReady(){
 
                         if(!q.exec())
                         {
-                            qDebug() << q.lastError();
-                            qDebug() << "Error on SELECT";
+                            //qDebug() << q.lastError();
+                            //qDebug() << "Error on SELECT";
                         }
 
                         qDebug() << "RED WINS!!!";
@@ -592,12 +594,21 @@ void GameServer::ReportReady(){
                         msg = "Finish: red";
                         this->sendAll(msg);
                         timer->stop();
+                        inLobby = true;
+                        delete timer;
                         QSqlQuery qq;
                         qq.prepare("DROP TABLE in_game");
                         if(!q.exec())
                         {
-                            qDebug() << q.lastError();
-                            qDebug() << "Error on DROP";
+                            //qDebug() << q.lastError();
+                            //qDebug() << "Error on DROP";
+                        }
+                        qq.clear();
+                        qq.prepare("DROP TABLE dodgeballs");
+                        if(!q.exec())
+                        {
+                            //qDebug() << q.lastError();
+                            //qDebug() << "Error on DROP";
                         }
                     }
                 }

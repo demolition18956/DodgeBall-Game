@@ -318,6 +318,10 @@ void mapDialog::processMessage()
         }
         else if(buffer == "Finish:")
         {
+            timer->stop();
+            delete timer;
+            scene->clear();
+            delete scene;
             QString team;
             buffer.clear();
             message >> buffer;  // team read
@@ -325,6 +329,7 @@ void mapDialog::processMessage()
             buffer.clear();
             qDebug() << "CLIENT: Received the team on FINISH -> " << team;
             qDebug() << "GAME FINISHED!!!";
+            disconnect(socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             emit this->finishGame(team);
         }
         message.readLine();

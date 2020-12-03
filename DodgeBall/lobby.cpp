@@ -329,6 +329,7 @@ bool lobby::getConnected()
 void lobby::GameFinish(QString team)
 {
     qDebug() << "CLIENT: " << team << " WINS!!!";
+    connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     map->close();
     this->show();
 }
