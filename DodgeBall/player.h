@@ -39,6 +39,10 @@ public:
     bool grab;
     bool _throw;
     bool getIsPlayer();
+    void incrementThrows();
+    void incrementKills();
+    int getKills();
+    int getThrows();
     ~Player();
 
 private:
@@ -48,6 +52,7 @@ private:
     int h;
     int dx;
     int dy;
+    int throws;
     bool ready;   // is the player ready?
     bool hasBall;   // is the player holding a ball?
     bool host;   // is this player the host?
@@ -59,6 +64,7 @@ private:
     QString team;
     bool justThrew;
     int delay;
+    int kills;
 
 
     //QPointF starpts[10];

@@ -100,6 +100,7 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
         else if ((e->key() == Qt::Key_C) && (playersUid[myPlayer-1]->isHoldingBall() == true)) //if we press space
         {
             //player will attempt to throw a ball if they have it
+            playersUid[myPlayer - 1]->incrementThrows();
             if(playersUid[myPlayer-1]->getTeam() == "red" && playersUid[myPlayer-1]->isHoldingBall())
             {
                 Ball *testBall = new Ball(playersUid[myPlayer-1]->GetX(),playersUid[myPlayer-1]->GetY());
@@ -446,5 +447,7 @@ void mapDialog::player_Hit()
 
     socket->write(block);
     socket->flush();
+
+    playersUid[myPlayer-1]->incrementKills();
     //qDebug() << "CLIENT: Player Hit Data Sent";
 }

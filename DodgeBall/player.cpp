@@ -16,6 +16,8 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     y = _y;
     dx = 0;
     dy = 0;
+    throws = 0;
+    kills = 0;
     justThrew = false; // flag used for collision with ball
     ballAttempt = false;
     hasBall = false;
@@ -269,4 +271,24 @@ bool Player::getJustThrew()
 bool Player::getIsPlayer()
 {
     return isUser;
+}
+
+void Player::incrementThrows()
+{
+    throws++;
+}
+
+int Player::getThrows()
+{
+    return throws;
+}
+
+int Player::getKills()
+{
+    return kills;
+}
+
+void Player::incrementKills()
+{
+    kills++;
 }
