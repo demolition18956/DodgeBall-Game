@@ -344,6 +344,10 @@ void lobby::GameFinish(QString team)
 {
     qDebug() << "CLIENT: " << team << " WINS!!!";
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
+    QString label = "Winner: ";
+    label.append(team.toUpper());
+    ui->winnerLabel->setText(label);
     map->close();
+    delete map;
     this->show();
 }

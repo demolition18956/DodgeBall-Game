@@ -544,13 +544,8 @@ void GameServer::ReportReady(){
                     q.next();
                     if(q.value(0).toInt() == 0)
                     {
+                        q.finish();
                         qDebug() << "Only 1 Team Remains!!!";
-
-                        if(!q.exec())
-                        {
-                            //qDebug() << q.lastError();
-                            //qDebug() << "Error on SELECT";
-                        }
 
                         qDebug() << "BLUE WINS!!!";
 
@@ -559,14 +554,22 @@ void GameServer::ReportReady(){
                         this->sendAll(msg);
                         timer->stop();
                         inLobby = true;
-                        delete timer;
                         QSqlQuery qq;
                         qq.prepare("DROP TABLE in_game");
-                        if(!q.exec())
+                        if(!qq.exec())
                         {
                             qDebug() << q.lastError();
                             qDebug() << "Error on DROP";
                         }
+                        qq.clear();
+                        qq.prepare("DROP TABLE dodgeballs");
+                        if(!qq.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
+                        qq.finish();
+                        return;
                     }
                     q.clear();
                     q.prepare("SELECT COUNT(team) FROM in_game WHERE team=:Team");
@@ -580,13 +583,8 @@ void GameServer::ReportReady(){
                     q.next();
                     if(q.value(0).toInt() == 0)
                     {
+                        q.finish();
                         qDebug() << "Only 1 Team Remains!!!";
-
-                        if(!q.exec())
-                        {
-                            //qDebug() << q.lastError();
-                            //qDebug() << "Error on SELECT";
-                        }
 
                         qDebug() << "RED WINS!!!";
 
@@ -595,21 +593,22 @@ void GameServer::ReportReady(){
                         this->sendAll(msg);
                         timer->stop();
                         inLobby = true;
-                        delete timer;
                         QSqlQuery qq;
                         qq.prepare("DROP TABLE in_game");
-                        if(!q.exec())
+                        if(!qq.exec())
                         {
-                            //qDebug() << q.lastError();
-                            //qDebug() << "Error on DROP";
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
                         }
                         qq.clear();
                         qq.prepare("DROP TABLE dodgeballs");
-                        if(!q.exec())
+                        if(!qq.exec())
                         {
-                            //qDebug() << q.lastError();
-                            //qDebug() << "Error on DROP";
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
                         }
+                        qq.finish();
+                        return;
                     }
                 }
 
