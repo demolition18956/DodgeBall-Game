@@ -122,7 +122,7 @@ void GameServer::ProcessNewConnections(){
         //qDebug() << "SERVER: processing incoming connection";
 
         // If Lobby is already full
-        if(!inLobby && playerCount >= 6){
+        if(!inLobby || playerCount >= 6){
 
             // Reject the player and return function
             QTcpSocket* sock = nextPendingConnection();
@@ -351,6 +351,7 @@ void GameServer::ReportReady(){
                     if((qq.value(0).toInt() == playerCount) && playerCount >= 1){
 
                         //qDebug() << "SERVER: Starting Game " << qq.value(0).toInt();
+                        UpdateReady();
                         inLobby = false;
                         StartGame();
                     }
@@ -555,6 +556,7 @@ void GameServer::ReportReady(){
                         timer->stop();
                         inLobby = true;
                         QSqlQuery qq;
+                        UpdateReady();
                         qq.prepare("DROP TABLE in_game");
                         if(!qq.exec())
                         {
@@ -594,6 +596,7 @@ void GameServer::ReportReady(){
                         timer->stop();
                         inLobby = true;
                         QSqlQuery qq;
+                        UpdateReady();
                         qq.prepare("DROP TABLE in_game");
                         if(!qq.exec())
                         {
@@ -671,8 +674,8 @@ void GameServer::StartGame(){
     // table for data associated with active players
     if(!start.exec("CREATE TABLE in_game(UID INT, x INT, y INT, hasBall INT, team TEXT)")){
 
-        //qDebug() << start.lastError();
-        //qDebug() << "Error on CREATE";
+        qDebug() << start.lastError();
+        qDebug() << "Error on CREATE";
     }
 
     //qDebug() << "In-game table created";

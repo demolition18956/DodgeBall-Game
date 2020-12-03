@@ -18,9 +18,9 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     //qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
     QString addy = "IP Address: ";
     if (ipAddress.toString() == localhost.toString()){
+        bool more = false;
         for (const QHostAddress &address: QNetworkInterface::allAddresses())
         {
-            bool more = false;
             if (address.isGlobal() && (address.protocol() == QAbstractSocket::IPv4Protocol))
             {
                  if (more)
@@ -190,6 +190,7 @@ void lobby::processMessage(){
         {
             //qDebug() << "Starting Game!";
 
+            playerReady();
             map = new mapDialog(playeruid,this);
             connect(map, SIGNAL(finishGame(QString)), this, SLOT(GameFinish(QString)));
             map->SetSocket(&socket);
