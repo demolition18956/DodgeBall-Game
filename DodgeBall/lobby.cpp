@@ -14,31 +14,11 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->readyButton, SIGNAL(pressed()), this, SLOT(playerReady()));
-    const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
-    //qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
-    QString addy = "IP Address: ";
-    if (ipAddress.toString() == localhost.toString()){
-        bool more = false;
-        for (const QHostAddress &address: QNetworkInterface::allAddresses())
-        {
-            if (address.isGlobal() && (address.protocol() == QAbstractSocket::IPv4Protocol))
-            {
-                 if (more)
-                    addy.append(", ");
-                 addy.append(address.toString());
-                 more = true;
-            }
-        }
-    }
-    else {
-        addy.append(ipAddress.toString());
-    }
 
-    ui->ipLabel->setText(addy);
+    // Set Up Client-to-Server Socket Connection
     portNum = portNumber;
     address = QHostAddress(ipAddress);
     host = host_;
-    connect(&socket, SIGNAL(connected()), this, SLOT(initialConnect()));
     socket.setProxy(QNetworkProxy::NoProxy);
     if(host ==  true)   // if player is the host
     {
@@ -79,6 +59,31 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
           connected = true;
        }
     }
+
+    // Outputs IP Address(es) in Lobby UI
+    const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
+    QString addy = "IP Address: ";
+    if (ipAddress.toString() == localhost.toString()){
+        bool more = false;
+        for (const QHostAddress &address: QNetworkInterface::allAddresses())
+        {
+            if (address.isGlobal() && (address.protocol() == QAbstractSocket::IPv4Protocol))
+            {
+                 if (more)
+                    addy.append(", ");
+                 addy.append(address.toString());
+                 more = true;
+            }
+        }
+    }
+    else {
+        addy.append(ipAddress.toString());
+    }
+
+    ui->ipLabel->setText(addy);
+
+
+
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
@@ -108,12 +113,12 @@ void lobby::processMessage(){
     int ind, playNum;
     bool ok;
     while (in.readLineInto(&msg)){
-        //qDebug() << msg;
+
+        // Just reading singular int sets PlayerUID for Client
         int num = msg.toInt(&ok);
         if (ok)
         {
             if (num != 0){
-                //qDebug() << "UID set";
                 playeruid = num;
                 //qDebug() << "Player UID: " << playeruid;
             }
@@ -123,6 +128,8 @@ void lobby::processMessage(){
             }
         }
         //qDebug() << msg;
+
+        // Sets Number of player info (playNum) to be edited
         if ((ind = msg.indexOf("Number: ")) != -1)
         {
             ind += 8;
@@ -130,6 +137,8 @@ void lobby::processMessage(){
             playNum = msg.right(msg.length() - ind).toInt(&ok);
             //qDebug() << "Number " << msg.right(msg.length() - ind) << ok;
         }
+
+        // Set Player Name of playNum
         else if ((ind = msg.indexOf("Player Name: ")) != -1)
         {
             ind += 13;
@@ -162,12 +171,12 @@ void lobby::processMessage(){
             }
         }
 
+        // Set Ready Status of playNum
         else if ((ind = msg.indexOf("Ready: ")) != -1)
         {
             ind += 7;
 
             int ready = msg.right(msg.length() - ind).toInt(&ok);
-            //qDebug() << "Ready " << msg.right(msg.length() - ind) << ok;
             QString readyStr = (ready == 0) ? "Not Ready" : "Ready";
 
             switch(playNum){
@@ -194,6 +203,7 @@ void lobby::processMessage(){
             }
         }
 
+        // Set Total Number of Players in Lobby
         else if ((ind = msg.indexOf("Joined: ")) != -1)
         {
             ind += 8;
@@ -201,6 +211,7 @@ void lobby::processMessage(){
             ui->playercountLabel->setNum(readySum);
         }
 
+        // Start Game
         else if ((ind = msg.indexOf("start")) != -1)
         {
             //qDebug() << "Starting Game!";
@@ -216,48 +227,6 @@ void lobby::processMessage(){
             return;
         }
 
-        // Either Player info or Ball info
-        QTextStream message(&msg, QIODevice::ReadOnly);
-        QString buffer;
-        message >> buffer;
-        //qDebug() << "BUFFER: " << buffer;
-
-
-        // Read Player Information (packet layout-->"PLAYER: uid team x y hasBall pixmap")
-        if(buffer == "PLAYER:")
-        {
-
-            //qDebug() << "WE are in";
-            int uid;
-            QString team;
-            int x;
-            int y;
-            bool hasBall;
-
-            buffer.clear();
-            message >> buffer;  // uid read
-            uid = buffer.toInt();
-            buffer.clear();
-            message >> buffer;  // team read
-            team = buffer;
-            buffer.clear();
-            message >> buffer;   // x pos read
-            x = buffer.toInt();
-            buffer.clear();
-            message >> buffer;   // y pos read
-            y = buffer.toInt();
-            buffer.clear();
-            message >> buffer;   // hasBall read
-            hasBall = buffer.toInt();
-            buffer.clear();
-
-            //qDebug() << "Player Data Read: ";
-            //qDebug() << "UID: " << uid;
-            //qDebug() << "Team: " << team;
-            //qDebug() << "x: " << x;
-            //qDebug() << "y: " << y;
-            //qDebug() << "hasBall: " << hasBall;
-        }
     }
     //qDebug() << "CLIENT MESSAGE: " << msg;
 }
@@ -271,39 +240,7 @@ bool lobby::isHost()
 //                                      Connections                                                //
 //*************************************************************************************************//
 
-void lobby::initialConnect()
-{
-    connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
-    if(socket.waitForReadyRead(5000))
-    {
-        QTextStream incoming(&socket);
-        QString msg;
-        incoming >> msg;
-        int data = msg.toInt();
-        if(data == 1)
-        {
-            //qDebug() << "CLIENT: connection accepted!";
-        }
-//        else if(data == 0)
-//        {
-//            //qDebug() << "CLIENT: connection refused!";
-//            socket.abort();
-//        }
-        else
-        {
-            //qDebug() << "CLIENT: something went wrong!";
-        }
-    }
-    else
-    {
-        //qDebug() << "CLIENT: Never got a message!";
-    }
-
-    connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
-
-
-}
-
+// Player triggers Ready Status and Reports to Server
 void lobby::playerReady()
 {
     static bool readyPrev = false;
@@ -323,6 +260,7 @@ void lobby::playerReady()
     socket.write(block);
 }
 
+// User Tries to Leave Lobby
 void lobby::leave()
 {
     int button = QMessageBox::question(this, "Confirm Drop",
@@ -338,6 +276,7 @@ void lobby::leave()
 
 }
 
+// User Changes Lobby Name, and Reports New Name to Server
 void lobby::changeName()
 {
     QString msg = ui->nameEdit->text();
@@ -351,11 +290,13 @@ void lobby::changeName()
     socket.write(block);
 }
 
+// Returns connected Boolean
 bool lobby::getConnected()
 {
     return connected;
 }
 
+// Triggered When Game Finishes and Users Returns To Lobby
 void lobby::GameFinish(QString team)
 {
     qDebug() << "CLIENT: " << team << " WINS!!!";
