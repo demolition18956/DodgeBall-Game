@@ -8,7 +8,7 @@ scoreDialog::scoreDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     close = false;
-    connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(setClose));
+    connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(setClose()));
 
 }
 
