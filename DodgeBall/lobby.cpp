@@ -20,8 +20,14 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     if (ipAddress.toString() == localhost.toString()){
         for (const QHostAddress &address: QNetworkInterface::allAddresses())
         {
+            bool more = false;
             if (address.isGlobal() && (address.protocol() == QAbstractSocket::IPv4Protocol))
+            {
+                 if (more)
+                    addy.append(", ");
                  addy.append(address.toString());
+                 more = true;
+            }
         }
     }
     else {
