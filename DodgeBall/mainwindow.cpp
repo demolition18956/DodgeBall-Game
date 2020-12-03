@@ -65,12 +65,19 @@ void MainWindow::exit()
 
 void MainWindow::hostNew(int portNumber)
 {
-    this->hide();
+
     //qDebug("here");
     gameLobby = new lobby(QHostAddress::LocalHost, portNumber, true);
-    //qDebug("there");
-    gameLobby->show();
+    //qDebug("there");    
     connect(gameLobby, SIGNAL(showAgain()), this, SLOT(showBack()));
+
+    if(gameLobby->getConnected() == false)
+    {
+        this->show();
+        delete gameLobby;
+    }
+    else this->hide();
+
 }
 
 void MainWindow::joinFunc()
