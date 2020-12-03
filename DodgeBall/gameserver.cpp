@@ -348,7 +348,8 @@ void GameServer::ReportReady(){
                     qq.next();
                     //qDebug() << qq.value(0).toInt();
 
-                    if((qq.value(0).toInt() == playerCount) && playerCount >= 1){
+                    if((qq.value(0).toInt() == playerCount) && playerCount >= 1) // Starts the game when 2 or more players are readied up
+                    {
 
                         //qDebug() << "SERVER: Starting Game " << qq.value(0).toInt();
                         UpdateReady();

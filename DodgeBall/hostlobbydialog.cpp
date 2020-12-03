@@ -15,7 +15,7 @@ HostLobbyDialog::HostLobbyDialog(QWidget *parent) :
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
     connect(ui->joinButton, SIGNAL(clicked()), this, SLOT(createLobby()));
 
-
+    // Input validation, ensures that only a maximum of 5 integers can be input for port number
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);

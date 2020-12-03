@@ -36,7 +36,7 @@ void MainWindow::hostFunc()
     ui->stackedWidget->setCurrentWidget(hostDialog);
 }
 
-void MainWindow::joinNew(QString ipAddress, int portNumber)
+void MainWindow::joinNew(QString ipAddress, int portNumber) // connect to the game lobby
 {
     gameLobby = new lobby(QHostAddress(ipAddress), portNumber, false);
 

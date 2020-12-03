@@ -38,16 +38,17 @@ void Ball::advance(int phase)
         {
             Player* player = dynamic_cast<Player *>(i);
         }
-        if (getMove() == 1) // if phase == 1, then its red team
+        if (getMove() == 1) // if phase == 1, then its red team so throw ball right
         {
             this->moveBy(20,0);
         }
-        else if(getMove() == 2) //blue team
+        else if(getMove() == 2) // blue team so throw ball left
         {
             this->moveBy(-20,0);
         }
 
-        if ((this->pos().x()+x < -XMAX/2 + 5) || (this->pos().x()+x > XMAX/2 - 5)){
+        if ((this->pos().x()+x < -XMAX/2 + 5) || (this->pos().x()+x > XMAX/2 - 5)) // Stops the ball from moving upon hitting the map boundary
+        {
 
             setMove(0);
             setMoving(false);

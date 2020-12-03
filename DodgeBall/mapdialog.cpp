@@ -279,7 +279,7 @@ void mapDialog::processMessage()
             //qDebug() << "Received the team" << team;
             buffer.clear();
 
-            if( (playersUid[myPlayer-1]->ballHeld != bid) && dodgeballs[bid-1] && isHeld)
+            if( (playersUid[myPlayer-1]->ballHeld != bid) && dodgeballs[bid-1] && isHeld) // Remove a ball from the scene once it is picked up
             {
                 //qDebug() << "CLIENT: REMOVING FROM SCENE";
                 scene->removeItem(dodgeballs[bid-1]);
@@ -287,7 +287,7 @@ void mapDialog::processMessage()
                 dodgeballs[bid-1] = nullptr;
             }
             else if( (playersUid[myPlayer-1]->ballHeld != bid) && (dodgeballs[bid-1] == nullptr) && !isHeld)
-            {
+            {   // Add a moving ball to the scene once it is throw
                 dodgeballs[bid-1] = new Ball(x, y, this);
                 connect(dodgeballs[bid-1], SIGNAL(playerHit()), this, SLOT(player_Hit()));
                 dodgeballs[bid-1]->bid = bid;
@@ -314,7 +314,7 @@ void mapDialog::processMessage()
             buffer.clear();
             //qDebug() << "CLIENT: Received the uid on HIT -> " << QString::number(uid);
             //qDebug() << "Removing Player";
-            scene->removeItem(playersUid[uid-1]);
+            scene->removeItem(playersUid[uid-1]); // Remove a player once they are hit with a ball
         }
         else if(buffer == "Finish:")
         {
