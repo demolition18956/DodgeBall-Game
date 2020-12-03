@@ -16,11 +16,19 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     connect(ui->readyButton, SIGNAL(pressed()), this, SLOT(playerReady()));
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
     //qDebug() << QNetworkInterface::interfaceFromIndex(1).name();
-    for (const QHostAddress &address: QNetworkInterface::allAddresses())
-    {
-        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost);
-             //qDebug() << address.toString();
+    QString addy = "IP Address: ";
+    if (ipAddress.toString() == localhost.toString()){
+        for (const QHostAddress &address: QNetworkInterface::allAddresses())
+        {
+            if (address.isGlobal() && (address.protocol() == QAbstractSocket::IPv4Protocol))
+                 addy.append(address.toString());
+        }
     }
+    else {
+        addy.append(ipAddress.toString());
+    }
+
+    ui->ipLabel->setText(addy);
     portNum = portNumber;
     address = QHostAddress(ipAddress);
     host = host_;
