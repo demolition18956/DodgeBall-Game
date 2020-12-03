@@ -226,11 +226,111 @@ void GameServer::clientDisconnected(){
                 // SQL HERE
                 QSqlQuery del;
 
+
                 // If unable to delete player from database, throw error
                 if (!del.exec("DELETE FROM players WHERE UID=" + QString::number(i+1))){
 
-                    //qDebug() << del.lastError();
-                    //qDebug() << "Error on DELETE";
+                    qDebug() << del.lastError();
+                    qDebug() << "Error on DELETE";
+                }
+
+                // If the Game is in Play
+                if (!inLobby){
+                    QString msg;
+                    QSqlQuery q;
+                    // Delete Player from game stats
+                    if (!del.exec("DELETE FROM in_game WHERE UID=" + QString::number(i+1))){
+
+                        //qDebug() << del.lastError();
+                        //qDebug() << "Error on DELETE";
+                    }
+                    // Get Clients to delete Player icon
+                    sendAll("HIT: " + QString::number(i+1));
+
+                    // Test for if red team is no longer remaining
+                    q.prepare("SELECT COUNT(team) FROM in_game WHERE team=:Team");
+                    q.bindValue(":Team", "red");
+
+                    if(!q.exec())
+                    {
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on SELECT";
+                    }
+                    q.next();
+
+                    // If no more red team, Blue team wins
+                    if(q.value(0).toInt() == 0)
+                    {
+                        q.finish();
+                        qDebug() << "Only 1 Team Remains!!!";
+
+                        qDebug() << "BLUE WINS!!!";
+
+                        msg.clear();
+                        msg = "Finish: blue";
+                        this->sendAll(msg);
+                        timer->stop();
+                        inLobby = true;
+                        QSqlQuery qq;
+                        UpdateReady();
+                        qq.prepare("DROP TABLE in_game");
+                        if(!qq.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
+                        qq.clear();
+                        qq.prepare("DROP TABLE dodgeballs");
+                        if(!qq.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
+                        qq.finish();
+                    }
+                    q.clear();
+
+                    // Test for if blue team is no longer remaining
+                    q.prepare("SELECT COUNT(team) FROM in_game WHERE team=:Team");
+                    q.bindValue(":Team", "blue");
+
+                    if(!q.exec())
+                    {
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on SELECT";
+                    }
+                    q.next();
+
+                    // If no more blue team, Red team wins
+                    if(q.value(0).toInt() == 0)
+                    {
+                        q.finish();
+                        qDebug() << "Only 1 Team Remains!!!";
+
+                        qDebug() << "RED WINS!!!";
+
+                        msg.clear();
+                        msg = "Finish: red";
+                        this->sendAll(msg);
+                        timer->stop();
+                        inLobby = true;
+                        QSqlQuery qq;
+                        UpdateReady();
+                        qq.prepare("DROP TABLE in_game");
+                        if(!qq.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
+                        qq.clear();
+                        qq.prepare("DROP TABLE dodgeballs");
+                        if(!qq.exec())
+                        {
+                            qDebug() << q.lastError();
+                            qDebug() << "Error on DROP";
+                        }
+                        qq.finish();
+                    }
                 }
 
                 // Update clients of new information
