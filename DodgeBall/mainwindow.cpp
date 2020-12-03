@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(joinDialog, SIGNAL(joinNew(QString, int)), this, SLOT(joinNew(QString, int)));
 
     int a = 1;
-    char n = a + 48 ;
+    char n = a + 48;
     //qDebug() << n;
 }
 

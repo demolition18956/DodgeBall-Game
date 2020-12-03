@@ -7,6 +7,7 @@
 #include <QTimer>
 #include "ball.h"
 #include "player.h"
+#include "scoredialog.h"
 
 namespace Ui {
 class mapDialog;
@@ -19,6 +20,7 @@ class mapDialog : public QDialog
 public:
     explicit mapDialog(int _uid, QWidget *parent = nullptr);
     void SetSocket(QTcpSocket* _sock);
+    Player* getPlayer(int index);
     ~mapDialog();
 
 protected:
@@ -37,6 +39,7 @@ private:
     QLine line;
     void sendPos();
     void sendBallInfo();
+    scoreDialog *scores;
 
 signals:
     void finishGame(QString);

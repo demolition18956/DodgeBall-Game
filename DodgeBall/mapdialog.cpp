@@ -2,6 +2,7 @@
 #include "ui_mapdialog.h"
 #include <QKeyEvent>
 #include "defs.h"
+#include "scoredialog.h"
 
 //*************************************************************************************************//
 //                                      Constructor                                                //
@@ -19,6 +20,7 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     // Set scene dimensions and background color
     scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX + 40, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
+    scores = new scoreDialog(this);
 
     // Ensures the widget size cannot be changed
     showNormal();
@@ -330,6 +332,14 @@ void mapDialog::processMessage()
             buffer.clear();
             qDebug() << "CLIENT: Received the team on FINISH -> " << team;
             qDebug() << "GAME FINISHED!!!";
+            //Show stats
+            for(int i = 0; i < 6; i++)
+            {
+                scores->setData(i, playersUid[i]->getThrows(), playersUid[i]->getThrows());
+            }
+
+            while(!scores->getClose())
+
             disconnect(socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             emit this->finishGame(team);
         }
@@ -450,4 +460,9 @@ void mapDialog::player_Hit()
 
     playersUid[myPlayer-1]->incrementKills();
     //qDebug() << "CLIENT: Player Hit Data Sent";
+}
+
+Player* mapDialog::getPlayer(int index)
+{
+    return playersUid[index];
 }

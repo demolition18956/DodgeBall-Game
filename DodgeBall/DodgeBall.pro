@@ -39,6 +39,7 @@ SOURCES += \
     scoredialog.cpp
 
 HEADERS += \
+    enddialog.h \
     gameserver.h \
         hostlobbydialog.h \
         joinlobbydialog.h \

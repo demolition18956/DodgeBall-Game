@@ -987,7 +987,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QLabel" name="p5Elim_2">
+            <widget class="QLabel" name="p5Thrown">
              <property name="palette">
               <palette>
                <active>
