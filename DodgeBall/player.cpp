@@ -41,13 +41,13 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     this->setPos(x, y);
 }
 
-QRectF Player::boundingRect() const
+QRectF Player::boundingRect() const // Sets player size
 {
     qreal adjust = 0.8;
     return QRectF(-w/2-adjust, -h/2-adjust, w+adjust, h+adjust);
 }
 
-void Player::advance(int phase)
+void Player::advance(int phase) // Advance method for player, controls player movement
 {
     if(phase==0){
         return;
@@ -56,7 +56,7 @@ void Player::advance(int phase)
     {
         if(isUser)
         {
-            if(this->getJustThrew())
+            if(this->getJustThrew()) // Prevents a thrown ball from hitting the player that threw it
             {
                 delay++;
                 if(delay > 15)
@@ -72,7 +72,8 @@ void Player::advance(int phase)
             {
                 foreach(QGraphicsItem *i, collisions)
                 {
-                    if ((ballAttempt) && !(this->isHoldingBall())){
+                    if ((ballAttempt) && !(this->isHoldingBall())) // allows a player to pick up a ball
+                    {
                         Ball* b = dynamic_cast<Ball *>(i);
                         if(b && !b->getMoving())
                         {
@@ -112,6 +113,7 @@ void Player::advance(int phase)
                 }
             }
 
+            // Prevents a player from moving beyond the boundaries of the map dialog
             if ((this->pos().y() < -YMAX/2 + h/2) || (this->pos().y() > YMAX/2 - h/2)){
                 //qDebug() << "Max Y Hit";
                 this->moveBy(0,-dy);
@@ -134,7 +136,7 @@ void Player::advance(int phase)
 }
 
 void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
+{   // Draws the players, adds a heart to distinguish your specific character, and changes outline color depending on if a ball is held
     QColor outline;
     if (hasBall){
         outline = Qt::yellow;
@@ -192,27 +194,23 @@ Player::~Player()
 
 }
 
-void Player::move(PlayerDirection dir)
+void Player::move(PlayerDirection dir) // Physical values that effect how fast a player moves and in what direction
 {
     if(dir==PlayerDirection::up)
     {
-//        dx=0;
         dy=-5;
     }
     else if(dir==PlayerDirection::left)
     {
         dx=-5;
-//        dy=0;
     }
     else if(dir==PlayerDirection::down)
     {
-//        dx=0;
         dy=5;
     }
     else if(dir==PlayerDirection::right)
     {
         dx=5;
-//        dy=0;
     }
     else if(dir==PlayerDirection::vstop)
     {
@@ -258,6 +256,7 @@ bool Player::getHoldingBall()
 {
     return hasBall;
 }
+
 //setters and getters for JustThrew
 void Player::setJustThrew(bool a)
 {
