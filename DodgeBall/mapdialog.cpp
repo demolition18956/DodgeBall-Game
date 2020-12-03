@@ -333,12 +333,14 @@ void mapDialog::processMessage()
             qDebug() << "CLIENT: Received the team on FINISH -> " << team;
             qDebug() << "GAME FINISHED!!!";
             //Show stats
+
             for(int i = 0; i < 6; i++)
             {
                 scores->setData(i, playersUid[i]->getThrows(), playersUid[i]->getThrows());
             }
-
+            scores->show();
             while(!scores->getClose())
+            scores->hide();
 
             disconnect(socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             emit this->finishGame(team);
