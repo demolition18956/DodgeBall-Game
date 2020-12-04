@@ -16,11 +16,12 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     ui->setupUi(this);
     myPlayer = _uid;
 
+    throws = 0;
 
     // Set scene dimensions and background color
     scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX + 40, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
-    //scores = new scoreDialog(this);
+    scores = new scoreDialog(this);
 
     // Ensures the widget size cannot be changed
     showNormal();
@@ -43,7 +44,12 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     timer = new QTimer(this);
     timer->setInterval(1000/33);
     timer->start();
+
     connect(timer, SIGNAL(timeout()), scene, SLOT(advance()));
+
+    time = 0;
+    timer_sec.start(1000);
+    connect(&timer_sec, SIGNAL(timeout()), this, SLOT(time_inc()));
 }
 
 mapDialog::~mapDialog()
@@ -112,6 +118,7 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 dodgeballs[bid-1] = testBall;
                 connect(dodgeballs[bid-1], SIGNAL(playerHit()), this, SLOT(player_Hit()));
                 scene->addItem(dodgeballs[bid-1]);
+                throws_inc();
                 playersUid[myPlayer-1]->setHoldingBall(false); //make the player not hold ball anymore
                 //setJustThrew to true
                 playersUid[myPlayer-1]->setJustThrew(true);
@@ -127,6 +134,7 @@ void mapDialog::keyPressEvent(QKeyEvent *e)
                 dodgeballs[bid-1] = testBall;
                 connect(dodgeballs[bid-1], SIGNAL(playerHit()), this, SLOT(player_Hit()));
                 scene->addItem(dodgeballs[bid-1]);
+                throws_inc();
                 playersUid[myPlayer-1]->setHoldingBall(false);
                 //setJustThrew to true
                 playersUid[myPlayer-1]->setJustThrew(true);
@@ -298,10 +306,12 @@ void mapDialog::processMessage()
                 if(team == "red")
                 {
                     dodgeballs[bid-1]->setMove(1);
+                    throws_inc();
                 }
                 else if(team == "blue")
                 {
                     dodgeballs[bid-1]->setMove(2);
+                    throws_inc();
                 }
                 scene->addItem(dodgeballs[bid-1]);
 
@@ -347,9 +357,10 @@ void mapDialog::processMessage()
 //                }
 
 //            }
+            scores->setData(throws,time);
 
-//            scores->exec();   // modal dialog
-
+            scores->exec();   // modal dialog
+            delete scores;
             disconnect(socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             emit this->finishGame(team);
         }
@@ -475,4 +486,14 @@ void mapDialog::player_Hit()
 Player* mapDialog::getPlayer(int index)
 {
     return playersUid[index];
+}
+
+void mapDialog::time_inc()
+{
+    time++;
+}
+
+void mapDialog::throws_inc()
+{
+    throws++;
 }

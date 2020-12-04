@@ -2,6 +2,7 @@
 #define SCOREDIALOG_H
 
 #include <QDialog>
+#include <QTimer>
 #include "player.h"
 
 namespace Ui {
@@ -14,7 +15,7 @@ class scoreDialog : public QDialog
 
 public:
     explicit scoreDialog(QWidget *parent = nullptr);
-    void setData(int index, int throws, int kills);
+    void setData(int throws, int time);
     bool getClose();
     ~scoreDialog();
 

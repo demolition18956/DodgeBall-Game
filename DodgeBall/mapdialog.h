@@ -36,6 +36,10 @@ private:
     Player* playersUid[6] = {nullptr};
     Ball* dodgeballs[4] = {nullptr};
     QTimer* timer;
+    QTimer timer_sec;
+    int time;
+    int throws;
+    void throws_inc();
     QLine line;
     void sendPos();
     void sendBallInfo();
@@ -47,6 +51,7 @@ signals:
 private slots:
     void processMessage();
     void player_Hit();
+    void time_inc();
 };
 
 #endif // MAPDIALOG_H
