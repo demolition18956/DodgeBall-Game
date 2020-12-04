@@ -30,7 +30,7 @@ public slots:
 private:
     int x;
     int y;
-    int r;
+    int r; //radius
     int move;
     QRectF ellipse;
     bool isMoving;

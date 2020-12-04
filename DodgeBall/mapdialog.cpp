@@ -343,20 +343,7 @@ void mapDialog::processMessage()
             qDebug() << "CLIENT: Received the team on FINISH -> " << team;
             qDebug() << "GAME FINISHED!!!";
 
-//            for(int i = 0; i < 6; i++)
-//            {
-//                if(playersUid[i] == nullptr)
-//                {
-//                    qDebug() << "no data";
-//                }
-//                else
-//                {
-//                    qDebug() << "SETTING SCORE DATA";
-//                    scores->setData(i, 0, 0);
-//                    qDebug() << playersUid[i]->getThrows(); //<< playersUid[i]->getKills();
-//                }
 
-//            }
             scores->setData(throws,time);
 
             scores->exec();   // modal dialog
@@ -499,7 +486,7 @@ void mapDialog::player_Hit()
     }
 
 
-    // playersUid[myPlayer-1]->incrementKills();   // this method is for the when the user is hit not when the user scores a kill
+
     //qDebug() << "CLIENT: Player Hit Data Sent";
 }
 

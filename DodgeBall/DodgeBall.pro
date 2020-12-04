@@ -25,7 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    enddialog.cpp \
         gameserver.cpp \
         hostlobbydialog.cpp \
         joinlobbydialog.cpp \
@@ -39,7 +38,6 @@ SOURCES += \
     scoredialog.cpp
 
 HEADERS += \
-    enddialog.h \
     gameserver.h \
         hostlobbydialog.h \
         joinlobbydialog.h \
@@ -53,7 +51,6 @@ HEADERS += \
     scoredialog.h
 
 FORMS += \
-        enddialog.ui \
         hostlobbydialog.ui \
         joinlobbydialog.ui \
         lobby.ui \

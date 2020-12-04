@@ -17,7 +17,6 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
     dx = 0;
     dy = 0;
     throws = 0;        // Counts the total number of throws for each player
-    kills = 0;         // Counts the total number of hits for each player
     justThrew = false; // flag used for collision with ball
     ballAttempt = false;
     hasBall = false;
@@ -97,13 +96,7 @@ void Player::advance(int phase) // Advance method for player, controls player mo
                             //qDebug() << "EMITTING PLAYER HIT!!!";
                         }
                     }
-/*
-                    Player* p = dynamic_cast<Player *>(i);
-                    if(p)
-                    {
-                        this->moveBy(-dx,-dy);
-                    }
-*/
+
                     QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
                     if (line)
                     {
@@ -246,15 +239,10 @@ QString Player::getTeam()
 {
     return team;
 }
-
+//set player to hold a ball
 void Player::setHoldingBall(bool a)
 {
     hasBall = a;
-}
-
-bool Player::getHoldingBall()
-{
-    return hasBall;
 }
 
 //setters and getters for JustThrew
@@ -283,12 +271,4 @@ int Player::getThrows()
     return throws;
 }
 
-int Player::getKills()
-{
-    return kills;
-}
 
-void Player::incrementKills()
-{
-    kills++;
-}

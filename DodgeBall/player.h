@@ -32,16 +32,13 @@ public:
     void setHoldingBall(bool a);
     QString getTeam();
     bool updatePos;
-    bool getHoldingBall();
     void setJustThrew(bool a);
     bool getJustThrew();
-    int ballHeld;  // bid of the ball player is holding. will be -1 when no ball held
+    int ballHeld;  // ball id of the ball player is holding. will be -1 when no ball held
     bool grab;
     bool _throw;
     bool getIsPlayer();
     void incrementThrows();
-    void incrementKills();
-    int getKills();
     int getThrows();
     ~Player();
 
@@ -64,7 +61,6 @@ private:
     QString team;
     bool justThrew;
     int delay;
-    int kills;
 
 
     //QPointF starpts[10];
