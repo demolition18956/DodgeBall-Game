@@ -20,7 +20,7 @@ public:
 
 private:
     Ui::scoreDialog *ui;
-    bool close;
+    bool _close;
 
 private slots:
     void setClose();

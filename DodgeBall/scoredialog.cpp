@@ -7,7 +7,7 @@ scoreDialog::scoreDialog(QWidget *parent) :
     ui(new Ui::scoreDialog)
 {
     ui->setupUi(this);
-    close = false;
+    _close = false;
     connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(setClose()));
 
 }
@@ -19,11 +19,23 @@ scoreDialog::~scoreDialog()
 
 void scoreDialog::setData(int index, int throws, int kills)
 {
-    double accuracy = kills/throws;
+    qDebug() << "Into the SetData";
+    qDebug() << "DATA: " << QString::number(index) << " " << QString::number(throws) << " " << QString::number(kills);
+    double accuracy;
+    if(throws == 0)
+    {
+        accuracy = 0;   // cannot divide by 0
+    }
+    else
+    {
+        accuracy = kills/throws;
+    }
+
     switch (index)
     {
 
     case 0 :
+        qDebug() << "CASE 0";
         ui->p1Accuracy->setText(QString::number(accuracy));
         ui->p1Thrown->setText(QString::number(throws));
         ui->p1Elim->setText(QString::number(kills));
@@ -64,11 +76,12 @@ void scoreDialog::setData(int index, int throws, int kills)
 
 bool scoreDialog::getClose()
 {
-    return close;
+    return _close;
 }
 
 //set close to true so we can exit the while loop in mapDialog
 void scoreDialog::setClose()
 {
-    close = true;
+    _close = true;
+    this->close();
 }

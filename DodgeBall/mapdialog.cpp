@@ -332,35 +332,23 @@ void mapDialog::processMessage()
             buffer.clear();
             qDebug() << "CLIENT: Received the team on FINISH -> " << team;
             qDebug() << "GAME FINISHED!!!";
-            /*Show stats
-            //For some reason if crashes on the for loop
-            //I thought it was because of the null pointers but it seems like it crashes anyways
-            //The function setData works fine what I dont know is why does it work with straight numbers but not with the playersUid[i]->stuff
-            //playersUid behhaves weird :/
-            //no idea why, my last guess is that we dont have access to it or something like that
 
-            for(int i = 0; i < 6; i++)
-            {
-                if(playersUid[i] == nullptr)
-                {
-                    qDebug() << "no data";
-                }
-                else
-                {
-                    scores->setData(i, 0, 0);
-                    //qDebug() << playersUid[i]->getThrows(); //<< playersUid[i]->getKills();
-                }
+//            for(int i = 0; i < 6; i++)
+//            {
+//                if(playersUid[i] == nullptr)
+//                {
+//                    qDebug() << "no data";
+//                }
+//                else
+//                {
+//                    qDebug() << "SETTING SCORE DATA";
+//                    scores->setData(i, 0, 0);
+//                    qDebug() << playersUid[i]->getThrows(); //<< playersUid[i]->getKills();
+//                }
 
-            }
+//            }
 
-            //scores->show();
-            //this maybe should be done other way
-            while(!scores->getClose())
-            {
-                scores->show();
-
-            }
-            scores->hide();*/
+//            scores->exec();   // modal dialog
 
             disconnect(socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             emit this->finishGame(team);
@@ -480,7 +468,7 @@ void mapDialog::player_Hit()
     socket->write(block);
     socket->flush();
 
-    playersUid[myPlayer-1]->incrementKills();
+    // playersUid[myPlayer-1]->incrementKills();   // this method is for the when the user is hit not when the user scores a kill
     //qDebug() << "CLIENT: Player Hit Data Sent";
 }
 
