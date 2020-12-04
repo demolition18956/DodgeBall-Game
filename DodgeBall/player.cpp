@@ -272,7 +272,7 @@ bool Player::getIsPlayer()
 {
     return isUser;
 }
-
+//increment kills and throws line 483 in mapdialog for kills and line 105 for throws
 void Player::incrementThrows()
 {
     throws++;

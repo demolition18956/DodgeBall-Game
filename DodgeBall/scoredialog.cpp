@@ -67,6 +67,7 @@ bool scoreDialog::getClose()
     return close;
 }
 
+//set close to true so we can exit the while loop in mapDialog
 void scoreDialog::setClose()
 {
     close = true;

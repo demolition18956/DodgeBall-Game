@@ -332,15 +332,35 @@ void mapDialog::processMessage()
             buffer.clear();
             qDebug() << "CLIENT: Received the team on FINISH -> " << team;
             qDebug() << "GAME FINISHED!!!";
-            //Show stats
+            /*Show stats
+            //For some reason if crashes on the for loop
+            //I thought it was because of the null pointers but it seems like it crashes anyways
+            //The function setData works fine what I dont know is why does it work with straight numbers but not with the playersUid[i]->stuff
+            //playersUid behhaves weird :/
+            //no idea why, my last guess is that we dont have access to it or something like that
 
             for(int i = 0; i < 6; i++)
             {
-                scores->setData(i, playersUid[i]->getThrows(), playersUid[i]->getThrows());
+                if(playersUid[i] == nullptr)
+                {
+                    qDebug() << "no data";
+                }
+                else
+                {
+                    scores->setData(i, 0, 0);
+                    //qDebug() << playersUid[i]->getThrows(); //<< playersUid[i]->getKills();
+                }
+
             }
-            scores->show();
+
+            //scores->show();
+            //this maybe should be done other way
             while(!scores->getClose())
-            scores->hide();
+            {
+                scores->show();
+
+            }
+            scores->hide();*/
 
             disconnect(socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
             emit this->finishGame(team);
