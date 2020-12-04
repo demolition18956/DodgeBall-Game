@@ -97,13 +97,13 @@ void Player::advance(int phase) // Advance method for player, controls player mo
                             //qDebug() << "EMITTING PLAYER HIT!!!";
                         }
                     }
-
+/*
                     Player* p = dynamic_cast<Player *>(i);
                     if(p)
                     {
                         this->moveBy(-dx,-dy);
                     }
-
+*/
                     QGraphicsLineItem* line = dynamic_cast<QGraphicsLineItem *>(i);
                     if (line)
                     {
