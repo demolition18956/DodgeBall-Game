@@ -723,6 +723,47 @@ void GameServer::ReportReady(){
                     }
                 }
 
+                else if ((ind = str.indexOf("Drop: ")) != -1) // Updates if a player grabs a ball
+                {
+
+                    QString buffer;
+                    QTextStream _in(&str, QIODevice::ReadOnly);
+                    _in >> buffer;
+                    int x;
+                    int y;
+                    int bid;
+
+                    buffer.clear();
+                    _in >> buffer;  // bid read
+                    bid = buffer.toInt();
+
+                    buffer.clear();
+                    _in >> buffer;  // bid read
+                    x = buffer.toInt();
+
+                    buffer.clear();
+                    _in >> buffer;  // bid read
+                    y = buffer.toInt();
+
+                    //qDebug() << "Ball Grab Read: ";
+                    //qDebug() << "bid: " << bid;
+
+                    QSqlQuery q;
+                    q.prepare("UPDATE dodgeballs SET isHeld=:IsHeld, x=:X, y=:Y, team=:TEAM WHERE bid=:BID");
+                    q.bindValue(":BID",bid);
+                    q.bindValue(":IsHeld",0);
+                    q.bindValue(":X",x);
+                    q.bindValue(":Y",y);
+                    q.bindValue(":TEAM","noteam");
+
+                    if(!q.exec())
+                    {
+                        //qDebug() << q.lastError();
+                        //qDebug() << "Error on UPDATE";
+                    }
+
+                }
+
                 if (inLobby){
                     this->UpdateReady();
                     break;

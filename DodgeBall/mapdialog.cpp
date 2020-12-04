@@ -466,6 +466,7 @@ void mapDialog::player_Hit()
     //qDebug() << "PLAYER HIT!!!!!";
     //qDebug() << "CLIENT: Player Hit, Sending Data";  // packet: "Hit: uid"
     QString msg = "Hit: ";
+
     //qDebug() << "myPlayer: " << myPlayer;
 
     msg.append(QString::number(myPlayer));
@@ -478,6 +479,25 @@ void mapDialog::player_Hit()
 
     socket->write(block);
     socket->flush();
+
+    if(playersUid[myPlayer-1]->isHoldingBall())
+    {
+        QString msg2 = "Drop: ";
+        msg2.append(QString::number(playersUid[myPlayer-1]->ballHeld));
+        msg2.append(" ");
+        msg2.append(QString::number(playersUid[myPlayer-1]->GetX()));
+        msg2.append(" ");
+        msg2.append(QString::number(playersUid[myPlayer-1]->GetY()));
+
+        QByteArray block2;
+        QTextStream out2(&block2, QIODevice::ReadWrite);
+        out2 << msg2 << endl;
+
+        socket->write(block2);
+        socket->flush();
+
+    }
+
 
     // playersUid[myPlayer-1]->incrementKills();   // this method is for the when the user is hit not when the user scores a kill
     //qDebug() << "CLIENT: Player Hit Data Sent";
