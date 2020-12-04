@@ -20,7 +20,7 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     // Set scene dimensions and background color
     scene = new QGraphicsScene(-XMAX/2, -YMAX/2, XMAX, YMAX + 40, this);
     scene->setBackgroundBrush(QBrush(Qt::black));
-    scores = new scoreDialog(this);
+    //scores = new scoreDialog(this);
 
     // Ensures the widget size cannot be changed
     showNormal();
