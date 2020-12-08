@@ -82,8 +82,6 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
 
     ui->ipLabel->setText(addy);
 
-
-
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
@@ -265,6 +263,9 @@ void lobby::playerReady()
 // User Tries to Leave Lobby
 void lobby::leave()
 {
+
+    disconnect(&socket, SIGNAL(disconnected()), this, SLOT(handleDisconnect()));
+
     int button = QMessageBox::question(this, "Confirm Drop",
         "Are you sure you sure you want to leave?",
             QMessageBox::Yes, QMessageBox::No);
