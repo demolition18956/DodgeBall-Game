@@ -664,7 +664,7 @@ void GameServer::ReportReady(){
                         timer->stop();
                         inLobby = true;
                         QSqlQuery qq;
-                        UpdateReady();
+                        UpdateClients();
                         qq.prepare("DROP TABLE in_game");
                         if(!qq.exec())
                         {
@@ -704,7 +704,7 @@ void GameServer::ReportReady(){
                         timer->stop();
                         inLobby = true;
                         QSqlQuery qq;
-                        UpdateReady();
+                        UpdateClients();
                         qq.prepare("DROP TABLE in_game");
                         if(!qq.exec())
                         {

@@ -50,6 +50,7 @@ mapDialog::mapDialog(int _uid, QWidget *parent) :
     time = 0;
     timer_sec.start(1000);
     connect(&timer_sec, SIGNAL(timeout()), this, SLOT(time_inc()));
+    inGame = true;
 }
 
 mapDialog::~mapDialog()
@@ -331,6 +332,7 @@ void mapDialog::processMessage()
         }
         else if(buffer == "Finish:")
         {   // End the game when only one team is left standing
+            inGame = false;
             timer->stop();
             delete timer;
             scene->clear();
@@ -503,4 +505,16 @@ void mapDialog::time_inc()
 void mapDialog::throws_inc()
 {
     throws++;
+}
+
+void mapDialog::closeEvent(QCloseEvent *e)
+{
+    if (inGame)
+    {
+        player_Hit();
+        this->accept();
+    }
+    else {
+        this->accept();
+    }
 }

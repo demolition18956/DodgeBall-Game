@@ -26,6 +26,7 @@ public:
 protected:
     void keyPressEvent(QKeyEvent* e);
     void keyReleaseEvent(QKeyEvent* e);
+    void closeEvent(QCloseEvent* e);
 
 private:
     Ui::mapDialog *ui;
@@ -44,6 +45,7 @@ private:
     void sendPos();
     void sendBallInfo();
     scoreDialog *scores;
+    bool inGame;
 
 signals:
     void finishGame(QString);

@@ -43,7 +43,7 @@ Player::Player(int _x, int _y, bool _isUser, QString _team) :
 QRectF Player::boundingRect() const // Sets player size
 {
     qreal adjust = 0.8;
-    return QRectF(-w/2-adjust, -h/2-adjust, w+adjust, h+adjust);
+    return QRectF(-w/2-adjust/2, -h/2-adjust/2, w+adjust, h+adjust);
 }
 
 void Player::advance(int phase) // Advance method for player, controls player movement
