@@ -10,13 +10,11 @@ JoinLobbyDialog::JoinLobbyDialog(QWidget *parent) :
     connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
     // Input validation, ensures that IP address consists only of integers in correct format
-    ui->ipEdit->setText("146.229.162.184");
     QRegularExpression ipInput ("[0-9]{1,3}[.]{1}[0-9]{1,3}[.]{1}[0-9]{1,3}[.]{1}[0-9]{1,3}");
     QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(ipInput, ui->ipEdit);
     ui->ipEdit->setValidator(ipValidator);
 
     // Input validation, ensures that only a maximum of 5 integers can be input for port number
-    ui->portEdit->setText("2224");
     QRegularExpression portInput ("[0-9]{1,5}");
     QRegularExpressionValidator* portValidator = new QRegularExpressionValidator(portInput, ui->portEdit);
     ui->portEdit->setValidator(portValidator);

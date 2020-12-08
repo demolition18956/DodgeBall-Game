@@ -87,6 +87,8 @@ lobby::lobby(QHostAddress ipAddress, int portNumber, bool host_,QWidget *parent)
     connect(ui->leaveButton, SIGNAL(clicked()), this, SLOT(leave()));
     connect(&socket, SIGNAL(readyRead()),this, SLOT(processMessage()));
     connect(ui->nameButton, SIGNAL(clicked(bool)), this, SLOT(changeName()));
+    connect(&socket, SIGNAL(disconnected()), this, SLOT(handleDisconnect()));
+
     QRegularExpression nameInput ("[A-z]{1,10}");
     QRegularExpressionValidator* ipValidator = new QRegularExpressionValidator(nameInput, ui->nameEdit);
     ui->nameEdit->setValidator(ipValidator);
@@ -307,4 +309,20 @@ void lobby::GameFinish(QString team)
     map->close();
     delete map;
     this->show();
+}
+
+void lobby::handleDisconnect()
+{
+    int ret = QMessageBox::warning(this, tr("My Application"),
+                                   tr("An error occurred and the server closed"));
+
+    if(map)
+    {
+        delete map;
+    }
+
+    this->deleteLater();
+    if(host == true) server->close();
+    emit showAgain();
+
 }

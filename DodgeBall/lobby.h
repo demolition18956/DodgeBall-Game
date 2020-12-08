@@ -51,6 +51,7 @@ private slots:
     void processMessage();
     void changeName();
     void GameFinish(QString);
+    void handleDisconnect();
 };
 
 #endif // LOBBY_H
